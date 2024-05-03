@@ -13,7 +13,7 @@ class Ofrecimiento(models.Model):
     articulo = models.CharField(max_length=100)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=250)
-    imagen = models.ImageField()
+    imagen = models.ImageField(blank=True, null=True)
     usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     categoriaId = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     sucursalId = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
