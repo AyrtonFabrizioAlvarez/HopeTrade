@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from sesiones.models import Persona, Usuario
 from datetime import date
@@ -6,17 +6,17 @@ from .forms import RegistroUsuario
 
 # Create your views here.
 def signup(request):
-    
-    print(request.GET)
-    return render(request, "signup.html", {
-        'form': RegistroUsuario()
-    })
+    if request.method == "GET":
+        return render(request, "signup.html", {
+            'form': RegistroUsuario()
+        })
+    else:
+        persona = Persona.objects.create(nombre=request.POST['nombre'], apellido=request.POST['apellido'], contraseña=request.POST['contraseña'])
+        persona.save()
+        usuario = Usuario.objects.create(dni=request.POST['dni'], email=request.POST['email'], fecha_nac=date.today(), cant_valoraciones=0, reputacion=0.0, personaId=persona)
+        usuario.save()
+        return redirect('/')
+        
 
 def signup_user(request):
-
-    print(request.GET)
-    #persona = Persona(nombre="asdasd", apellido="sdddd", contraseña="dddd")
-    #persona.save()
-    #usuario = Usuario(dni=11222333, email="a@a.com", fecha_nac=date.today(), cant_valoraciones=0, reputacion=0.0, #personaId=persona)
-    #usuario.save()
-    return HttpResponse("algo para devovler")
+    return HttpResponse("se creo el usuario")
