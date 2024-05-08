@@ -4,5 +4,5 @@ from django.http import HttpResponse
 def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
 
-def prueba2(request):
+def listar_intercambios(request):
     return render(request, "index.html")
