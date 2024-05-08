@@ -24,6 +24,6 @@ urlpatterns = [
     path('', intercambios.listar_intercambios),
     path('intercambios/<str:prueba>', intercambios.prueba),
     #REGISTRAR USUARIO
-    path('signup/', sesiones.signup, name='signup'),
-    path('signup_user/', sesiones.signup_user, name='signup_user')
+    path('signup/', sesiones.signup),
+    path('signup_user/', sesiones.signup_user)
 ]
