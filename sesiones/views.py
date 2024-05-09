@@ -2,13 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from sesiones.models import Persona, Usuario, Ayudante
 from datetime import date
-<<<<<<< Updated upstream
 from django.shortcuts import get_object_or_404
 from .forms import RegistroUsuario, EditarUsuario, EditarPersona
-from .models import Usuario, Persona
-=======
+from .models import Usuario, Persona, Ayudante
 from .forms import RegistroUsuario, RegistroAyudante, ModificarInterno
->>>>>>> Stashed changes
 
 # Create your views here.
 def signup(request):
@@ -30,7 +27,6 @@ def list_users(request):
         'usuarios': usuarios
     })      
 
-<<<<<<< Updated upstream
 def edit_user(request, user_id):
     if request.method == "GET":
         usuario = get_object_or_404(Usuario, pk=user_id)
@@ -42,13 +38,23 @@ def edit_user(request, user_id):
             'formUser': formularioUsuario
         })
     else:
-        print('aca se haria la edicion de la persona/usuario')
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        persona = get_object_or_404(Persona, pk=usuario.personaId.id)
+        formularioUsuario = EditarUsuario(request.POST, instance=usuario)
+        formularioPersona = EditarPersona(request.POST, instance=persona)
+        formularioPersona.save()
+        formularioUsuario.save()
+        return redirect('/')
 
 def delete_user(request):
     return HttpResponse("vista para eliminar usuario")
-=======
-def signup_user(request):
-    return HttpResponse("se creo el usuario")
+
+def delete_helper(request, helper_id):
+    print('entre')
+    ayudante = get_object_or_404(Ayudante, pk=helper_id)
+    ayudante.nombre_usuario = 'eliminado'
+    ayudante.save()
+    return redirect('/')
 
 
 def signup_helper(request):
@@ -62,17 +68,24 @@ def signup_helper(request):
         ayudante = Ayudante.objects.create(nombre_usuario=request.POST['nombre_usuario'], personaId=persona)
         ayudante.save()
         return redirect('/')
+    
+def list_helpers(request):
+    ayudantes = Ayudante.objects.exclude(nombre_usuario='eliminado')
+    return render(request, "listadoAyudantes.html", {
+        'ayudantes': ayudantes
+    })   
 
 def edit_intern(request, helper_id):
     if request.method == "GET":
-        intern = get_object_or_404(Ayudante, pk=helper_id)
+        ayudante = get_object_or_404(Ayudante, pk=helper_id)
+        persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
+        formularioPersona = EditarPersona(instance=persona)
         return render(request, "edit_intern.html", {
-            'form': ModificarInterno()
+            'formPerson': formularioPersona,
         })
     else:
-        persona = Persona.objects.create(nombre=request.POST['nombre'], apellido=request.POST['apellido'], contraseña=request.POST['contraseña'])
-        persona.save()
-        ayudante = Ayudante.objects.create(nombre_usuario=request.POST['nombre_usuario'], personaId=persona)
-        ayudante.save()
+        ayudante = get_object_or_404(Ayudante, pk=helper_id)
+        persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
+        formularioPersona = EditarPersona(request.POST, instance=persona)
+        formularioPersona.save()
         return redirect('/')
->>>>>>> Stashed changes

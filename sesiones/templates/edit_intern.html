@@ -1,8 +1,10 @@
+{% extends 'layouts/navBar.html' %}
+
 {% block content %}
 <form method="POST">
 
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ formPerson.as_p }}
 
     <button>
         Actualizar
