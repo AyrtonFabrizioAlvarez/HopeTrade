@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from sesiones.models import Persona, Usuario
+from sesiones.models import Persona, Usuario, Ayudante
 from datetime import date
+<<<<<<< Updated upstream
 from django.shortcuts import get_object_or_404
 from .forms import RegistroUsuario, EditarUsuario, EditarPersona
 from .models import Usuario, Persona
+=======
+from .forms import RegistroUsuario, RegistroAyudante, ModificarInterno
+>>>>>>> Stashed changes
 
 # Create your views here.
 def signup(request):
@@ -26,6 +30,7 @@ def list_users(request):
         'usuarios': usuarios
     })      
 
+<<<<<<< Updated upstream
 def edit_user(request, user_id):
     if request.method == "GET":
         usuario = get_object_or_404(Usuario, pk=user_id)
@@ -41,3 +46,33 @@ def edit_user(request, user_id):
 
 def delete_user(request):
     return HttpResponse("vista para eliminar usuario")
+=======
+def signup_user(request):
+    return HttpResponse("se creo el usuario")
+
+
+def signup_helper(request):
+    if request.method == "GET":
+        return render(request, "signup_helper.html", {
+            'form': RegistroAyudante()
+        })
+    else:
+        persona = Persona.objects.create(nombre=request.POST['nombre'], apellido=request.POST['apellido'], contraseña=request.POST['contraseña'])
+        persona.save()
+        ayudante = Ayudante.objects.create(nombre_usuario=request.POST['nombre_usuario'], personaId=persona)
+        ayudante.save()
+        return redirect('/')
+
+def edit_intern(request, helper_id):
+    if request.method == "GET":
+        intern = get_object_or_404(Ayudante, pk=helper_id)
+        return render(request, "edit_intern.html", {
+            'form': ModificarInterno()
+        })
+    else:
+        persona = Persona.objects.create(nombre=request.POST['nombre'], apellido=request.POST['apellido'], contraseña=request.POST['contraseña'])
+        persona.save()
+        ayudante = Ayudante.objects.create(nombre_usuario=request.POST['nombre_usuario'], personaId=persona)
+        ayudante.save()
+        return redirect('/')
+>>>>>>> Stashed changes
