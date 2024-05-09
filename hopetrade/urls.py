@@ -21,9 +21,14 @@ from sesiones import views as sesiones
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', intercambios.listar_intercambios),
-    path('intercambios/<str:prueba>', intercambios.prueba),
-    #REGISTRAR USUARIO
+    path('', intercambios.ver_landing_page),
+    path('intercambios/', intercambios.listar_intercambios),
+    #SESIONES
     path('signup/', sesiones.signup),
-    path('signup_user/', sesiones.signup_user)
+    path('users/', sesiones.list_users),
+    path('edit_user/<int:user_id>/', sesiones.edit_user),
+    path('delete_user/', sesiones.delete_user),
+    
+    #EJEMPLO CON PARAMETROS
+    path('intercambios2/<str:prueba>', intercambios.prueba),
 ]

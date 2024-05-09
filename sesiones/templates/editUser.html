@@ -4,10 +4,11 @@
 <form method="POST">
 
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ formPerson.as_p }}
+    {{ formUser.as_p }}
 
     <button>
-        Registrar
+        GUARDAR
     </button>
 
 </form>

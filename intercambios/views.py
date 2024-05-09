@@ -5,4 +5,7 @@ def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
 
 def listar_intercambios(request):
-    return render(request, "index.html")
+    return render(request, "intercambios.html")
+
+def ver_landing_page(request):
+    return render(request, 'landingPage.html')
