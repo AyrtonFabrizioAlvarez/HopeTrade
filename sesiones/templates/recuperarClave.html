@@ -1,0 +1,10 @@
+<h1>Recuperar contraseña</h1>
+
+{{error}}
+<form action="/signin/recuperarclave/" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button>
+        recuperar contraseña
+    </button>
+</form>

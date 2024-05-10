@@ -34,3 +34,5 @@ class ModificarInterno(forms.Form):
 class IniciarSesionUsuario(forms.Form):
     dni = forms.IntegerField()
     contraseña = forms.CharField()
+class RecuperarClave(forms.Form):
+    dni = forms.IntegerField()

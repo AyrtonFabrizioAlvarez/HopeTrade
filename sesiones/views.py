@@ -4,7 +4,7 @@ from sesiones.models import Persona, Usuario, Ayudante
 from datetime import date
 from django.shortcuts import get_object_or_404
 from .forms import RegistroUsuario, EditarUsuario, EditarPersona
-from .forms import IniciarSesionUsuario
+from .forms import IniciarSesionUsuario, RecuperarClave
 from .models import Usuario, Persona
 from .forms import RegistroUsuario, RegistroAyudante, ModificarInterno
 from django.core.mail import EmailMessage
@@ -103,46 +103,51 @@ def signin(request):
     if request.method == "GET":
         return render(request, "signin.html", {"form": IniciarSesionUsuario()})
     elif request.method == "POST":
-        form = IniciarSesionUsuario(request.POST)
-        if form.is_valid():
-            dnii = form.cleaned_data.get('dni')
-            password = form.cleaned_data.get('contraseña')
-            try:
-                user = Usuario.objects.get(dni=dnii)
-                persona = user.personaId
-
-                # Verificar que el usuario no este bloqueado
-                if persona.intentos < 3:
-                    # Verificar la contraseña del usuario
-                    if user.personaId.contraseña == password:
-                        # Iniciar sesión
-                        request.session['usuario_id'] = user.id
-                        persona.intentos = 0
-                        persona.save()
-                        return redirect("/")  # Redirigir a la página principal después del login
-                    else:
-                        # Contraseña incorrecta
-
-                        # Aumento la cantidad de intentos
-                        persona.intentos = persona.intentos + 1
-                        persona.save()
-                        if persona.intentos == 3:
-                            error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
-                            enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
-                        else:
-                            error = "El usuario y/o contraseña ingresados son incorrectos."
-                        return render(request, "signin.html", {"form": form, "error": error})
-                else:
-                    error = "El usuario con el que desea ingresar se encuentra bloqueado"
-                    return render(request, "signin.html", {"form": form, "error": error})
-                
-            except Usuario.DoesNotExist:
-                # Usuario no encontrado
-                error = "El usuario y/o contraseña ingresados son incorrectos."
-                return render(request, "signin.html", {"form": form, "error": error})
+        action = request.POST.get("action")
+        if action == "getpass":
+            # Si la acción es "getpass", redirige a la página de recuperación de contraseña
+            return redirect("signin/recuperarclave/")
         else:
-            # Formulario no válido
-            return render(request, "signin.html", {"form": form})  
+            form = IniciarSesionUsuario(request.POST)
+            if form.is_valid():
+                dnii = form.cleaned_data.get('dni')
+                password = form.cleaned_data.get('contraseña')
+                try:
+                    user = Usuario.objects.get(dni=dnii)
+                    persona = user.personaId
+
+                    # Verificar que el usuario no este bloqueado
+                    if persona.intentos < 3:
+                        # Verificar la contraseña del usuario
+                        if user.personaId.contraseña == password:
+                            # Iniciar sesión
+                            request.session['usuario_id'] = user.id
+                            persona.intentos = 0
+                            persona.save()
+                            return redirect("/")  # Redirigir a la página principal después del login
+                        else:
+                            # Contraseña incorrecta
+
+                            # Aumento la cantidad de intentos
+                            persona.intentos = persona.intentos + 1
+                            persona.save()
+                            if persona.intentos == 3:
+                                error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
+                                enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
+                            else:
+                                error = "El usuario y/o contraseña ingresados son incorrectos."
+                            return render(request, "signin.html", {"form": form, "error": error})
+                    else:
+                        error = "El usuario con el que desea ingresar se encuentra bloqueado"
+                        return render(request, "signin.html", {"form": form, "error": error})
+                    
+                except Usuario.DoesNotExist:
+                    # Usuario no encontrado
+                    error = "El usuario y/o contraseña ingresados son incorrectos."
+                    return render(request, "signin.html", {"form": form, "error": error})
+            else:
+                # Formulario no válido
+                return render(request, "signin.html", {"form": form})  
 
 def signout(request):
     if request.method == "GET":
@@ -156,3 +161,23 @@ def signout(request):
         elif action == "cancel":
             return redirect("/")
 
+def recuperar_contrasenia(request):
+    if request.method == "GET":
+        return render(request, "recuperarClave.html", {"form": RecuperarClave()})
+    elif request.method == "POST":
+        form = RecuperarClave(request.POST)
+        if form.is_valid():
+            dnii = form.cleaned_data.get('dni')
+            try:
+                user = Usuario.objects.get(dni=dnii)
+                persona = user.personaId
+                contrasenia = persona.contraseña
+                subject = f"¡Hola!, tu contraseña para poder ingresar a Hope Trade es {contrasenia}"
+                enviar_mail("Tu contraseña de Hope Trade", subject, user.email, persona.nombre)
+                return render(request, "recuperarClave.html", {"form": RecuperarClave()})
+            except Usuario.DoesNotExist:
+                error = "El usuario ingresado no existe en el sistema"
+                return render(request, "recuperarClave.html", {"form": RecuperarClave(), "error": error})
+        else:
+            # Formulario no válido
+            return render(request, "signin.html", {"form": form})  

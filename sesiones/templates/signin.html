@@ -5,7 +5,6 @@
 <form action="/signin/" method="POST">
     {% csrf_token %}
     {{form}}
-    <button>
-        Iniciar Sesion
-    </button>
+    <button type="submit" name="action" value="signin">Iniciar Sesion</button>
 </form>
+<a href="/signin/recuperarclave/">¿Olvidaste tu contraseña?</a>

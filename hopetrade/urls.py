@@ -29,6 +29,7 @@ urlpatterns = [
     path('edit_user/<int:user_id>/', sesiones.edit_user),
     path('delete_user/', sesiones.delete_user),
     path('signin/', sesiones.signin),
+    path('signin/recuperarclave/', sesiones.recuperar_contrasenia),
     path('signout/', sesiones.signout),
 
     #EJEMPLO CON PARAMETROS
