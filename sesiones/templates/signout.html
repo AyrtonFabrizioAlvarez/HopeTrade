@@ -1,0 +1,11 @@
+<h1>Cerrar Sesion</h1>
+
+<p>
+    ¿Estas seguro que deseas cerrar sesion?
+</p>
+
+<form action="/signout/" method="POST">
+    {% csrf_token %}
+    <button type="submit" name="action" value="confirm">Aceptar</button>
+    <button type="submit" name="action" value="cancel">Cancelar</button>
+</form>

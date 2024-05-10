@@ -25,15 +25,14 @@ urlpatterns = [
     path('intercambios/', intercambios.listar_intercambios),
     #SESIONES
     path('signup/', sesiones.signup),
-<<<<<<< Updated upstream
     path('users/', sesiones.list_users),
     path('edit_user/<int:user_id>/', sesiones.edit_user),
     path('delete_user/', sesiones.delete_user),
-    
+    path('signin/', sesiones.signin),
+    path('signout/', sesiones.signout),
+
     #EJEMPLO CON PARAMETROS
     path('intercambios2/<str:prueba>', intercambios.prueba),
-=======
     path('signup_user/', sesiones.signup_user),
     path('signup_helper/', sesiones.signup_helper)
->>>>>>> Stashed changes
 ]

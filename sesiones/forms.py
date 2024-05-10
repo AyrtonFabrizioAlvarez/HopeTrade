@@ -10,7 +10,6 @@ class RegistroUsuario(forms.Form):
     email = forms.EmailField()
     fecha_nac = forms.DateField()
     
-<<<<<<< Updated upstream
 class EditarPersona(ModelForm):
     class Meta:
         model = Persona
@@ -21,7 +20,6 @@ class EditarUsuario(ModelForm):
         model = Usuario
         fields = ['email']
     
-=======
 class RegistroAyudante(forms.Form):
     nombre = forms.CharField(label="nombre", max_length=25)
     apellido = forms.CharField(label="apellido", max_length=25, required=True)
@@ -32,4 +30,7 @@ class ModificarInterno(forms.Form):
     nombre = forms.CharField(label="nombre", max_length=25)
     apellido = forms.CharField(label="apellido", max_length=25, required=True)
     contraseña = forms.CharField()
->>>>>>> Stashed changes
+
+class IniciarSesionUsuario(forms.Form):
+    dni = forms.IntegerField()
+    contraseña = forms.CharField()
