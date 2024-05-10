@@ -1,14 +1,32 @@
 {% extends 'layouts/navBar.html' %}
 
 {% block content %}
-<form method="POST">
+    <form method="POST">
 
-    {% csrf_token %}
-    {{ form.as_p }}
+        {% csrf_token %}
+        {{ persona_form.as_p }}
+        {{ ayudante_form.as_p }}
 
-    <button>
-        Registrar
-    </button>
+        <button>
+            Registrar
+        </button>
 
-</form>
+    </form>
+
+    {% if form.errors %}
+        <div class="errors">
+            <p>Hubo algunos errores en el formulario:</p>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
 {% endblock %}

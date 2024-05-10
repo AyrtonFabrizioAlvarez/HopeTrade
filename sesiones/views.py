@@ -3,9 +3,8 @@ from django.http import HttpResponse
 from sesiones.models import Persona, Usuario, Ayudante
 from datetime import date
 from django.shortcuts import get_object_or_404
-from .forms import RegistroUsuario, EditarUsuario, EditarPersona
+from .forms import RegistroUsuario, EditarUsuario, EditarPersonaForm, AyudanteForm, PersonaForm
 from .models import Usuario, Persona, Ayudante
-from .forms import RegistroUsuario, RegistroAyudante, ModificarInterno
 
 # Create your views here.
 def signup(request):
@@ -32,7 +31,7 @@ def edit_user(request, user_id):
         usuario = get_object_or_404(Usuario, pk=user_id)
         persona = get_object_or_404(Persona, pk=usuario.personaId.id)
         formularioUsuario = EditarUsuario(instance=usuario)
-        formularioPersona = EditarPersona(instance=persona)
+        formularioPersona = EditarPersonaForm(instance=persona)
         return render(request, "editUser.html", {
             'formPerson': formularioPersona,
             'formUser': formularioUsuario
@@ -41,7 +40,7 @@ def edit_user(request, user_id):
         usuario = get_object_or_404(Usuario, pk=user_id)
         persona = get_object_or_404(Persona, pk=usuario.personaId.id)
         formularioUsuario = EditarUsuario(request.POST, instance=usuario)
-        formularioPersona = EditarPersona(request.POST, instance=persona)
+        formularioPersona = EditarPersonaForm(request.POST, instance=persona)
         formularioPersona.save()
         formularioUsuario.save()
         return redirect('/')
@@ -58,16 +57,20 @@ def delete_helper(request, helper_id):
 
 
 def signup_helper(request):
-    if request.method == "GET":
-        return render(request, "signup_helper.html", {
-            'form': RegistroAyudante()
-        })
+    if request.method == 'POST':
+        persona_form = PersonaForm(request.POST)
+        ayudante_form = AyudanteForm(request.POST)
+        if persona_form.is_valid() and ayudante_form.is_valid():
+            persona = persona_form.save()
+            ayudante = ayudante_form.save(commit=False)
+            ayudante.personaId = persona
+            ayudante.save()
+            return redirect('/')
     else:
-        persona = Persona.objects.create(nombre=request.POST['nombre'], apellido=request.POST['apellido'], contraseña=request.POST['contraseña'])
-        persona.save()
-        ayudante = Ayudante.objects.create(nombre_usuario=request.POST['nombre_usuario'], personaId=persona)
-        ayudante.save()
-        return redirect('/')
+        persona_form = PersonaForm()
+        ayudante_form = AyudanteForm()
+
+    return render(request, 'signup_helper.html', {'persona_form': persona_form, 'ayudante_form': ayudante_form})
     
 def list_helpers(request):
     ayudantes = Ayudante.objects.exclude(nombre_usuario='eliminado')
@@ -76,16 +79,19 @@ def list_helpers(request):
     })   
 
 def edit_intern(request, helper_id):
-    if request.method == "GET":
-        ayudante = get_object_or_404(Ayudante, pk=helper_id)
-        persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
-        formularioPersona = EditarPersona(instance=persona)
-        return render(request, "edit_intern.html", {
-            'formPerson': formularioPersona,
-        })
-    else:
-        ayudante = get_object_or_404(Ayudante, pk=helper_id)
-        persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
-        formularioPersona = EditarPersona(request.POST, instance=persona)
-        formularioPersona.save()
-        return redirect('/')
+    ayudante = get_object_or_404(Ayudante, pk=helper_id)
+    persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
+    persona_form = EditarPersonaForm(instance=persona)
+    if request.method == 'POST':
+        nueva_persona_form = EditarPersonaForm(request.POST)
+        if nueva_persona_form.is_valid():
+            persona = persona_form.save(commit=False)
+            persona.nombre = request.POST['nombre']
+            persona.apellido = request.POST['apellido']
+            persona.contraseña = request.POST['contraseña']
+            persona.save()
+            return redirect('/')
+        else:
+            persona_form = nueva_persona_form
+
+    return render(request, 'edit_intern.html', {'formPerson': persona_form})
