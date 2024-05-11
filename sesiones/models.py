@@ -6,6 +6,7 @@ class Persona(models.Model):
     nombre = models.TextField()
     apellido = models.TextField()
     contraseña = models.TextField()
+    intentos = models.IntegerField()
 
 class Administrador(models.Model):
     nombre_usuario = models.TextField()

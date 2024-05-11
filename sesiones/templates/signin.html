@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Registrar Usuario</title>
+{% endblock title %}
+
+{% block title %}
+<h1>Iniciar Sesion</h1>
+
+{{error}}
+<form action="/signin/" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" name="action" value="signin">Iniciar Sesion</button>
+</form>
+<a href="/signin/recuperarclave/">¿Olvidaste tu contraseña?</a>
+{% endblock title %}

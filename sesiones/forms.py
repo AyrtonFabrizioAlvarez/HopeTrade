@@ -118,3 +118,9 @@ class EditarAyudanteForm(forms.ModelForm):
 
     nombre_usuario = forms.CharField(disabled=True)
             
+
+class IniciarSesionUsuario(forms.Form):
+    dni = forms.IntegerField()
+    contraseña = forms.CharField()
+class RecuperarClave(forms.Form):
+    dni = forms.IntegerField()
