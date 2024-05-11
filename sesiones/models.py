@@ -16,7 +16,7 @@ class Ayudante(models.Model):
     personaId = models.ForeignKey(Persona, on_delete=models.CASCADE)
 
 class Usuario(models.Model):
-    dni = models.BigIntegerField()
+    dni = models.IntegerField()
     email = models.EmailField()
     fecha_nac = models.DateField()
     reputacion = models.FloatField()

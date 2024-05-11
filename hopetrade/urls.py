@@ -15,23 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from intercambios import views as intercambios
+from django.urls import path, include
 from sesiones import views as sesiones
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', intercambios.ver_landing_page),
-    path('intercambios/', intercambios.listar_intercambios),
-    #SESIONES
-    path('signup/', sesiones.signup),
-    path('signup_helper/', sesiones.signup_helper),
-    path('users/', sesiones.list_users),
-    path('helpers/', sesiones.list_helpers),
-    path('edit_user/<int:user_id>/', sesiones.edit_user, name='edit_user'),
-    path('edit_intern/<int:helper_id>', sesiones.edit_intern, name='edit_intern'),
-    path('delete_helper/<int:helper_id>', sesiones.delete_helper, name='delete_helper'),
+    path('sesiones/', include(('sesiones.urls', 'sesiones'))),
+    #path('publicaciones/', include(('publicaciones.urls', 'publicaciones'))),
+    path('intercambios/', include(('intercambios.urls', 'intercambios'))),
+    path('', sesiones.ver_landing_page),
     
-    #EJEMPLO CON PARAMETROS
-    path('intercambios2/<str:prueba>', intercambios.prueba),
 ]
