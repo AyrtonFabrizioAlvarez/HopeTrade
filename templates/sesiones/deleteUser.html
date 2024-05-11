@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Eliminar Usuario</title>
+{% endblock title %}
+{% block content %}
+<form method="POST">
+
+    {% csrf_token %}
+
+    <h2>¿Seguro que desea eliminar al usuario {{ usuario.personaId.nombre }} {{ usuario.personaId.apellido }}?</h2>
+    <form method="POST">
+        <button type="submit" class="btn btn-danger">
+            Eliminar
+        </button>
+    </form>
+
+    <form action="{% url 'sesiones:list_users' %}" method="GET">
+        <button type="submit" class="btn btn-secondary">
+                Cancelar
+        </button>
+    </form>
+
+</form>
+
+    
+{% endblock content %}
+

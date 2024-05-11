@@ -6,6 +6,3 @@ def prueba(request, prueba):
 
 def listar_intercambios(request):
     return render(request, "intercambios.html")
-
-def ver_landing_page(request):
-    return render(request, 'landingPage.html')
