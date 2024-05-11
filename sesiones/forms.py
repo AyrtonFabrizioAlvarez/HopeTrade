@@ -110,4 +110,11 @@ class EditarUsuarioForm(ModelForm):
         if Usuario.objects.filter(email=email).exclude(dni=self.data['dni']).exists():
             raise forms.ValidationError("El email que desea ingresar ya se encuentra registrado en el sistema.")
         return email
+    
+class EditarAyudanteForm(forms.ModelForm):
+    class Meta:
+        model = Ayudante
+        fields = ['nombre_usuario']
+
+    nombre_usuario = forms.CharField(disabled=True)
             
