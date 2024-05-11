@@ -116,6 +116,8 @@ def delete_user(request, user_id):
     
 def list_helpers(request):
     ayudantes = Ayudante.objects.exclude(nombre_usuario='eliminado')
+    if not ayudantes:
+        return HttpResponse("No existen ayudantes en el sistema")
     return render(request, "listadoAyudantes.html", {
         'ayudantes': ayudantes
     })   
