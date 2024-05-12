@@ -8,7 +8,7 @@
 <h1>Iniciar Sesion</h1>
 
 {{error}}
-<form action="/signin/" method="POST">
+<form action="{% url 'sesiones:signin' %}" method="POST">
     {% csrf_token %}
     {{form}}
     <button  type="submit" class="btn btn-lg btn-primary" name="action" value="signin">Iniciar Sesion</button>

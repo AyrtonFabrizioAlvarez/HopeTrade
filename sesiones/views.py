@@ -30,6 +30,7 @@ def signup(request):
         if persona_form.is_valid() and usuario_form.is_valid():
             persona = persona_form.save(commit=False)
             persona.intentos = 0
+            persona.rol = 'usuario'
             persona.save()
             usuario = usuario_form.save(commit=False)
             usuario.personaId = persona
@@ -92,6 +93,7 @@ def signup_helper(request):
         ayudante_form = AyudanteForm(request.POST)
         if persona_form.is_valid() and ayudante_form.is_valid():
             persona = persona_form.save(commit=False)
+            persona.rol = 'ayudante'
             persona.intentos = 0
             persona.save()
             ayudante = ayudante_form.save(commit=False)
@@ -178,7 +180,7 @@ def signin(request):
         if action == "getpass":
             # Si la acción es "getpass", redirige a la página de recuperación de contraseña
             return redirect("/sesiones/recuperarclave.html")
-        else:
+        elif action == "signin":
             form = IniciarSesionUsuario(request.POST)
             if form.is_valid():
                 dnii = form.cleaned_data.get('dni')

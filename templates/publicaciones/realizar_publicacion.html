@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Realizar Publicacion</title>
+{% endblock title %}
+{% block content %}
+<h1>Nueva Publicacion<h1></h1>
+{{error}}
+
+<form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" name="action" value="guardar">Realizar Publicacion</button>
+
+</form>
+<a href="{% url 'publicaciones:cancelar_operacion' %}" id="cancelar_operacion">Cancelar</a>
+{% endblock %}

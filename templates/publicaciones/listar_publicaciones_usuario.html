@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Publicaciones de Usuario</title>
+{% endblock title %}
+{% block content %}
+<form method="POST">
+    <h1>Publicaciones</h1>
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% else %}
+        {% csrf_token %}
+        <ul>
+            {% for publicacion in publicacionesUsuario %}
+                <li>
+                    <h2>titulo: {{ publicacion.titulo }}</h2>
+                    <p>descripcion: {{ publicacion.descripcion }}</p>
+                        
+                    <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}">Ver</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-primary">Crear nueva publicación</a>
+    {% endif %}
+
+</form>
+{% endblock %}

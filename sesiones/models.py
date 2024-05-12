@@ -7,6 +7,7 @@ class Persona(models.Model):
     apellido = models.TextField()
     contraseña = models.TextField()
     intentos = models.IntegerField()
+    rol = models.TextField()
 
 class Administrador(models.Model):
     nombre_usuario = models.TextField()
