@@ -28,8 +28,9 @@ def signup(request):
         print(persona_form.is_valid())
         print(usuario_form.is_valid())
         if persona_form.is_valid() and usuario_form.is_valid():
-            print('es valido')
-            persona = persona_form.save()
+            persona = persona_form.save(commit=False)
+            persona.intentos = 0
+            persona.save()
             usuario = usuario_form.save(commit=False)
             usuario.personaId = persona
             usuario.reputacion = 0.0
@@ -44,7 +45,7 @@ def signup(request):
   
   
 def list_users(request):
-    usuarios = Usuario.objects.all()
+    usuarios = Usuario.objects.exclude(email='eliminado')
     return render(request, "sesiones/listadoUsuarios.html", {
         'usuarios': usuarios
     })      
@@ -77,11 +78,12 @@ def edit_user(request, user_id):
 
 
 def delete_helper(request, helper_id):
-    print('entre')
     ayudante = get_object_or_404(Ayudante, pk=helper_id)
-    ayudante.nombre_usuario = 'eliminado'
-    ayudante.save()
-    return redirect('/')
+    if request.method == "POST":
+        ayudante.nombre_usuario = 'eliminado'
+        ayudante.save()
+        return redirect('sesiones:list_helpers')
+    return render(request, 'sesiones/deleteHelper.html', { 'ayudante': ayudante })
 
 
 def signup_helper(request):
@@ -89,7 +91,9 @@ def signup_helper(request):
         persona_form = PersonaForm(request.POST)
         ayudante_form = AyudanteForm(request.POST)
         if persona_form.is_valid() and ayudante_form.is_valid():
-            persona = persona_form.save()
+            persona = persona_form.save(commit=False)
+            persona.intentos = 0
+            persona.save()
             ayudante = ayudante_form.save(commit=False)
             ayudante.personaId = persona
             ayudante.save()
@@ -98,7 +102,7 @@ def signup_helper(request):
         persona_form = PersonaForm()
         ayudante_form = AyudanteForm()
 
-    return render(request, 'signup_helper.html', {'persona_form': persona_form, 'ayudante_form': ayudante_form})
+    return render(request, 'sesiones/signup_helper.html', {'persona_form': persona_form, 'ayudante_form': ayudante_form})
 
     
 def delete(request):
@@ -109,16 +113,16 @@ def delete(request):
 def delete_user(request, user_id):
     usuario = get_object_or_404(Usuario, pk=user_id)
     if request.method == "POST":
-        usuario.delete()
+        usuario.dni = 0
+        usuario.email = 'eliminado'
+        usuario.save()
         return redirect('sesiones:list_users')
     return render(request, 'sesiones/deleteUser.html', { 'usuario': usuario })
 
     
 def list_helpers(request):
     ayudantes = Ayudante.objects.exclude(nombre_usuario='eliminado')
-    if not ayudantes:
-        return HttpResponse("No existen ayudantes en el sistema")
-    return render(request, "listadoAyudantes.html", {
+    return render(request, "sesiones/listadoAyudantes.html", {
         'ayudantes': ayudantes
     })   
 
@@ -139,7 +143,7 @@ def edit_intern(request, helper_id):
         else:
             persona_form = nueva_persona_form
 
-    return render(request, 'edit_intern.html', {'formPerson': persona_form, 'formAyudante': ayudante_form})
+    return render(request, 'sesiones/edit_intern.html', {'formPerson': persona_form, 'formAyudante': ayudante_form})
 
 
 def enviar_mail(subject, message, to_email, nombre):
@@ -148,7 +152,7 @@ def enviar_mail(subject, message, to_email, nombre):
     subject = subject
     message = message 
 
-    template = render_to_string("email_template.html", {
+    template = render_to_string("sesiones/email_template.html", {
         "name": name,
         "email": mail,
         "message": message
@@ -168,12 +172,12 @@ def enviar_mail(subject, message, to_email, nombre):
 
 def signin(request):
     if request.method == "GET":
-        return render(request, "signin.html", {"form": IniciarSesionUsuario()})
+        return render(request, "sesiones/signin.html", {"form": IniciarSesionUsuario()})
     elif request.method == "POST":
         action = request.POST.get("action")
         if action == "getpass":
             # Si la acción es "getpass", redirige a la página de recuperación de contraseña
-            return redirect("signin/recuperarclave/")
+            return redirect("/sesiones/recuperarclave.html")
         else:
             form = IniciarSesionUsuario(request.POST)
             if form.is_valid():
@@ -203,22 +207,22 @@ def signin(request):
                                 enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
                             else:
                                 error = "El usuario y/o contraseña ingresados son incorrectos."
-                            return render(request, "signin.html", {"form": form, "error": error})
+                            return render(request, "sesiones/signin.html", {"form": form, "error": error})
                     else:
                         error = "El usuario con el que desea ingresar se encuentra bloqueado"
-                        return render(request, "signin.html", {"form": form, "error": error})
+                        return render(request, "sesiones/signin.html", {"form": form, "error": error})
                     
                 except Usuario.DoesNotExist:
                     # Usuario no encontrado
                     error = "El usuario y/o contraseña ingresados son incorrectos."
-                    return render(request, "signin.html", {"form": form, "error": error})
+                    return render(request, "sesiones/signin.html", {"form": form, "error": error})
             else:
                 # Formulario no válido
-                return render(request, "signin.html", {"form": form})  
+                return render(request, "sesiones/signin.html", {"form": form})  
 
 def signout(request):
     if request.method == "GET":
-        return render(request, "signout.html")
+        return render(request, "sesiones/signout.html")
     elif request.method == "POST":
         action = request.POST.get("action")
         if action == "confirm":
@@ -230,7 +234,7 @@ def signout(request):
 
 def recuperar_contrasenia(request):
     if request.method == "GET":
-        return render(request, "recuperarClave.html", {"form": RecuperarClave()})
+        return render(request, "sesiones/recuperarClave.html", {"form": RecuperarClave()})
     elif request.method == "POST":
         form = RecuperarClave(request.POST)
         if form.is_valid():
@@ -241,10 +245,10 @@ def recuperar_contrasenia(request):
                 contrasenia = persona.contraseña
                 subject = f"¡Hola!, tu contraseña para poder ingresar a Hope Trade es {contrasenia}"
                 enviar_mail("Tu contraseña de Hope Trade", subject, user.email, persona.nombre)
-                return render(request, "recuperarClave.html", {"form": RecuperarClave()})
+                return render(request, "sesiones/recuperarClave.html", {"form": RecuperarClave()})
             except Usuario.DoesNotExist:
                 error = "El usuario ingresado no existe en el sistema"
-                return render(request, "recuperarClave.html", {"form": RecuperarClave(), "error": error})
+                return render(request, "sesiones/recuperarClave.html", {"form": RecuperarClave(), "error": error})
         else:
             # Formulario no válido
-            return render(request, "signin.html", {"form": form})  
+            return render(request, "sesiones/signin.html", {"form": form})  
