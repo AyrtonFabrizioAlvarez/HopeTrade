@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
 {% block title %}
-        <title>Registrar Usuario</title>
+        <title>Cerrar Sesion</title>
 {% endblock title %}
 
-{% block title %}
+{% block content %}
 <h1>Cerrar Sesion</h1>
 
 <p>
     ¿Estas seguro que deseas cerrar sesion?
 </p>
 
-<form action="/signout/" method="POST">
+<form action="sesiones/signout/" method="POST">
     {% csrf_token %}
     <button type="submit" name="action" value="confirm">Aceptar</button>
     <button type="submit" name="action" value="cancel">Cancelar</button>
 </form>
-{% endblock title %}
+{% endblock content %}

@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}
-        <title>Registrar Usuario</title>
+        <title>Recuperar Clave</title>
 {% endblock title %}
 
-{% block title %}
+{% block content %}
 <h1>Recuperar contraseña</h1>
 
 {{error}}
-<form action="/signin/recuperarclave/" method="POST">
+<form action="{% url 'sesiones:recuperar_contrasenia' %}" method="POST">
     {% csrf_token %}
     {{form}}
     <button>
         recuperar contraseña
     </button>
 </form>
-{% endblock title %}
+{% endblock content %}
