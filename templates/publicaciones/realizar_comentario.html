@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Comentario</title>
+{% endblock title %}
+{% block content %}
+    <h1>Nuevo Comentario<h1>
+    <form method="POST">
+    
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Comentar</button>
+    
+    </form>
+    {% endblock %}

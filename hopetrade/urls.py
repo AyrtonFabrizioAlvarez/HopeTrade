@@ -21,7 +21,7 @@ from sesiones import views as sesiones
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sesiones/', include(('sesiones.urls', 'sesiones'))),
-    #path('publicaciones/', include(('publicaciones.urls', 'publicaciones'))),
+    path('publicaciones/', include(('publicaciones.urls', 'publicaciones'))),
     path('intercambios/', include(('intercambios.urls', 'intercambios'))),
     path('', sesiones.ver_landing_page),
     
