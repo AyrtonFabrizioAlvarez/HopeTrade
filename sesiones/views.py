@@ -4,7 +4,7 @@ from sesiones.models import Persona, Usuario, Ayudante
 from django.shortcuts import get_object_or_404
 from .forms import IniciarSesionUsuario, RecuperarClave
 from .forms import PersonaForm, UsuarioForm, AyudanteForm, EditarUsuarioForm, EditarPersonaForm, EditarAyudanteForm
-from .models import Persona, Usuario, Ayudante
+from .models import Persona, Usuario, Ayudante, Administrador
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from hopetrade import settings
@@ -183,53 +183,118 @@ def signin(request):
         elif action == "signin":
             form = IniciarSesionUsuario(request.POST)
             if form.is_valid():
-                dnii = form.cleaned_data.get('dni')
+                clave = form.cleaned_data.get('usuario')
                 password = form.cleaned_data.get('contraseña')
-                try:
-                    user = Usuario.objects.get(dni=dnii)
-                    persona = user.personaId
 
-                    # Verificar que el usuario no este bloqueado
-                    if persona.intentos < 3:
-                        # Verificar la contraseña del usuario
-                        if user.personaId.contraseña == password:
-                            # Iniciar sesión
-                            request.session['usuario_id'] = user.id
-                            persona.intentos = 0
-                            persona.save()
-                            return redirect("/")  # Redirigir a la página principal después del login
-                        else:
-                            # Contraseña incorrecta
+                # Compruebo si la clave es un dni o nombre de usuario
+                if (clave.isdigit()):
+                    return inicio_sesion_usuario(request, clave, password, form)
+                else:
+                    return inicio_sesion_interno(request, clave, password, form)
 
-                            # Aumento la cantidad de intentos
-                            persona.intentos = persona.intentos + 1
-                            persona.save()
-                            if persona.intentos == 3:
-                                error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
-                                enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
-                            else:
-                                error = "El usuario y/o contraseña ingresados son incorrectos."
-                            return render(request, "sesiones/signin.html", {"form": form, "error": error})
-                    else:
-                        error = "El usuario con el que desea ingresar se encuentra bloqueado"
-                        return render(request, "sesiones/signin.html", {"form": form, "error": error})
-                    
-                except Usuario.DoesNotExist:
-                    # Usuario no encontrado
-                    error = "El usuario y/o contraseña ingresados son incorrectos."
-                    return render(request, "sesiones/signin.html", {"form": form, "error": error})
             else:
                 # Formulario no válido
                 return render(request, "sesiones/signin.html", {"form": form})  
+               
 
+def inicio_sesion_usuario(request, clave, password, form):
+    try:
+        user = Usuario.objects.get(dni=clave)
+        persona = user.personaId
+
+        # Verificar que el usuario no este bloqueado
+        if persona.intentos < 3:
+            # Verificar la contraseña del usuario
+            if user.personaId.contraseña == password:
+                # Iniciar sesión
+                request.session['usuario_id'] = persona.id
+                request.session['rol'] = 'usuario'
+                print(request.session['usuario_id'])
+                persona.intentos = 0
+                persona.save()
+                return redirect("/")  # Redirigir a la página principal después del login
+            else:
+                # Contraseña incorrecta
+
+                # Aumento la cantidad de intentos
+                persona.intentos = persona.intentos + 1
+                persona.save()
+                if persona.intentos == 3:
+                    error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
+                    enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
+                else:
+                    error = "El usuario y/o contraseña ingresados son incorrectos."
+                return render(request, "sesiones/signin.html", {"form": form, "error": error})
+        else:
+            error = "El usuario con el que desea ingresar se encuentra bloqueado"
+            return render(request, "sesiones/signin.html", {"form": form, "error": error})
+        
+    except Usuario.DoesNotExist:
+        # Usuario no encontrado
+        error = "El usuario y/o contraseña ingresados son incorrectos."
+        return render(request, "sesiones/signin.html", {"form": form, "error": error})
+
+def inicio_sesion_interno(request, clave, password, form):
+    try:
+        ayudante = Ayudante.objects.get(nombre_usuario=clave)
+        persona = ayudante.personaId
+
+        # Verificar que el usuario no este bloqueado
+        #if persona.intentos < 3:
+            # Verificar la contraseña del usuario
+        if persona.contraseña == password:
+                # Iniciar sesión
+                request.session['usuario_id'] = persona.id
+                request.session['rol'] = 'ayudante'
+                print(request.session['usuario_id'])
+                #persona.intentos = 0
+                #persona.save()
+                return redirect("/")  # Redirigir a la página principal después del login
+        else:
+                # Contraseña incorrecta
+
+                # Aumento la cantidad de intentos
+                #persona.intentos = persona.intentos + 1
+                #persona.save()
+                #if persona.intentos == 3:
+                #    error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
+                #    enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
+                #else:
+                error = "El usuario y/o contraseña ingresados son incorrectos."
+                return render(request, "sesiones/signin.html", {"form": form, "error": error})
+        #else:
+          #  error = "El usuario con el que desea ingresar se encuentra bloqueado"
+           # return render(request, "sesiones/signin.html", {"form": form, "error": error})
+        
+    except Ayudante.DoesNotExist:
+        # Usuario no encontrado
+        try:
+            admin = Administrador.objects.get(nombre_usuario=clave)
+            persona = admin.personaId
+            if persona.contraseña == password:
+                # Iniciar sesión
+                request.session['usuario_id'] = persona.id
+                request.session['rol'] = 'administrador'
+                print(request.session['usuario_id'])
+                return redirect("/")  
+            else:
+                error = "El usuario y/o contraseña ingresados son incorrectos."
+                return render(request, "sesiones/signin.html", {"form": form, "error": error})
+        except Administrador.DoesNotExist:
+            error = "El usuario y/o contraseña ingresados son incorrectos."
+            return render(request, "sesiones/signin.html", {"form": form, "error": error})
+        
 def signout(request):
     if request.method == "GET":
         return render(request, "sesiones/signout.html")
     elif request.method == "POST":
         action = request.POST.get("action")
         if action == "confirm":
-            request.session['usuario_id'] = -1
-            print(request.session['usuario_id'])
+            request.session.clear()
+            
+            persona_id = request.session.get('usuario_id', None)
+            print(persona_id)
+            
             return redirect("/")
         elif action == "cancel":
             return redirect("/")

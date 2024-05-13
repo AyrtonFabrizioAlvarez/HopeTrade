@@ -11,7 +11,7 @@
     ¿Estas seguro que deseas cerrar sesion?
 </p>
 
-<form action="sesiones/signout/" method="POST">
+<form action="{% url 'sesiones:signout' %}" method="POST">
     {% csrf_token %}
     <button type="submit" name="action" value="confirm">Aceptar</button>
     <button type="submit" name="action" value="cancel">Cancelar</button>
