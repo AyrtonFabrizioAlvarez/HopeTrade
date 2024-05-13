@@ -27,21 +27,31 @@
                 </ul>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
-                    </li>
+                    {% if request.session.usuario_id %}
+                        {% if request.session.rol == "ayudante" or request.session.rol == "administrador" %}
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
-                    </li>
+                    {% if request.session.usuario_id %}
+                        {% if request.session.rol == "ayudante" or request.session.rol == "administrador" %}
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
-                    </li>
+                    {% if request.session.usuario_id %}
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
+                        </li>
+                    {% endif %}
                 </ul>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -51,22 +61,30 @@
                 </ul>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
-                    </li>
+                    {% if request.session.usuario_id %}
+                        {% if request.session.rol == "ayudante" %}
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
 
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if request.session.usuario_id is none %}
                     <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/sesiones/signin/">Iniciar Sesion</a>
                     </li>
+                    {% endif %}
                 </ul>
-
+                
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if request.session.usuario_id %}
                     <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/sesiones/signout/">Cerrar Sesion</a>
                     </li>
+                    {% endif %}
                 </ul>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
