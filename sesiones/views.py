@@ -223,7 +223,7 @@ def inicio_sesion_usuario(request, clave, password, form):
                 persona.save()
                 if persona.intentos == 3:
                     error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
-                    enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
+                    enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada, para desbloquearla ve al inicio de sesión, presione '¿Olvidaste tu contraseña?', ingrese su DNI, presiona 'Recuperar contraseña' y nosotros te enviaremos otro mail para recuperarla ", user.email, persona.nombre)
                 else:
                     error = "El usuario y/o contraseña ingresados son incorrectos."
                 return render(request, "sesiones/signin.html", {"form": form, "error": error})
