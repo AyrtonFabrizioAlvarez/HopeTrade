@@ -8,6 +8,8 @@ from .models import Persona, Usuario, Ayudante, Administrador
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from hopetrade import settings
+import random
+import string
 
 # Create your views here.
 def ver_landing_page(request):
@@ -309,6 +311,10 @@ def recuperar_contrasenia(request):
             try:
                 user = Usuario.objects.get(dni=dnii)
                 persona = user.personaId
+                if (persona.intentos == 3):
+                    persona.contraseña = generate_otp(8)
+                    persona.intentos = 0
+                    persona.save()
                 contrasenia = persona.contraseña
                 subject = f"¡Hola!, tu contraseña para poder ingresar a Hope Trade es {contrasenia}"
                 enviar_mail("Tu contraseña de Hope Trade", subject, user.email, persona.nombre)
@@ -319,3 +325,10 @@ def recuperar_contrasenia(request):
         else:
             # Formulario no válido
             return render(request, "sesiones/signin.html", {"form": form})  
+
+def generate_otp(length):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    otp = "".join(random.choice(characters) for _ in range(length))
+    return otp
+
+otp_code = generate_otp(10)
