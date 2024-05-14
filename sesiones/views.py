@@ -78,11 +78,13 @@ def edit_user(request, user_id):
 def view_profile_user(request, user_id):
     usuario = get_object_or_404(Usuario, pk=user_id)
     persona = get_object_or_404(Persona, pk=usuario.personaId.id)
+    print(request.session['usuario_id'])
+    print(persona.id)
     fecha_nac_formateada = usuario.fecha_nac.strftime('%d/%m/%Y')
     formulario_usuario = UsuarioForm(instance=usuario)
     formulario_persona = PersonaForm(instance=persona)
     return render(request, "sesiones/view_profile_user.html", {'form_persona': formulario_persona,'form_usuario': formulario_usuario,
-    'fecha_nac': fecha_nac_formateada, 'id':user_id})
+    'fecha_nac': fecha_nac_formateada, 'id':user_id, 'persona_id':persona.id})
     
 def view_profile_helper(request, helper_id):
     ayudante = get_object_or_404(Ayudante, pk=helper_id)
