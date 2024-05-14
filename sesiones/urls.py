@@ -7,6 +7,8 @@ urlpatterns = [
     path('edit_user/<int:user_id>/', views.edit_user, name='edit_user'),
     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
     path('delete/', views.delete, name='delete'),
+    path('view_profile_user/<int:user_id>', views.view_profile_user, name='view_profile_user'),
+    path('view_profile_helper/<int:helper_id>', views.view_profile_helper, name='view_profile_helper'),
     
     #MILENA
     path('signin/', views.signin, name='signin'),

@@ -24,11 +24,8 @@ def signup(request):
             'form_usuario': usuario_form
         })
     else:
-        print(request.POST)
         persona_form = PersonaForm(request.POST)
         usuario_form = UsuarioForm(request.POST)
-        print(persona_form.is_valid())
-        print(usuario_form.is_valid())
         if persona_form.is_valid() and usuario_form.is_valid():
             persona = persona_form.save(commit=False)
             persona.intentos = 0
@@ -64,9 +61,8 @@ def edit_user(request, user_id):
     else:
         formulario_usuario_nuevo = EditarUsuarioForm(request.POST, instance=usuario)
         formulario_persona_nueva = EditarPersonaForm(request.POST, instance=persona)
-        print(formulario_usuario_nuevo)
+        print(request.POST)
         if formulario_usuario_nuevo.is_valid() and formulario_persona_nueva.is_valid():
-            print('es valido')
             formulario_persona_nueva.save()
             formulario_usuario_nuevo.save()
             return redirect('/')
@@ -78,6 +74,22 @@ def edit_user(request, user_id):
         'form_usuario': formulario_usuario,
         'fecha_nac': fecha_nac_formateada
     })
+    
+def view_profile_user(request, user_id):
+    usuario = get_object_or_404(Usuario, pk=user_id)
+    persona = get_object_or_404(Persona, pk=usuario.personaId.id)
+    fecha_nac_formateada = usuario.fecha_nac.strftime('%d/%m/%Y')
+    formulario_usuario = UsuarioForm(instance=usuario)
+    formulario_persona = PersonaForm(instance=persona)
+    return render(request, "sesiones/view_profile_user.html", {'form_persona': formulario_persona,'form_usuario': formulario_usuario,
+    'fecha_nac': fecha_nac_formateada, 'id':user_id})
+    
+def view_profile_helper(request, helper_id):
+    ayudante = get_object_or_404(Ayudante, pk=helper_id)
+    persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
+    ayudante_form = AyudanteForm(instance=ayudante)
+    persona_form = PersonaForm(instance=persona)
+    return render(request, 'sesiones/view_profile_intern.html', {'form_persona': persona_form, 'form_ayudante': ayudante_form, 'id':helper_id})
 
 
 def delete_helper(request, helper_id):
@@ -106,7 +118,7 @@ def signup_helper(request):
         persona_form = PersonaForm()
         ayudante_form = AyudanteForm()
 
-    return render(request, 'sesiones/signup_helper.html', {'persona_form': persona_form, 'ayudante_form': ayudante_form})
+    return render(request, 'sesiones/signup_helper.html', {'form_persona': persona_form, 'form_ayudante': ayudante_form})
 
     
 def delete(request):
@@ -147,7 +159,7 @@ def edit_intern(request, helper_id):
         else:
             persona_form = nueva_persona_form
 
-    return render(request, 'sesiones/edit_intern.html', {'formPerson': persona_form, 'formAyudante': ayudante_form})
+    return render(request, 'sesiones/edit_intern.html', {'form_persona': persona_form})
 
 
 def enviar_mail(subject, message, to_email, nombre):

@@ -7,11 +7,41 @@
 <form method="POST">
 
     {% csrf_token %}
-    {{ formPerson.as_p }}
+    <div class="col-md-3 mx-auto">
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control {% if form_persona.nombre.errors %}is-invalid{% endif %}" name="nombre" value="{{ form_persona.nombre.value }}">
+            {% for error in form_persona.nombre.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
 
-    <button>
-        Actualizar
-    </button>
+        <div class="mb-3">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-control {% if form_persona.apellido.errors %}is-invalid{% endif %}" name="apellido" value="{{ form_persona.apellido.value }}">
+            {% for error in form_persona.apellido.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input type="text" class="form-control {% if form_persona.contraseña.errors %}is-invalid{% endif %}" name="contraseña" value="{{ form_persona.contraseña.value }}">
+            {% for error in form_persona.contraseña.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-primary">
+            Actualizar
+        </button>
+    </div>
 
 </form>
 
