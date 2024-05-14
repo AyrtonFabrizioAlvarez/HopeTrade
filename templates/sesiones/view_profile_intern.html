@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Perfil Ayudante</title>
+{% endblock title %}
+
+{% block content %}
+<form action="{% url 'sesiones:edit_helper' id %}" method="GET">
+    {% csrf_token %}
+    
+
+    <div class="col-md-3 mx-auto">
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" value="{{ form_persona.nombre.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-control" name="apellido" value="{{ form_persona.apellido.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" name="nombre_usuario" value="{{ form_ayudante.nombre_usuario.value }}" readonly>
+        </div>
+        
+        <button type="submit" class="btn btn-lg btn-primary">Editar perfil</button>
+    </div>
+
+</form>
+{% endblock content %}

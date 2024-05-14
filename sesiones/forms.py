@@ -31,9 +31,10 @@ class PersonaForm(forms.ModelForm):
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['dni', 'email', 'fecha_nac']
+        fields = ['id', 'dni', 'email', 'fecha_nac']
         widgets = {'fecha_nac': forms.DateInput(attrs={'class':'datepicker'})}
         
+    id = forms.IntegerField()
     dni = forms.IntegerField()
     email = forms.EmailField()
     fecha_nac = forms.DateField(widget=forms.DateInput(attrs={'placeholder': 'dd/mm/aaaa'}), input_formats=['%d/%m/%Y'])
@@ -66,7 +67,7 @@ class AyudanteForm(forms.ModelForm):
     class Meta:
         model = Ayudante
         fields = ['nombre_usuario']
-    
+        
     nombre_usuario = forms.CharField()
 
     def clean_nombre_usuario(self):

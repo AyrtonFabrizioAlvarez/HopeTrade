@@ -20,78 +20,84 @@
             </div>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                 </ul>
 
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.usuario_id %}
-                        {% if request.session.rol == "ayudante" or request.session.rol == "administrador" %}
+                <!--SI NO INICIO SESION-->
+                {% if request.session.usuario_id is none %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
+                        <a class="nav-link active" aria-current="page" href="/sesiones/signup/">Registrar Usuario</a>
                         </li>
+                    </ul>
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sesiones/signin/">Iniciar Sesion</a>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
+                        </li>
+                    </ul>
+
+                    {% if request.session.rol != "usuario" %}
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
+                            </li>
+                        </ul>
+
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/">Mi Perfil</a>
+                            </li>
+                        </ul>
+
+                        {% if request.session.rol == "administrador" %}
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
+                                </li>
+                            </ul>
+
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
+                                </li>
+                            </ul>
+
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
+                                </li>
+                            </ul>
                         {% endif %}
-                    {% endif %}
-                </ul>
 
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.usuario_id %}
-                        {% if request.session.rol == "ayudante" or request.session.rol == "administrador" %}
+                    {% else %}
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/">Mi Perfil</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
+                        <a class="nav-link active" aria-current="page" href="/sesiones/signout/">Cerrar Sesion</a>
                         </li>
-                        {% endif %}
-                    {% endif %}
-                </ul>
+                    </ul>
 
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.usuario_id %}
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
-                        </li>
-                    {% endif %}
-                </ul>
-
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/signup/">Registrar Usuario</a>
-                    </li>
-                </ul>
-
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.usuario_id %}
-                        {% if request.session.rol == "ayudante" %}
-                        <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
-                        </li>
-                        {% endif %}
-                    {% endif %}
-                </ul>
+                {% endif %}
 
 
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.usuario_id is none %}
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/signin/">Iniciar Sesion</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if request.session.usuario_id %}
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/signout/">Cerrar Sesion</a>
-                    </li>
-                    {% endif %}
-                </ul>
-
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
-                    </li>
-                </ul>
             </div>
 
         </div>

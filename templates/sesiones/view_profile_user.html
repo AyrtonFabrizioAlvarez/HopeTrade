@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Perfil Usuario</title>
+{% endblock title %}
+
+{% block content %}
+<form action="{% url 'sesiones:edit_user' id %}" method="GET">
+    {% csrf_token %}
+    
+
+    <div class="col-md-3 mx-auto">
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" value="{{ form_persona.nombre.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-control" name="apellido" value="{{ form_persona.apellido.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" name="email" value="{{ form_usuario.email.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Dni</label>
+            <input type="text" class="form-control" name="dni" value="{{ form_usuario.dni.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha de Nacimiento</label>
+            <input type="text" class="form-control" name="fecha_nac" value="{{ fecha_nac }}" readonly>
+        </div>
+
+
+        {% if request.session.usuario_id == persona_id  %}
+            <button type="submit" class="btn btn-lg btn-primary">Editar perfil</button>
+        {% endif %}
+    </div>
+
+</form>
+{% endblock content %}
