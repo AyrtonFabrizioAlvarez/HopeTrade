@@ -3,3 +3,26 @@
 {% block title %}
         <title>Eliminar Publicacion</title>
 {% endblock title %}
+
+{% block content %}
+
+<form method="POST">
+
+        {% csrf_token %}
+    
+        <h2>¿Seguro que desea eliminar la publicacion {{ publicacion.titulo }}?</h2>
+        <form method="POST">
+            <button type="submit" class="btn btn-danger">
+                Eliminar
+            </button>
+        </form>
+    
+        <form action="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" method="GET">
+            <button type="submit" class="btn btn-secondary">
+                    Cancelar
+            </button>
+        </form>
+    
+    </form>
+
+{% endblock content %}

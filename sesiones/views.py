@@ -26,6 +26,8 @@ def signup(request):
     else:
         persona_form = PersonaForm(request.POST)
         usuario_form = UsuarioForm(request.POST)
+        print(persona_form.is_valid())
+        print(usuario_form.is_valid())
         if persona_form.is_valid() and usuario_form.is_valid():
             persona = persona_form.save(commit=False)
             persona.intentos = 0
@@ -161,7 +163,7 @@ def edit_intern(request, helper_id):
         else:
             persona_form = nueva_persona_form
 
-    return render(request, 'sesiones/edit_intern.html', {'form_persona': persona_form})
+    return render(request, 'sesiones/edit_intern.html', {'form_persona': persona_form, 'form_ayudante': ayudante_form})
 
 
 def enviar_mail(subject, message, to_email, nombre):
@@ -225,6 +227,7 @@ def inicio_sesion_usuario(request, clave, password, form):
                 # Iniciar sesión
                 request.session['usuario_id'] = persona.id
                 request.session['rol'] = 'usuario'
+                request.session['rol_id'] = user.id
                 print(request.session['usuario_id'])
                 persona.intentos = 0
                 persona.save()
@@ -254,33 +257,15 @@ def inicio_sesion_interno(request, clave, password, form):
     try:
         ayudante = Ayudante.objects.get(nombre_usuario=clave)
         persona = ayudante.personaId
-
-        # Verificar que el usuario no este bloqueado
-        #if persona.intentos < 3:
-            # Verificar la contraseña del usuario
         if persona.contraseña == password:
-                # Iniciar sesión
-                request.session['usuario_id'] = persona.id
-                request.session['rol'] = 'ayudante'
-                print(request.session['usuario_id'])
-                #persona.intentos = 0
-                #persona.save()
-                return redirect("/")  # Redirigir a la página principal después del login
+            request.session['usuario_id'] = persona.id
+            request.session['rol'] = 'ayudante'
+            request.session['rol_id'] = ayudante.id
+            print(request.session['usuario_id'])
+            return redirect("/")
         else:
-                # Contraseña incorrecta
-
-                # Aumento la cantidad de intentos
-                #persona.intentos = persona.intentos + 1
-                #persona.save()
-                #if persona.intentos == 3:
-                #    error = "El usuario y/o contraseña ingresados son incorrectos. Su cuenta ha sido bloqueada"
-                #    enviar_mail("Bloqueo de cuenta", "Tu cuenta ha sido bloqueada", user.email, persona.nombre)
-                #else:
-                error = "El usuario y/o contraseña ingresados son incorrectos."
-                return render(request, "sesiones/signin.html", {"form": form, "error": error})
-        #else:
-          #  error = "El usuario con el que desea ingresar se encuentra bloqueado"
-           # return render(request, "sesiones/signin.html", {"form": form, "error": error})
+            error = "El usuario y/o contraseña ingresados son incorrectos."
+            return render(request, "sesiones/signin.html", {"form": form, "error": error})
         
     except Ayudante.DoesNotExist:
         # Usuario no encontrado
@@ -291,6 +276,7 @@ def inicio_sesion_interno(request, clave, password, form):
                 # Iniciar sesión
                 request.session['usuario_id'] = persona.id
                 request.session['rol'] = 'administrador'
+                request.session['rol_id'] = admin.id
                 print(request.session['usuario_id'])
                 return redirect("/")  
             else:
