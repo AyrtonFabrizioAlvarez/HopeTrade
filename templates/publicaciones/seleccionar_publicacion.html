@@ -4,16 +4,29 @@
         <title>Seleccionar Publicacion</title>
 {% endblock title %}
 {% block content %}
-    <h2>{{ publicacion.titulo }}</h2>
-    <p>{{ publicacion.descripcion }}</p>
-    <p>{{ publicacion.cantidad }}</p>
-    <p>{{ publicacion.imagen }}</p>
+<h1>Publicacion</h1>
+    <main class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{publicacion.titulo}}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+                        <p>{{ publicacion.cantidad }}</p>
+                        <img src="{{ producto.imagen.url }}">
+                    </div>
+                </div>
+                <h3>Comentarios:</h3>
+                <ul>
+                    {% for comentario in comentarios %}
+                        <li>{{ comentario.texto }}: {{ comentario.fecha }}</li>
+                    {% endfor %}
+                    <a href="{% url 'publicaciones:realizar_comentario' publicacion.id %}">Realizar comentario</a>
+                </ul>
 
-    <h3>Comentarios:</h3>
-    <ul>
-        {% for comentario in comentarios %}
-            <li>{{ comentario.texto }}: {{ comentario.fecha }}</li>
-        {% endfor %}
-        <a href="{% url 'publicaciones:realizar_comentario' publicacion.id %}">Realizar comentario</a>
-    </ul>
+            </div>
+        </div>
+    </main>
+
+
 {% endblock %}

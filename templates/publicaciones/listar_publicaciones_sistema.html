@@ -3,24 +3,53 @@
 {% block title %}
         <title>Publicaciones del Sistema</title>
 {% endblock title %}
+
 {% block content %}
-<form method="POST">
+<form method="GET">
     <h1>Publicaciones</h1>
+
     {% if mensaje %}
         <p>{{ mensaje }}</p>
     {% else %}
+
         {% csrf_token %}
+
         <ul>
-            {% for publicacion in publicacionesSistema %}
-                <li>
-                    <h2>titulo: {{publicacion.titulo}}</h2>
-                    <p>descripcion: {{ publicacion.descripcion }}</p>
-                    
-                    <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}">Ver</a>
-                </li>
-            {% endfor %}
+            {% if publicacionesSistema %}
+            <main class="container">
+                <div class="row">
+                {% for publicacion in publicacionesSistema %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card" style="width: 20rem;">
+                            <div class="card-body">
+
+                                <h5 class="card-title"> {{publicacion.titulo}}</h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+
+                                <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </main>
+            {% else %}
+                    <h1>No existen publicaciones en el sistema</h1>
+            {% endif %}
         </ul>
-        <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-primary">Crear nueva publicación</a>
+
+        {% if request.session.rol == 'usuario' %}
+            <main class="container">
+                <div class="col-md-3 mb-4">
+                    <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-primary">Crear nueva publicación</a>
+                </div>
+            </main>
+            <main class="container">
+                <div class="col-md-3 mb-4">
+                    <a href="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" class="btn btn-primary">Ver mis publicaciones</a>
+                </div>
+            </main>
+        {% endif %}
     {% endif %}
 
 </form>

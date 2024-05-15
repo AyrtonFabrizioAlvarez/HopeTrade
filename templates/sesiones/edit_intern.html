@@ -29,6 +29,11 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" name="nombre_usuario" value="{{ form_ayudante.nombre_usuario.value }}" readonly>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">Contraseña</label>
             <input type="text" class="form-control {% if form_persona.contraseña.errors %}is-invalid{% endif %}" name="contraseña" value="{{ form_persona.contraseña.value }}">
             {% for error in form_persona.contraseña.errors %}
@@ -37,6 +42,7 @@
             </div>
             {% endfor %}
         </div>
+
 
         <button type="submit" class="btn btn-lg btn-primary">
             Actualizar

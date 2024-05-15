@@ -31,7 +31,7 @@
                 {% if request.session.usuario_id is none %}
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/signup/">Registrar Usuario</a>
+                        <a class="nav-link active" aria-current="page" href="/sesiones/signup/">Registrarse</a>
                         </li>
                     </ul>
 
@@ -57,7 +57,7 @@
 
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/">Mi Perfil</a>
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">Mi Perfil</a>
                             </li>
                         </ul>
 
@@ -84,7 +84,7 @@
                     {% else %}
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/">Mi Perfil</a>
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">Mi Perfil</a>
                             </li>
                         </ul>
                     {% endif %}

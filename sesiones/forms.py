@@ -21,7 +21,7 @@ class PersonaForm(forms.ModelForm):
     def clean_contraseña(self):
         contraseña = self.cleaned_data.get('contraseña')
          # Expresión regular para verificar si la contraseña cumple con los requisitos
-        patron = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"
+        patron = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
         # Verificar si la contraseña coincide con el patrón
         if re.match(patron, contraseña):
             return contraseña
@@ -31,10 +31,9 @@ class PersonaForm(forms.ModelForm):
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['id', 'dni', 'email', 'fecha_nac']
+        fields = ['dni', 'email', 'fecha_nac']
         widgets = {'fecha_nac': forms.DateInput(attrs={'class':'datepicker'})}
         
-    id = forms.IntegerField()
     dni = forms.IntegerField()
     email = forms.EmailField()
     fecha_nac = forms.DateField(widget=forms.DateInput(attrs={'placeholder': 'dd/mm/aaaa'}), input_formats=['%d/%m/%Y'])
@@ -90,12 +89,14 @@ class EditarPersonaForm(ModelForm):
     def clean_contraseña(self):
         contraseña = self.cleaned_data.get('contraseña')
          # Expresión regular para verificar si la contraseña cumple con los requisitos
-        patron = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"
+        patron = patron = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
         # Verificar si la contraseña coincide con el patrón
         if re.match(patron, contraseña):
             return contraseña
         else:
             raise forms.ValidationError("La contraseña debe contener: ( >=8 caracteres, una mayuscula, una minuscula, un numero, un caracter especial)")
+        
+    
         
 class EditarUsuarioForm(ModelForm):
     class Meta:
