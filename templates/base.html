@@ -14,18 +14,28 @@
       padding: 40px;
     }
   </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Estilos adicionales */
+    .jumbotron {
+      background-color: #f8f9fa;
+      box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+  </style>
     {% block title %}
     {% endblock title %}
 </head>
 <body>
 
-    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar sticky-top sticky-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
 
             <div class="container">
                 {% load static %}
+                {% load static %}
                 <a class="navbar-brand" href="/">
-                  <img src="{% static 'logoConSlogan.png' %}" max-width="75%" height="auto">
+                  <img src="{% static 'logo.png' %}" style="max-width: 200px; height: auto;">
                 </a>
             </div>
 
@@ -64,14 +74,21 @@
                             <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
                             </li>
                         </ul>
-
-                        <ul class="navbar-nav me-auto mb-3 mb-lg-0">
-                            <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">Mi Perfil</a>
-                            </li>
-                        </ul>
+                        {% if request.session.rol == 'ayudante' %}
+                            <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                                <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">Mi Perfil</a>
+                                </li>
+                            </ul>
+                        {% endif %}
 
                         {% if request.session.rol == "administrador" %}
+
+                            <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                                <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">Mi Perfil</a>
+                                </li>
+                            </ul>
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
                                     <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>

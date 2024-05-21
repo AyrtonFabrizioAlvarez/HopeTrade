@@ -7,7 +7,7 @@ class Publicacion(models.Model):
     titulo = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=250)
     cantidad = models.IntegerField()
-    imagen = models.ImageField(upload_to='imagenes/')
+    imagen = models.ImageField(upload_to='')
     aceptada = models.BooleanField()
     usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     categoriaId = models.ForeignKey(Categoria,  on_delete=models.CASCADE)

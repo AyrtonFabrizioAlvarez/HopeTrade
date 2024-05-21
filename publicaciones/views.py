@@ -46,11 +46,12 @@ def realizar_comentario(request, publicacion_id):
             try:
                 comentario = realizar_comentario_form.save(commit=False)
                 comentario.fecha = datetime.now()
-                usuarioId = request.session.get('usuario_id', None)
+                usuarioId = request.session.get('rol_id')
                 comentario.usuarioId = Usuario.objects.get(id=usuarioId)
                 comentario.publicacionId = Publicacion.objects.get(id=publicacion_id) #falla aca
                 comentario.save()
-                return redirect('publicaciones/seleccionar_publicacion', publicacion_id=publicacion_id)
+                ruta = "/publicaciones/seleccionar_publicacion/" + str(publicacion_id)
+                return redirect(ruta)
             except:
                 return render(request, "publicaciones/realizar_comentario.html", {
                     'form': RealizarComentario(),
@@ -61,7 +62,7 @@ def realizar_comentario(request, publicacion_id):
     })
 
 def listar_publicaciones_sistema(request):
-    publicacionesSistema = Publicacion.objects.all()
+    publicacionesSistema = Publicacion.objects.all().exclude(titulo='eliminado')
     return render(request, "publicaciones/listar_publicaciones_sistema.html", {
         'publicacionesSistema': publicacionesSistema
     })  
@@ -84,6 +85,6 @@ def eliminar_publicacion(request, publicacion_id):
     if request.method == "POST":
         publicacion.titulo = 'eliminado'
         publicacion.save()
-        ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
+        ruta = "/publicaciones/listar_publicaciones_sistema/"
         return redirect(ruta)
     return render(request, 'publicaciones/eliminar_publicacion.html', { 'publicacion': publicacion })
