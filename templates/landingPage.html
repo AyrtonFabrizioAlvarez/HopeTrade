@@ -1,7 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>LANDING PAGE</h1>
+    <div class="container mt-5">
+        <div class="jumbotron">
+          <h1 class="display-4">Bienvenido a Cáritas Argentina</h1>
+          <p class="lead">Caritas Argentina es una organización sin fines de lucro comprometida con la ayuda a los más necesitados. Nuestra misión es promover la conciencia solidaria e invitar a la sociedad a encontrarse en la acción de compartir y así construir una realidad más justa y en paz.</p>
+          <hr class="my-4">
+          <p class="lead">Caritas Argentina es una organización sin fines de lucro de renombre, dedicada a abordar los desafíos de la pobreza y la exclusión social en Argentina. A lo largo de los años, ha establecido una red sólida de programas y proyectos que abarcan una amplia gama de necesidades, desde la asistencia alimentaria hasta la promoción del desarrollo comunitario.</p>
+          <p>Con una historia arraigada en valores como la solidaridad y la justicia social, Caritas Argentina ha demostrado un compromiso inquebrantable con la mejora de las condiciones de vida de las personas más vulnerables de la sociedad. Sus iniciativas no solo buscan brindar ayuda inmediata, sino también empoderar a las comunidades para que puedan superar las barreras estructurales que perpetúan la pobreza.</p>
+          <p>Una de las últimas herramientas en el arsenal de Caritas Argentina es su plataforma de intercambios y donaciones. Esta aplicación digital innovadora y fácil de usar conecta a individuos dispuestos a ayudar con aquellos que necesitan apoyo. A través de la aplicación, los usuarios pueden realizar donaciones de alimentos, artículos de higiene, ropa y más, llegando directamente a quienes más lo necesitan.</p>
+          <p>Además de facilitar la solidaridad directa, la plataforma promueve la economía circular al fomentar el intercambio de bienes y servicios entre los usuarios. Esta característica única no solo reduce el desperdicio, sino que también fortalece los lazos comunitarios al fomentar el intercambio no monetario y la colaboración mutua.</p>
+          <p>Al unirse a la plataforma de Caritas Argentina, cada usuario se convierte en un agente de cambio, contribuyendo no solo a aliviar la carga de aquellos que enfrentan dificultades, sino también a construir una sociedad más inclusiva y solidaria para todos.</p>
+          <p class="lead">
+            {% if request.session.usuario_id is none %}
+                <a class="btn btn-primary btn-lg" href="/sesiones/signup/" role="button">Únete ahora</a>
+            {% endif %}
+          </p>
+        </div>
+      </div>
 {% endblock content %}
 
 

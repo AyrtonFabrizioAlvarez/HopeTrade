@@ -10,18 +10,30 @@
             <div class="col-md-3 mb-4">
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
+                        <a href="{% url 'sesiones:view_profile_user' publicacion.usuarioId.id %}">
+                            {{ publicacion.usuarioId.personaId.nombre }}
+                        </a>
                         <h5 class="card-title"> {{publicacion.titulo}}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
-                        <p>{{ publicacion.cantidad }}</p>
-                        <img src="{{ producto.imagen.url }}">
+                        <h7 class="card-subtitle mb-2 text-body-secondary">cantidad: {{ publicacion.cantidad }}</h7>
+                        {% if request.session.rol == 'administrador'%}
+                            <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
+                        {% endif %}
                     </div>
                 </div>
                 <h3>Comentarios:</h3>
                 <ul>
                     {% for comentario in comentarios %}
-                        <li>{{ comentario.texto }}: {{ comentario.fecha }}</li>
+                        <li>
+                            <a href="{% url 'sesiones:view_profile_user' comentario.usuarioId.id %}">
+                                {{ comentario.usuarioId.personaId.nombre }}:
+                            </a>
+                            {{ comentario.texto }}, {{ comentario.fecha }}
+                        </li>
                     {% endfor %}
-                    <a href="{% url 'publicaciones:realizar_comentario' publicacion.id %}">Realizar comentario</a>
+                    {% if request.session.rol == 'usuario' %}
+                        <a href="{% url 'publicaciones:realizar_comentario' publicacion.id %}">Realizar comentario</a>
+                    {% endif %}
                 </ul>
 
             </div>

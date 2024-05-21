@@ -16,11 +16,14 @@
             <div class="col-md-3 mb-4">
                 <div class="card" style="width: 20rem;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ayudante.personaId.nombre}} {{ayudante.personaId.apellido}}</h5>
+                        <a href="{% url 'sesiones:view_profile_helper' ayudante.id %}">
+                            {{ ayudante.personaId.nombre }} {{ayudante.personaId.apellido}}
+                        </a>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{ ayudante.dni }}</h6>
-                        <p class="card-text">Un pequeño texto que tranquilamente podemos reemplazar o eliminar</p>
-                        <a href="{% url 'sesiones:edit_helper' ayudante.id %}" class="btn btn-primary">Editar Perfil</a>
-                        <a href="{% url 'sesiones:delete_helper' ayudante.id %}" class="btn btn-danger">Eliminar Ayudante</a>
+                        {% if request.session.rol == 'administrador' %}
+                            <a href="{% url 'sesiones:edit_helper' ayudante.id %}" class="btn btn-primary">Editar Perfil</a>
+                            <a href="{% url 'sesiones:delete_helper' ayudante.id %}" class="btn btn-danger">Eliminar Ayudante</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
