@@ -63,7 +63,6 @@ def edit_user(request, user_id):
     else:
         formulario_usuario_nuevo = EditarUsuarioForm(request.POST, instance=usuario)
         formulario_persona_nueva = EditarPersonaForm(request.POST, instance=persona)
-        print(request.POST)
         if formulario_usuario_nuevo.is_valid() and formulario_persona_nueva.is_valid():
             formulario_persona_nueva.save()
             formulario_usuario_nuevo.save()
@@ -80,8 +79,6 @@ def edit_user(request, user_id):
 def view_profile_user(request, user_id):
     usuario = get_object_or_404(Usuario, pk=user_id)
     persona = get_object_or_404(Persona, pk=usuario.personaId.id)
-    print(request.session['usuario_id'])
-    print(persona.id)
     fecha_nac_formateada = usuario.fecha_nac.strftime('%d/%m/%Y')
     formulario_usuario = UsuarioForm(instance=usuario)
     formulario_persona = PersonaForm(instance=persona)
@@ -89,11 +86,37 @@ def view_profile_user(request, user_id):
     'fecha_nac': fecha_nac_formateada, 'id':user_id, 'persona_id':persona.id})
     
 def view_profile_helper(request, helper_id):
-    ayudante = get_object_or_404(Ayudante, pk=helper_id)
-    persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
-    ayudante_form = AyudanteForm(instance=ayudante)
+    intern = get_object_or_404(Ayudante, pk=helper_id)
+    persona = get_object_or_404(Persona, pk=intern.personaId.id)
+    estandar_form = AyudanteForm(instance=intern)
     persona_form = PersonaForm(instance=persona)
-    return render(request, 'sesiones/view_profile_intern.html', {'form_persona': persona_form, 'form_ayudante': ayudante_form, 'id':helper_id})
+    return render(request, 'sesiones/view_profile_intern.html', {'form_persona': persona_form, 'form_ayudante': estandar_form, 'id':helper_id})
+
+def view_profile_admin(request, admin_id):
+    intern = get_object_or_404(Administrador, pk=admin_id)
+    persona = get_object_or_404(Persona, pk=intern.personaId.id)
+    estandar_form = AyudanteForm(instance=intern)
+    persona_form = PersonaForm(instance=persona)
+    return render(request, 'sesiones/view_profile_admin.html', {'form_persona': persona_form, 'form_admin': estandar_form, 'id':admin_id})
+
+def edit_admin(request, admin_id):
+    intern = get_object_or_404(Administrador, pk=admin_id)
+    persona = get_object_or_404(Persona, pk=intern.personaId.id)
+    ayudante_form = EditarAyudanteForm(instance=intern)
+    persona_form = EditarPersonaForm(instance=persona)
+    if request.method == 'POST':
+        nueva_persona_form = EditarPersonaForm(request.POST)
+        if nueva_persona_form.is_valid():
+            persona = persona_form.save(commit=False)
+            persona.nombre = request.POST['nombre']
+            persona.apellido = request.POST['apellido']
+            persona.contraseña = request.POST['contraseña']
+            persona.save()
+            return redirect('/')
+        else:
+            persona_form = nueva_persona_form
+
+    return render(request, 'sesiones/edit_admin.html', {'form_persona': persona_form, 'form_admin': ayudante_form})
 
 
 def delete_helper(request, helper_id):
@@ -147,9 +170,9 @@ def list_helpers(request):
     })   
 
 def edit_intern(request, helper_id):
-    ayudante = get_object_or_404(Ayudante, pk=helper_id)
-    persona = get_object_or_404(Persona, pk=ayudante.personaId.id)
-    ayudante_form = EditarAyudanteForm(instance=ayudante)
+    intern = get_object_or_404(Ayudante, pk=helper_id)
+    persona = get_object_or_404(Persona, pk=intern.personaId.id)
+    ayudante_form = EditarAyudanteForm(instance=intern)
     persona_form = EditarPersonaForm(instance=persona)
     if request.method == 'POST':
         nueva_persona_form = EditarPersonaForm(request.POST)
