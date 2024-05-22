@@ -7,6 +7,7 @@ from .forms import PersonaForm, UsuarioForm, AyudanteForm, EditarUsuarioForm, Ed
 from .models import Persona, Usuario, Ayudante, Administrador
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.contrib import messages
 from hopetrade import settings
 import random
 import string
@@ -38,6 +39,7 @@ def signup(request):
             usuario.reputacion = 0.0
             usuario.cant_valoraciones = 0
             usuario.save()
+            messages.success(request, "El usuario se creó exitosamente")
             return redirect('/')
         
         return render(request, "sesiones/signup.html", {
@@ -140,6 +142,7 @@ def signup_helper(request):
             ayudante = ayudante_form.save(commit=False)
             ayudante.personaId = persona
             ayudante.save()
+            messages.success(request, "El ayudante se creó exitosamente")
             return redirect('/')
     else:
         persona_form = PersonaForm()
@@ -341,6 +344,7 @@ def recuperar_contrasenia(request):
                 contrasenia = persona.contraseña
                 subject = f"¡Hola!, tu contraseña para poder ingresar a Hope Trade es {contrasenia}"
                 enviar_mail("Tu contraseña de Hope Trade", subject, user.email, persona.nombre)
+                messages.success(request, 'Se le envió un email con su contraseña')
                 return render(request, "sesiones/recuperarClave.html", {"form": RecuperarClave()})
             except Usuario.DoesNotExist:
                 error = "El usuario ingresado no existe en el sistema"
