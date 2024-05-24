@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from publicaciones.models import Publicacion
 from publicaciones.models import Comentario
+from listados.models import Categoria
 from sesiones.models import Usuario
 from .forms import RealizarPublicacion
 from .forms import RealizarComentario
@@ -63,16 +65,24 @@ def realizar_comentario(request, publicacion_id):
 
 def listar_publicaciones_sistema(request):
     publicacionesSistema = Publicacion.objects.all().exclude(titulo='eliminado')
+    categorias = Categoria.objects.all()
+    if len(publicacionesSistema) == 0:
+        messages.warning(request, 'No existen publicaciones en el sistema')
     return render(request, "publicaciones/listar_publicaciones_sistema.html", {
-        'publicacionesSistema': publicacionesSistema
-    })  
+        'publicacionesSistema': publicacionesSistema,
+        'categorias': categorias,
+    })
 
 
 def listar_publicaciones_usuario(request, user_id):
     usuario = Usuario.objects.get(id=user_id)
+    categorias = Categoria.objects.all()
     publicacionesUsuario = Publicacion.objects.filter(usuarioId=usuario).exclude(titulo='eliminado')
+    if len(publicacionesUsuario) == 0:
+        messages.warning(request, 'No existen publicaciones en el sistema')
     return render(request, "publicaciones/listar_publicaciones_usuario.html", {
         'publicacionesUsuario': publicacionesUsuario,
+        'categorias': categorias,
     })  
 
 def seleccionar_publicacion(request, publicacion_id):
@@ -88,3 +98,34 @@ def eliminar_publicacion(request, publicacion_id):
         ruta = "/publicaciones/listar_publicaciones_sistema/"
         return redirect(ruta)
     return render(request, 'publicaciones/eliminar_publicacion.html', { 'publicacion': publicacion })
+
+def filtrar_publicaciones_sistema(request):
+    publicaciones = Publicacion.objects.all().exclude(titulo='eliminado')
+    categorias = Categoria.objects.all()
+    categoria = request.POST.get('categoria')
+    reputacion = request.POST.get('reputacion')
+    if categoria != 'Categoria':
+        publicaciones = publicaciones.filter(categoriaId__id=categoria)
+    if reputacion != 'Reputacion':
+        publicaciones = publicaciones.filter(usuarioId__reputacion=reputacion)
+    if len(publicaciones) == 0:
+        messages.warning(request, f'No existen publicaciones para el filtro seleccionado')
+    return render(request, "publicaciones/listar_publicaciones_sistema.html", {
+        'publicacionesSistema': publicaciones,
+        'categorias': categorias
+    })
+    
+def filtrar_publicaciones_usuario(request):
+    usuario = Usuario.objects.get(id=request.session['rol_id'])
+    print(request.session['rol_id'])
+    categorias = Categoria.objects.all()
+    publicaciones = Publicacion.objects.filter(usuarioId=usuario).exclude(titulo='eliminado')
+    categoria = request.POST.get('categoria')
+    if categoria != 'Categoria':
+        publicaciones = publicaciones.filter(categoriaId__id=categoria)
+    if len(publicaciones) == 0:
+        messages.warning(request, f'No existen publicaciones para el filtro seleccionado')
+    return render(request, "publicaciones/listar_publicaciones_usuario.html", {
+        'publicacionesUsuario': publicaciones,
+        'categorias': categorias
+    })
