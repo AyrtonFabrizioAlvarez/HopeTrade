@@ -18,6 +18,3 @@ class Ofrecimiento(models.Model):
     categoriaId = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     sucursalId = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     publicacionId = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
-
-
-
