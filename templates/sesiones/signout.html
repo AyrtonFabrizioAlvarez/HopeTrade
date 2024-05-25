@@ -1,19 +1,24 @@
 {% extends 'base.html' %}
 
 {% block title %}
-        <title>Cerrar Sesion</title>
+    <title>Cerrar Sesion</title>
 {% endblock title %}
 
 {% block content %}
-<h1>Cerrar Sesion</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1 class="mb-4">Cerrar Sesion</h1>
+            <p class="mb-4">¿Estás seguro que deseas cerrar sesión?</p>
 
-<p>
-    ¿Estas seguro que deseas cerrar sesion?
-</p>
-
-<form action="{% url 'sesiones:signout' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit" name="action" value="confirm">Aceptar</button>
-    <button type="submit" name="action" value="cancel">Cancelar</button>
-</form>
+            <form action="{% url 'sesiones:signout' %}" method="POST">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" name="action" value="confirm" class="btn btn-lg btn-danger mx-2">Aceptar</button>
+                    <button type="submit" name="action" value="cancel" class="btn btn-lg btn-secondary mx-2">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}

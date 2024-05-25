@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Intercambios del día</title>
+{% endblock title %}
+
+{% block content %}
+    <form method="GET">
+        <h1>Intercambios del día</h1>
+
+        {% if mensaje %}
+            <p>{{ mensaje }}</p>
+        {% else %}
+            {% csrf_token %}
+            {% if intercambios_hoy %}
+            <div class="container">
+                <div class="row">
+                    {% for intercambio in intercambios_hoy %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ intercambio.ofrecimientoId.publicacionId.titulo }}</h5>
+                                    <p class="card-text">Intercambio ID: {{ intercambio.id }}</p>
+                                    <p><strong>Usuario que publica:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.publicacionId.usuarioId.id %}">{{ intercambio.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</a></p>
+                                    <p><strong>Usuario que ofrece:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.usuarioId.id %}">{{ intercambio.ofrecimientoId.usuarioId.personaId.nombre }}</a></p>
+                                    <a href="#" class="btn btn-success">Confirmar</a>
+                                    <a href="#" class="btn btn-danger">Intercambio cancelado</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+                    <h1>No existen intercambios para el dia de hoy</h1>
+            {% endif %}
+        {% endif %}
+    </form>
+{% endblock %}

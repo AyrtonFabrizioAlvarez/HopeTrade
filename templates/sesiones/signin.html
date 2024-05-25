@@ -1,17 +1,38 @@
 {% extends 'base.html' %}
 
 {% block title %}
-        <title>Iniciar Sesion</title>
+    <title>Iniciar Sesion</title>
 {% endblock title %}
 
 {% block content %}
-<h1>Iniciar Sesion</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center mb-4">Iniciar Sesion</h1>
 
-{{error}}
-<form action="{% url 'sesiones:signin' %}" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button  type="submit" class="btn btn-lg btn-primary" name="action" value="signin">Iniciar Sesion</button>
-</form>
-<a href="/sesiones/recuperarclave/">¿Olvidaste tu contraseña?</a>
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{% url 'sesiones:signin' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.usuario.label_tag }}
+                    {{ form.usuario }}
+                </div>
+                <div class="form-group">
+                    {{ form.contraseña.label_tag }}
+                    {{ form.contraseña }}
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block" name="action" value="signin">Iniciar Sesion</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="/sesiones/recuperarclave/">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
