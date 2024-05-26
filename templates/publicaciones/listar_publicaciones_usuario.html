@@ -1,41 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-        <title>Publicaciones del Sistema</title>
+        <title>Publicaciones del Usuario</title>
 {% endblock title %}
 
 {% block content %}
 <br>
-<form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_usuario' %}">
-
-    {% csrf_token %}
-
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="input-group">
-                <select class="form-select" name="categoria">
-                <option selected>Categoria</option>
-                {% for categoria in categorias %}
-                    <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
-                {% endfor %}
-                </select>
-            </div>
-        </div> 
-
-        <div class="col-md-4 d-flex align-items-center">
-            {% load static %}
-            <button class="btn" type="submit">
-                <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-width: 50px; height: auto;">
-            </button>
-        </div>
-    </div>
-</form> 
-<form method="GET">
-
-    {% if mensaje %}
-        <p>{{ mensaje }}</p>
-    {% else %}
-
     {% for message in messages %}
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -48,34 +18,66 @@
             <div>
             {{ message }}
             </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 
-        {% csrf_token %}
+<form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_usuario' %}">
+    
+    {% csrf_token %}
+    
+    <ul>
+    <main class="container mt-5">
+        <div class="col d-flex">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <select class="form-select shadow-sm" name="categoria">
+                    <option selected>Categoria</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div> 
 
-        <ul>
-            {% if publicacionesUsuario %}
-            <main class="container">
-                <div class="row">
-                {% for publicacion in publicacionesUsuario %}
-                    <div class="col-md-3 mb-4">
-                        <div class="card" style="width: 20rem;">
-                            <div class="card-body">
+            <div class="col-md-4 d-flex align-items-center">
+                {% load static %}
+                <button class="btn" type="submit">
+                    <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-width: 50px; height: auto;">
+                </button>
+            </div>
+        </div>    </main>
+</form> 
+<form method="GET">
+    {% csrf_token %}
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% else %}
 
-                                <h5 class="card-title"> {{publicacion.titulo}}</h5>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
 
-                                <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
-                                <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
 
-                            </div>
+        {% if publicacionesUsuario %}
+        <main class="container  mt-5">
+            <div class="row">
+            {% for publicacion in publicacionesUsuario %}
+                <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                    <div class="card shadow-sm" style="width: 100%;">
+                        <div class="card-body">
+
+                            <h5 class="card-title"> {{publicacion.titulo}}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+
+                            <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
+                            <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
+
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </main>
-            {% endif %}
-        </ul>
+                {% endfor %}
+            </div>
+        </main>
+        {% endif %}
+    </ul>
     {% endif %}
 
 </form>

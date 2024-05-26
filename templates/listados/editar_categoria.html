@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Editar Categoria</title>
+{% endblock title %}
+{% block content %}
+<form method="POST">
+
+    {% csrf_token %}
+    <div class="col-md-3 mx-auto">
+        <div class="mb-3">
+            <label class="form-label">Titulo</label>
+            <input type="text" class="form-control {% if form_categoria.titulo.errors %}is-invalid{% endif %}" name="titulo" value="{{ form_categoria.titulo.value }}">
+            {% for error in form_categoria.titulo.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-primary">
+            Actualizar
+        </button>
+    </div>
+
+</form>
+
+{% if form.errors %}
+        <div class="errors">
+            <p>Hubo algunos errores en el formulario:</p>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

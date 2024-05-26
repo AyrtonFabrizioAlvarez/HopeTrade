@@ -21,6 +21,11 @@
       padding: 40px;
     }
   </style>
+  <style>
+    html, body {
+        height: 100%;
+    }
+</style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     /* Estilos adicionales */
@@ -33,9 +38,9 @@
     {% block title %}
     {% endblock title %}
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
-    <nav class="navbar sticky-top sticky-top navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar sticky-top sticky-top navbar-expand-lg bg-body-tertiary shadow-sm">
         <div class="container-fluid">
 
             <div class="container">
@@ -117,6 +122,12 @@
                                 <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
                                 </li>
                             </ul>
+
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/listados/listar_categorias/">Categorias</a>
+                                </li>
+                            </ul>
                         {% endif %}
 
                     {% else %}
@@ -147,4 +158,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+<footer class="footer mt-auto py-3 bg-light shadow-sm text-center">
+    <div class="container">
+        <span class="text-muted">HopeTrade by YoungDevelopers 2024 ©</span>
+    </div>
+</footer>
 </html>

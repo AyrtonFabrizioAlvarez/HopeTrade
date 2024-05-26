@@ -6,49 +6,6 @@
 
 {% block content %}
 <br>
-<form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_sistema' %}">
-
-    {% csrf_token %}
-
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="input-group">
-                <select class="form-select" name="categoria">
-                <option selected>Categoria</option>
-                {% for categoria in categorias %}
-                    <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
-                {% endfor %}
-                </select>
-            </div>
-        </div> 
-
-        <div class="col-md-4">
-            <div class="input-group">
-                <select class="form-select" name="reputacion">
-                    <option selected>Reputacion</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="col-md-4 d-flex align-items-center">
-            {% load static %}
-            <button class="btn" type="submit">
-                <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-width: 50px; height: auto;">
-            </button>
-        </div>
-    </div>
-</form> 
-<form method="GET">
-
-    {% if mensaje %}
-        <p>{{ mensaje }}</p>
-    {% else %}
-
     {% for message in messages %}
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -61,48 +18,90 @@
             <div>
             {{ message }}
             </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
+<form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_sistema' %}">
+    
+    <ul>
+    {% csrf_token %}
+    <main class="container mt-5">
+        <div class="col d-flex">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <select class="form-select shadow-sm" name="categoria">
+                    <option selected>Categoria</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div> 
 
+            <div class="col-md-4">
+                <div class="input-group">
+                    <select class="form-select shadow-sm" name="reputacion">
+                        <option selected>Reputacion</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
 
-        {% csrf_token %}
+            <div class="col-md-4 d-flex align-items-center">
+                {% load static %}
+                <button class="btn" type="submit">
+                    <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-width: 50px; height: auto;">
+                </button>
+            </div>
+        </div>
+    </main>
+</form> 
+<form method="GET">
+    {% csrf_token %}
 
-        <ul>
-            {% if publicacionesSistema %}
-            <main class="container">
-                <div class="row">
-                {% for publicacion in publicacionesSistema %}
-                    <div class="col-md-3 mb-4">
-                        <div class="card" style="width: 20rem;">
-                            <div class="card-body">
-                                <a href="{% url 'sesiones:view_profile_user' publicacion.usuarioId.id %}">
-                                    {{ publicacion.usuarioId.personaId.nombre }}
-                                </a>
-                                <h5 class="card-title"> {{publicacion.titulo}}</h5>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% else %}
 
-                                <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
-                            </div>
+        {% if publicacionesSistema %}
+        <main class="container mt-5">
+            <div class="row">
+            {% for publicacion in publicacionesSistema %}
+                <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                    <div class="card shadow-sm" style="width: 100%;">
+                        <div class="card-body">
+                            <a href="{% url 'sesiones:view_profile_user' publicacion.usuarioId.id %}">
+                                {{ publicacion.usuarioId.personaId.nombre }}
+                            </a>
+                            <h5 class="card-title"> {{publicacion.titulo}}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+
+                            <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </main>
-            {% endif %}
-        </ul>
-
+                {% endfor %}
+            </div>
+        </main>
+        {% endif %}
         {% if request.session.rol == 'usuario' %}
-            <main class="container">
-                <div class="col-md-3 mb-4">
-                    <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-primary">Crear nueva publicación</a>
-                </div>
-            </main>
-            <main class="container">
-                <div class="col-md-3 mb-4">
-                    <a href="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" class="btn btn-primary">Ver mis publicaciones</a>
+            <main class="container mt-4">
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-success">Crear nueva publicación</a>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <a href="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" class="btn btn-primary">Ver mis publicaciones</a>
+                    </div>
                 </div>
             </main>
         {% endif %}
+    </ul>
+
     {% endif %}
 
 </form>

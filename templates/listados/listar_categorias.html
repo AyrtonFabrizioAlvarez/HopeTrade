@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Listado de Categorias</title>
+{% endblock title %}
+
+{% block content %}
+<form method="GET">
+
+    {% csrf_token %}
+
+    <ul>
+        {% if categorias %}
+        <div class="row">
+            {% for categoria in categorias %}
+            <div class="col-md-3 mb-4">
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{categoria.titulo}}</h5>
+
+                        <a href="{% url 'listados:editar_categoria' categoria.id %}" class="btn btn-primary">Editar</a>
+
+                        <a href="{% url 'listados:eliminar_categoria' categoria.id %}" class="btn btn-primary">Eliminar</a>
+                            
+                        {%for message in messages %}
+                              <p> {{message}} </p>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+        </div>
+    </ul>
+
+    <main class="container">
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'listados:agregar_categoria' %}" class="btn btn-primary">Crear nueva categoria</a>
+        </div>
+    </main>
+
+
+</form>
+{% endblock content %}

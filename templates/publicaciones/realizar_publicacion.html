@@ -12,7 +12,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     
-    <button type="submit" value="guardar" class="btn btn-primary">Realizar Publicacion</button>
+    <button type="submit" value="guardar" class="btn btn-success">Realizar Publicacion</button>
     <a href="{% url 'publicaciones:cancelar_operacion' %}" class="btn btn-primary">Cancelar</a>
 
 </form>
