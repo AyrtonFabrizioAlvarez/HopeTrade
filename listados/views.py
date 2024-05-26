@@ -5,27 +5,26 @@ from django.contrib import messages
 from intercambios.models import Intercambio
 from ofrecimientos.models import Ofrecimiento
 from datetime import datetime
+from django.core import exceptions
 
 from django.utils import timezone
 
 def agregar_categoria(request):
     if request.method == 'POST':
         categoria_form = AgregarCategoriaForm(request.POST)
-        existe = bool(Categoria.objects.get(titulo=request.POST['titulo']))
-        print(existe)
+        try:
+            existe = bool(Categoria.objects.get(titulo=request.POST['titulo']))
+        except exceptions.ObjectDoesNotExist:
+            existe = False
         if categoria_form.is_valid():
             if existe:
                 categoria = Categoria.objects.get(titulo=request.POST['titulo'])
-                categoria.estado = 'disponible'
-                categoria.save()
-                messages.success(request, "La categoría se creó exitosamente")
-                return redirect('/listados/listar_categorias')
             else:
                 categoria = categoria_form.save(commit=False)
-                categoria.estado = 'disponible'
-                categoria.save()
-                messages.success(request, "La categoría se creó exitosamente")
-                return redirect('/listados/listar_categorias')
+            categoria.estado = 'disponible'
+            categoria.save()
+            messages.success(request, "La categoría se creó exitosamente")
+            return redirect('/listados/listar_categorias')
     else:
         categoria_form = AgregarCategoriaForm()
     
@@ -44,6 +43,7 @@ def editar_categoria(request, categoria_id):
             categoria = categoria_form.save(commit=False)
             categoria.titulo = request.POST['titulo']
             categoria.save()
+            messages.success(request, "La categoría se actualizó")
             return redirect('/listados/listar_categorias')
         else:
             categoria_form = nueva_categoria_form
