@@ -50,6 +50,8 @@ def signup(request):
   
 def list_users(request):
     usuarios = Usuario.objects.exclude(email='eliminado')
+    if len(usuarios) == 0:
+        messages.warning(request, 'No existen usuarios en el sistema')
     return render(request, "sesiones/listadoUsuarios.html", {
         'usuarios': usuarios
     })      
@@ -168,6 +170,8 @@ def delete_user(request, user_id):
     
 def list_helpers(request):
     ayudantes = Ayudante.objects.exclude(nombre_usuario='eliminado')
+    if len(ayudantes) == 0:
+        messages.warning(request, 'No existen ayudantes en el sistema')
     return render(request, "sesiones/listadoAyudantes.html", {
         'ayudantes': ayudantes
     })   
