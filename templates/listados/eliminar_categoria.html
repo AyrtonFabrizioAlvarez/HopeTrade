@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Eliminar Categoria</title>
+{% endblock title %}
+
+{% block content %}
+<h1>Eliminar Categoria</h1>
+
+<p>
+    ¿Estas seguro que deseas eliminar la categoria {{ categoria.titulo }}?
+</p>
+
+<form action="{% url 'listados:eliminar_categoria' categoria.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" name="action" value="confirm">Aceptar</button>
+    <button type="submit" name="action" value="cancel">Cancelar</button>
+</form>
+{% endblock content %}
