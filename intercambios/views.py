@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from intercambios.models import Intercambio
+from ofrecimientos.models import Ofrecimiento
+from publicaciones.models import Publicacion
 from sesiones.models import Usuario
 from sesiones.views import enviar_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from listados.views import list_exchanges_today
 from .forms import escribir_texto_cancelacion
+from django.contrib import messages
 # Create your views here.
 def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
@@ -17,6 +20,20 @@ def confirm_exchange(request, intercambio_id):
     intercambio = get_object_or_404(Intercambio, id=intercambio_id)
     intercambio.estado = "terminado"
     intercambio.save()
+    
+    # Obtén el id de la publicación en lugar del objeto completo
+    publicacionid = intercambio.ofrecimientoId.publicacionId.id
+    
+    ofrecimientos = Ofrecimiento.objects.filter(publicacionId__id=publicacionid)
+    for ofrecimiento in ofrecimientos:
+        if intercambio.ofrecimientoId != ofrecimiento:
+            enviar_mail(
+                "Tu ofrecimiento ya no existe", 
+                f"El ofrecimiento que le hiciste a la publicación {ofrecimiento.publicacionId.titulo} ya no existe debido a que ya fue intercambiado", 
+                ofrecimiento.usuarioId.email, 
+                ""
+            )
+    
     user1 = intercambio.ofrecimientoId.publicacionId.usuarioId
     user2 = intercambio.ofrecimientoId.usuarioId
     enviar_mail(
@@ -31,6 +48,8 @@ def confirm_exchange(request, intercambio_id):
         user2.email, 
         ""
     )
+    
+    messages.success(request, 'Se confirmó el intercambio y enviaron los mails exitosamente')
     return list_exchanges_today(request)
 
 def cancel_exchange(request, intercambio_id):
@@ -46,6 +65,9 @@ def cancelar_intercambio(intercambio_id):
     intercambio = get_object_or_404(Intercambio, id=intercambio_id)
     intercambio.estado = "cancelado"
     intercambio.save()
+    publicacion = intercambio.ofrecimientoId.publicacionId
+    publicacion.estado = "disponible"
+    publicacion.save()
 
 def partial_absence(request, intercambio_id, user1_id, user2_id):
     cancelar_intercambio(intercambio_id)
@@ -63,11 +85,13 @@ def partial_absence(request, intercambio_id, user1_id, user2_id):
         user2.email, 
         ""
     )
+    messages.success(request, 'Se canceló el intercambio y enviaron los mails exitosamente')
     return list_exchanges_today(request)
 
 def total_absence(request, intercambio_id, user1_id, user2_id):
     cancelar_intercambio(intercambio_id)
     enviar_mails_cancelacion(user1_id, user2_id, "mutua ausencia")
+    messages.success(request, 'Se canceló el intercambio y enviaron los mails exitosamente')
     return list_exchanges_today(request)
 
 def other(request, intercambio_id, user1_id, user2_id):
@@ -79,6 +103,7 @@ def other(request, intercambio_id, user1_id, user2_id):
             razon = form.cleaned_data.get('razon')
             cancelar_intercambio(intercambio_id)
             enviar_mails_cancelacion(user1_id, user2_id, razon)
+            messages.success(request, 'Se canceló el intercambio y enviaron los mails exitosamente')
             return list_exchanges_today(request)
         else:
             return render(request, "intercambios/otro.html", {"form": form})
