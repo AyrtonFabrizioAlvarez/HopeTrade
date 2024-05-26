@@ -11,12 +11,21 @@ from django.utils import timezone
 def agregar_categoria(request):
     if request.method == 'POST':
         categoria_form = AgregarCategoriaForm(request.POST)
+        existe = bool(Categoria.objects.get(titulo=request.POST['titulo']))
+        print(existe)
         if categoria_form.is_valid():
-            categoria = categoria_form.save(commit=False)
-            categoria.estado = 'disponible'
-            categoria.save()
-            messages.success(request, "La categoría se creó exitosamente")
-            return redirect('/listados/listar_categorias')
+            if existe:
+                categoria = Categoria.objects.get(titulo=request.POST['titulo'])
+                categoria.estado = 'disponible'
+                categoria.save()
+                messages.success(request, "La categoría se creó exitosamente")
+                return redirect('/listados/listar_categorias')
+            else:
+                categoria = categoria_form.save(commit=False)
+                categoria.estado = 'disponible'
+                categoria.save()
+                messages.success(request, "La categoría se creó exitosamente")
+                return redirect('/listados/listar_categorias')
     else:
         categoria_form = AgregarCategoriaForm()
     
