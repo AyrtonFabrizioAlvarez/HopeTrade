@@ -61,7 +61,7 @@
 
         <div class="mb-3">
             <label class="form-label">Fecha de Nacimiento</label>
-            <input type="text" class="form-control {% if form_usuario.fecha_nac.errors %}is-invalid{% endif %}" name="fecha_nac" value="{{ form_usuario.fecha_nac.value}}" readonly>
+            <input type="text" class="form-control {% if form_usuario.fecha_nac.errors %}is-invalid{% endif %}" name="fecha_nac" value="{{ fecha_nac}}" readonly>
             {% for error in form_usuario.fecha_nac.errors %}
             <div class="invalid-feedback">
                 {{ error }}

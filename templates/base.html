@@ -88,7 +88,7 @@
                         {% if request.session.rol == 'ayudante' %}
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">Mi Perfil</a>
+                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
                                 </li>
                             </ul>
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
@@ -102,7 +102,7 @@
 
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">Mi Perfil</a>
+                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
                                 </li>
                             </ul>
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -133,7 +133,7 @@
                     {% else %}
                         <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                             <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">Mi Perfil</a>
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
                             </li>
                         </ul>
                     {% endif %}

@@ -256,6 +256,7 @@ def inicio_sesion_usuario(request, clave, password, form):
             if user.personaId.contraseña == password:
                 # Iniciar sesión
                 request.session['usuario_id'] = persona.id
+                request.session['nombre'] = persona.nombre
                 request.session['rol'] = 'usuario'
                 request.session['rol_id'] = user.id
                 print(request.session['usuario_id'])
@@ -289,6 +290,7 @@ def inicio_sesion_interno(request, clave, password, form):
         persona = ayudante.personaId
         if persona.contraseña == password:
             request.session['usuario_id'] = persona.id
+            request.session['nombre'] = persona.nombre
             request.session['rol'] = 'ayudante'
             request.session['rol_id'] = ayudante.id
             print(request.session['usuario_id'])
@@ -305,6 +307,7 @@ def inicio_sesion_interno(request, clave, password, form):
             if persona.contraseña == password:
                 # Iniciar sesión
                 request.session['usuario_id'] = persona.id
+                request.session['nombre'] = persona.nombre
                 request.session['rol'] = 'administrador'
                 request.session['rol_id'] = admin.id
                 print(request.session['usuario_id'])
