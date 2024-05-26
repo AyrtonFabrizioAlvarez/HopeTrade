@@ -23,7 +23,7 @@ def realizar_publicacion(request):
                     "error": 'No se pudo realizar la publicación, actualmente ya posee una publicación con el mismo título'
                 })  
                 publicacion.categoria_id = realizar_publicacion_form.cleaned_data['categoriaId'].id
-                publicacion.aceptada = False
+                publicacion.estado = "disponible"
                 publicacion.save()
                 ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
                 return redirect(ruta)
@@ -64,8 +64,12 @@ def realizar_comentario(request, publicacion_id):
     })
 
 def listar_publicaciones_sistema(request):
-    publicacionesSistema = Publicacion.objects.all().exclude(titulo='eliminado')
+    publicacionesSistema = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
     categorias = Categoria.objects.all()
+    categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
+    for cat in categorias_eliminadas:
+        if not publicacionesSistema.filter(categoriaId=cat).exists():
+            categorias.exclude(id=cat.id)
     if len(publicacionesSistema) == 0:
         messages.warning(request, 'No existen publicaciones en el sistema')
     return render(request, "publicaciones/listar_publicaciones_sistema.html", {
@@ -76,8 +80,12 @@ def listar_publicaciones_sistema(request):
 
 def listar_publicaciones_usuario(request, user_id):
     usuario = Usuario.objects.get(id=user_id)
+    publicacionesUsuario = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada')
     categorias = Categoria.objects.all()
-    publicacionesUsuario = Publicacion.objects.filter(usuarioId=usuario).exclude(titulo='eliminado')
+    categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
+    for cat in categorias_eliminadas:
+        if not publicacionesUsuario.filter(categoriaId=cat).exists():
+            categorias.exclude(id=cat.id)
     if len(publicacionesUsuario) == 0:
         messages.warning(request, 'No existen publicaciones en el sistema')
     return render(request, "publicaciones/listar_publicaciones_usuario.html", {
@@ -93,15 +101,19 @@ def seleccionar_publicacion(request, publicacion_id):
 def eliminar_publicacion(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
     if request.method == "POST":
-        publicacion.titulo = 'eliminado'
+        publicacion.estado = 'eliminada'
         publicacion.save()
         ruta = "/publicaciones/listar_publicaciones_sistema/"
         return redirect(ruta)
     return render(request, 'publicaciones/eliminar_publicacion.html', { 'publicacion': publicacion })
 
 def filtrar_publicaciones_sistema(request):
-    publicaciones = Publicacion.objects.all().exclude(titulo='eliminado')
+    publicaciones = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
     categorias = Categoria.objects.all()
+    categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
+    for cat in categorias_eliminadas:
+        if not publicaciones.filter(categoriaId=cat).exists():
+            categorias.exclude(id=cat.id)
     categoria = request.POST.get('categoria')
     reputacion = request.POST.get('reputacion')
     if categoria != 'Categoria':
@@ -117,9 +129,12 @@ def filtrar_publicaciones_sistema(request):
     
 def filtrar_publicaciones_usuario(request):
     usuario = Usuario.objects.get(id=request.session['rol_id'])
-    print(request.session['rol_id'])
+    publicaciones = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada')
     categorias = Categoria.objects.all()
-    publicaciones = Publicacion.objects.filter(usuarioId=usuario).exclude(titulo='eliminado')
+    categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
+    for cat in categorias_eliminadas:
+        if not publicaciones.filter(categoriaId=cat).exists():
+            categorias.exclude(id=cat.id)
     categoria = request.POST.get('categoria')
     if categoria != 'Categoria':
         publicaciones = publicaciones.filter(categoriaId__id=categoria)

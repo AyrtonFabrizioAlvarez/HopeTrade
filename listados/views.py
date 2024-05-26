@@ -11,17 +11,28 @@ from django.utils import timezone
 def agregar_categoria(request):
     if request.method == 'POST':
         categoria_form = AgregarCategoriaForm(request.POST)
+        existe = bool(Categoria.objects.get(titulo=request.POST['titulo']))
+        print(existe)
         if categoria_form.is_valid():
-            categoria_form.save()
-            messages.success(request, "La categoría se creó exitosamente")
-            return redirect('/listados/listar_categorias')
+            if existe:
+                categoria = Categoria.objects.get(titulo=request.POST['titulo'])
+                categoria.estado = 'disponible'
+                categoria.save()
+                messages.success(request, "La categoría se creó exitosamente")
+                return redirect('/listados/listar_categorias')
+            else:
+                categoria = categoria_form.save(commit=False)
+                categoria.estado = 'disponible'
+                categoria.save()
+                messages.success(request, "La categoría se creó exitosamente")
+                return redirect('/listados/listar_categorias')
     else:
         categoria_form = AgregarCategoriaForm()
     
     return render(request, 'listados/agregar_categoria.html', {'form_categoria': categoria_form})
 
 def listar_categorias(request):
-    categorias = Categoria.objects.all()
+    categorias = Categoria.objects.all().exclude(estado='eliminada')
     return render(request, "listados/listar_categorias.html", {'categorias': categorias})
 
 def editar_categoria(request, categoria_id):
@@ -45,11 +56,13 @@ def eliminar_categoria(request, categoria_id):
         if Categoria.objects.count() > 1:
             return render(request, 'listados/eliminar_categoria.html', {'categoria':categoria})
         else:
-            messages.error(request, "No se puede eliminar la categoría, tiene que existir al menos una en el sistema")
+            messages.warning(request, "No se puede eliminar la categoría, tiene que existir al menos una en el sistema")
     elif request.method == 'POST':
         action = request.POST.get('action')
         if action == "confirm":
-            categoria.delete()
+            messages.success(request, 'Se eliminó la categoría exitosamente')
+            categoria.estado = 'eliminada'
+            categoria.save()
 
     return redirect('/listados/listar_categorias')
 

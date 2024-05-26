@@ -23,62 +23,54 @@
     {% endfor %}
 
 <form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_usuario' %}">
-    
     {% csrf_token %}
-    
-    <ul>
     <main class="container mt-5">
-        <div class="col d-flex">
+        <div class="col g-3 d-flex">
             <div class="col-md-4">
                 <div class="input-group">
                     <select class="form-select shadow-sm" name="categoria">
-                    <option selected>Categoria</option>
-                    {% for categoria in categorias %}
+                        <option selected>Categoria</option>
+                        {% for categoria in categorias %}
                         <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
-                    {% endfor %}
+                        {% endfor %}
                     </select>
                 </div>
             </div> 
-
-            <div class="col-md-4 d-flex align-items-center">
+            <div class="col-md-4">
                 {% load static %}
-                <button class="btn" type="submit">
-                    <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-width: 50px; height: auto;">
+                <button class="btn h-100 w-100" type="submit" style="display: flex; align-items: center; justify-content: left;">
+                    <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-height: 24px;">
                 </button>
             </div>
-        </div>    </main>
+        </div>
+    </main>
 </form> 
 <form method="GET">
-    {% csrf_token %}
-    {% if mensaje %}
-        <p>{{ mensaje }}</p>
-    {% else %}
-
-
-
+    {% csrf_token %}     
+    <ul>
         {% if publicacionesUsuario %}
-        <main class="container  mt-5">
-            <div class="row">
-            {% for publicacion in publicacionesUsuario %}
-                <div class="col-md-3 mb-4 d-flex align-items-stretch">
-                    <div class="card shadow-sm" style="width: 100%;">
-                        <div class="card-body">
-
-                            <h5 class="card-title"> {{publicacion.titulo}}</h5>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
-
-                            <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
-                            <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
-
+            <main class="container  mt-5">
+                <main class="container mt-4">
+                    <div class="row">
+                        {% for publicacion in publicacionesUsuario %}
+                        <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                            <div class="card shadow-sm" style="width: 100%;">
+                                <div class="card-body">
+                                    
+                                    <h5 class="card-title"> {{publicacion.titulo}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+                                    
+                                    <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
+                                    <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
+                                    
+                                </div>
+                            </div>
                         </div>
+                        {% endfor %}
                     </div>
-                </div>
-                {% endfor %}
-            </div>
-        </main>
+                </main>
+            </main>
         {% endif %}
     </ul>
-    {% endif %}
-
 </form>
 {% endblock %}
