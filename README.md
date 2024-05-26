@@ -6,6 +6,14 @@
 
 **HopeTrade** es una solución digital diseñada para facilitar la interacción entre donantes y beneficiarios, permitiendo la publicación de ofertas y solicitudes de trueque y donaciones de manera sencilla y efectiva.
 
+## Tecnologías utilizadas
+
+<p>
+  <a href="https://github.com/AyrtonFabrizioAlvarez">
+    <img src="https://skillicons.dev/icons?i=python,django,html,css,bootstrap&theme=dark" />
+  </a>
+</p>
+
 ## Cómo Utilizar el Proyecto
 
 ### Clonar el Repositorio
