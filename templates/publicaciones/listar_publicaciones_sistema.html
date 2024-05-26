@@ -21,44 +21,43 @@
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
-<form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_sistema' %}">
+    <form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_sistema' %}">
+        {% csrf_token %}
+        <main class="container mt-5">
+            <div class="col g-3 d-flex">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <select class="form-select shadow-sm" name="categoria">
+                            <option selected>Categoria</option>
+                            {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div> 
     
-    {% csrf_token %}
-    <main class="container mt-5">
-        <div class="col d-flex">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <select class="form-select shadow-sm" name="categoria">
-                        <option selected>Categoria</option>
-                        {% for categoria in categorias %}
-                        <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <select class="form-select shadow-sm" name="reputacion">
+                            <option selected>Reputacion</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
                 </div>
-            </div> 
-
-            <div class="col-md-4">
-                <div class="input-group">
-                    <select class="form-select shadow-sm" name="reputacion">
-                        <option selected>Reputacion</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
+                
+                <div class="col-md-4">
+                    {% load static %}
+                    <button class="btn h-100 w-100" type="submit" style="display: flex; align-items: center; justify-content: left;">
+                        <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-height: 24px;">
+                    </button>
                 </div>
             </div>
-            
-            <div class="col-md-4 d-flex align-items-center">
-                {% load static %}
-                <button class="btn" type="submit">
-                    <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-width: 50px; height: auto;">
-                </button>
-            </div>
-        </div>
-    </main>
-</form> 
+        </main>
+    </form>
 <form method="GET">
     {% csrf_token %}
     <ul>
