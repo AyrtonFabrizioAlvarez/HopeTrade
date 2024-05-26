@@ -9,9 +9,5 @@ from django.utils import timezone
 
 def list_exchanges_today(request):
     hoy = timezone.now().date()
-    intercambios_hoy = Intercambio.objects.filter(ofrecimientoId__fecha__date=hoy)
-    print(hoy)
-    i = Intercambio.objects.get(id=1)
-    print(i.ofrecimientoId.fecha.date())
-    print(intercambios_hoy)
+    intercambios_hoy = Intercambio.objects.filter(ofrecimientoId__fecha__date=hoy).filter(estado = "pendiente")
     return render(request, "intercambios/intercambios_del_dia.html", {"intercambios_hoy": intercambios_hoy})
