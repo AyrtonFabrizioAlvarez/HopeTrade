@@ -8,9 +8,20 @@
     <form method="GET">
         <h1>Intercambios del día</h1>
 
-        {% if mensaje %}
-            <p>{{ mensaje }}</p>
-        {% else %}
+        {% for msg in messages %}
+          <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+            <symbol id="check-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+            </symbol>
+          </svg>
+          <div class="alert alert-success d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"></use></svg>
+              <div>
+                {{ msg }}
+              </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor%}
             {% csrf_token %}
             {% if intercambios_hoy %}
             <div class="container">
@@ -24,7 +35,7 @@
                                     <p><strong>Usuario que publica:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.publicacionId.usuarioId.id %}">{{ intercambio.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</a></p>
                                     <p><strong>Usuario que ofrece:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.usuarioId.id %}">{{ intercambio.ofrecimientoId.usuarioId.personaId.nombre }}</a></p>
                                     <a href="{% url 'listados:listar_intercambios_del_dia_confirmar' intercambio.id %}" class="btn btn-lg btn-success mx-2">Intercambio exitoso</a>
-                                    <a href="#" class="btn btn-danger">Intercambio cancelado</a>
+                                    <a href="{% url 'intercambios:cancelar_intercambio' intercambio.id %}" class="btn btn-danger">Intercambio cancelado</a>
                                 </div>
                             </div>
                         </div>
@@ -34,6 +45,6 @@
             {% else %}
                 <h1>No existen intercambios para el día de hoy</h1>
             {% endif %}
-        {% endif %}
+        
     </form>
 {% endblock %}
