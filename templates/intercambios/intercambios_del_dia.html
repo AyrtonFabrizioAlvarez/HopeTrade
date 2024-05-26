@@ -24,7 +24,7 @@
                                     <p><strong>Usuario que publica:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.publicacionId.usuarioId.id %}">{{ intercambio.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</a></p>
                                     <p><strong>Usuario que ofrece:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.usuarioId.id %}">{{ intercambio.ofrecimientoId.usuarioId.personaId.nombre }}</a></p>
                                     <a href="{% url 'listados:listar_intercambios_del_dia_confirmar' intercambio.id %}" class="btn btn-lg btn-success mx-2">Intercambio exitoso</a>
-                                    <a href="#" class="btn btn-danger">Intercambio cancelado</a>
+                                    <a href="{% url 'intercambios:cancelar_intercambio' intercambio.id %}" class="btn btn-danger">Intercambio cancelado</a>
                                 </div>
                             </div>
                         </div>

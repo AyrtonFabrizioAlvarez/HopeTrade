@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from intercambios.models import Intercambio
+from sesiones.models import Usuario
 from sesiones.views import enviar_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from listados.views import list_exchanges_today
+from .forms import escribir_texto_cancelacion
 # Create your views here.
 def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
@@ -30,3 +32,69 @@ def confirm_exchange(request, intercambio_id):
         ""
     )
     return list_exchanges_today(request)
+
+def cancel_exchange(request, intercambio_id):
+    intercambio = get_object_or_404(Intercambio, id=intercambio_id)
+    return render(request, "intercambios/cancelar_intercambio.html", {"intercambio": intercambio})
+
+def cancel_exchange_partial_absence(request, intercambio_id, user1_id, user2_id):
+    intercambio = get_object_or_404(Intercambio, id=intercambio_id)
+    return render(request, "intercambios/inasistencia_parcial.html", {"intercambio": intercambio})
+
+
+def cancelar_intercambio(intercambio_id):
+    intercambio = get_object_or_404(Intercambio, id=intercambio_id)
+    intercambio.estado = "cancelado"
+    intercambio.save()
+
+def partial_absence(request, intercambio_id, user1_id, user2_id):
+    cancelar_intercambio(intercambio_id)
+    user1 = get_object_or_404(Usuario, id=user1_id)
+    user2 = get_object_or_404(Usuario, id=user2_id)
+    enviar_mail(
+        "Valoración", 
+        f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a tu ausencia. Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre}", 
+        user1.email, 
+        ""
+    )
+    enviar_mail(
+        "Intercambio Cancelado", 
+        f"Tu intercambio con {user1.personaId.nombre} ha sido cancelado debido a tu ausencia ", 
+        user2.email, 
+        ""
+    )
+    return list_exchanges_today(request)
+
+def total_absence(request, intercambio_id, user1_id, user2_id):
+    cancelar_intercambio(intercambio_id)
+    enviar_mails_cancelacion(user1_id, user2_id, "mutua ausencia")
+    return list_exchanges_today(request)
+
+def other(request, intercambio_id, user1_id, user2_id):
+    if request.method == "GET":
+        return render(request, "intercambios/otro.html", {"form": escribir_texto_cancelacion()})
+    elif request.method == "POST":
+        form = escribir_texto_cancelacion(request.POST)
+        if form.is_valid():
+            razon = form.cleaned_data.get('razon')
+            cancelar_intercambio(intercambio_id)
+            enviar_mails_cancelacion(user1_id, user2_id, razon)
+            return list_exchanges_today(request)
+        else:
+            return render(request, "intercambios/otro.html", {"form": form})
+
+def enviar_mails_cancelacion(user1_id, user2_id, razon):
+    user1 = get_object_or_404(Usuario, id=user1_id)
+    user2 = get_object_or_404(Usuario, id=user2_id)
+    enviar_mail(
+        "Intercambio Cancelado", 
+        f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a {razon} ", 
+        user1.email, 
+        ""
+    )
+    enviar_mail(
+        "Intercambio Cancelado", 
+        f"Tu intercambio con {user1.personaId.nombre} ha sido cancelado debido a {razon} ", 
+        user2.email, 
+        ""
+    )

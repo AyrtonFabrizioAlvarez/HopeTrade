@@ -25,5 +25,4 @@ urlpatterns = [
     path('intercambios/', include(('intercambios.urls', 'intercambios'))),
     path('listados/', include(('listados.urls', 'listados'))),
     path('', sesiones.ver_landing_page),
-    path('listados/', include(('listados.urls', 'listados')))
 ]
