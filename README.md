@@ -8,11 +8,14 @@
 
 ## Tecnologías utilizadas
 
-<p>
-  <a href="https://github.com/AyrtonFabrizioAlvarez">
-    <img src="https://skillicons.dev/icons?i=python,django,html,css,bootstrap&theme=dark" />
-  </a>
-</p>
+[![Python](https://skillicons.dev/icons?i=python&theme=dark)](https://www.python.org/)
+[![Django](https://skillicons.dev/icons?i=django&theme=dark)](https://www.djangoproject.com/)
+[![HTML](https://skillicons.dev/icons?i=html&theme=dark)](https://developer.mozilla.org/es/docs/Web/HTML)
+[![CSS](https://skillicons.dev/icons?i=css&theme=dark)](https://developer.mozilla.org/es/docs/Web/CSS)
+[![Bootstrap](https://skillicons.dev/icons?i=bootstrap&theme=dark)](https://getbootstrap.com/)
+
+
+<br>
 
 ## Cómo Utilizar el Proyecto
 
