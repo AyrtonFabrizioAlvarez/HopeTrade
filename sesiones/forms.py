@@ -122,7 +122,22 @@ class EditarAyudanteForm(forms.ModelForm):
             
 
 class IniciarSesionUsuario(forms.Form):
-    usuario = forms.CharField()
-    contraseña = forms.CharField()
+    usuario = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Usuario'
+        })
+    )
+    contraseña = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Contraseña'
+        })
+    )
 class RecuperarClave(forms.Form):
-    dni = forms.IntegerField()
+    dni = forms.IntegerField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'DNI'
+        })
+    )

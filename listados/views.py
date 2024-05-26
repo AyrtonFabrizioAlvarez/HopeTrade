@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AgregarCategoriaForm, EditarCategoriaForm
 from listados.models import Categoria
 from django.contrib import messages
+from intercambios.models import Intercambio
+from ofrecimientos.models import Ofrecimiento
+from datetime import datetime
+
+from django.utils import timezone
 
 def agregar_categoria(request):
     if request.method == 'POST':
@@ -47,3 +52,9 @@ def eliminar_categoria(request, categoria_id):
             categoria.delete()
 
     return redirect('/listados/listar_categorias')
+
+def list_exchanges_today(request):
+    hoy = timezone.now().date()
+    intercambios_hoy = Intercambio.objects.filter(ofrecimientoId__fecha__date=hoy).filter(estado = "pendiente")
+    return render(request, "intercambios/intercambios_del_dia.html", {"intercambios_hoy": intercambios_hoy})
+
