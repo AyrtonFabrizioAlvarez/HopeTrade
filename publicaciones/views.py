@@ -64,7 +64,9 @@ def realizar_comentario(request, publicacion_id):
     })
 
 def listar_publicaciones_sistema(request):
-    publicacionesSistema = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
+    publicacionesSistema = Publicacion.objects.all()
+    if request.session['rol'] != 'administrador':
+        publicacionesSistema = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
     for cat in categorias_eliminadas:
@@ -108,7 +110,9 @@ def eliminar_publicacion(request, publicacion_id):
     return render(request, 'publicaciones/eliminar_publicacion.html', { 'publicacion': publicacion })
 
 def filtrar_publicaciones_sistema(request):
-    publicaciones = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
+    publicaciones = Publicacion.objects.all()
+    if request.session['rol'] != 'administrador':
+        publicaciones = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
     for cat in categorias_eliminadas:
@@ -116,10 +120,13 @@ def filtrar_publicaciones_sistema(request):
             categorias.exclude(id=cat.id)
     categoria = request.POST.get('categoria')
     reputacion = request.POST.get('reputacion')
+    estado = request.POST.get('estado')
     if categoria != 'Categoria':
         publicaciones = publicaciones.filter(categoriaId__id=categoria)
     if reputacion != 'Reputacion':
         publicaciones = publicaciones.filter(usuarioId__reputacion=reputacion)
+    if estado != 'Estado':
+        publicaciones = publicaciones.filter(estado=estado)
     if len(publicaciones) == 0:
         messages.warning(request, f'No existen publicaciones para el filtro seleccionado')
     return render(request, "publicaciones/listar_publicaciones_sistema.html", {
