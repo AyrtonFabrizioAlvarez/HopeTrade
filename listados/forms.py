@@ -11,7 +11,7 @@ class AgregarCategoriaForm(forms.ModelForm):
 
     def clean_titulo(self):
         titulo = self.cleaned_data.get('titulo')
-        if Categoria.objects.filter(titulo=titulo).exists():
+        if Categoria.objects.filter(titulo=titulo).exclude(estado='eliminada').exists():
             raise forms.ValidationError("El nombre de la categoría ya existe.")
         return titulo
 
