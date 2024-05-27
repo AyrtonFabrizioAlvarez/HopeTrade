@@ -24,5 +24,6 @@ urlpatterns = [
     path('publicaciones/', include(('publicaciones.urls', 'publicaciones'))),
     path('intercambios/', include(('intercambios.urls', 'intercambios'))),
     path('', sesiones.ver_landing_page),
-    path('listados/', include(('listados.urls', 'listados')))
+    path('listados/', include(('listados.urls', 'listados'))),
+    path('ofrecimientos/', include('ofrecimientos.urls')),
 ]

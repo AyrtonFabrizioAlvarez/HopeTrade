@@ -50,7 +50,7 @@ def realizar_comentario(request, publicacion_id):
                 comentario.fecha = datetime.now()
                 usuarioId = request.session.get('rol_id')
                 comentario.usuarioId = Usuario.objects.get(id=usuarioId)
-                comentario.publicacionId = Publicacion.objects.get(id=publicacion_id) #falla aca
+                comentario.publicacionId = Publicacion.objects.get(id=publicacion_id) 
                 comentario.save()
                 ruta = "/publicaciones/seleccionar_publicacion/" + str(publicacion_id)
                 return redirect(ruta)
