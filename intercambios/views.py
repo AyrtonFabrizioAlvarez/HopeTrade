@@ -21,7 +21,6 @@ def confirm_exchange(request, intercambio_id):
     intercambio.estado = "terminado"
     intercambio.save()
     
-    # Obtén el id de la publicación en lugar del objeto completo
     publicacionid = intercambio.ofrecimientoId.publicacionId.id
     
     ofrecimientos = Ofrecimiento.objects.filter(publicacionId__id=publicacionid)
@@ -75,7 +74,7 @@ def partial_absence(request, intercambio_id, user1_id, user2_id):
     user2 = get_object_or_404(Usuario, id=user2_id)
     enviar_mail(
         "Valoración", 
-        f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a tu ausencia. Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre}", 
+        f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a su ausencia. Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre}", 
         user1.email, 
         ""
     )
@@ -123,3 +122,6 @@ def enviar_mails_cancelacion(user1_id, user2_id, razon):
         user2.email, 
         ""
     )
+
+def value_user (request):
+    return render(request, "intercambios/valorar_usuario.html")
