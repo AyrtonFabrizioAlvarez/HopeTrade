@@ -48,6 +48,19 @@
                         </select>
                     </div>
                 </div>
+
+                {% if request.session.rol == 'administrador' %}
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <select class="form-select shadow-sm" name="estado">
+                                <option selected>Estado</option>
+                                <option>aceptada</option>
+                                <option>disponible</option>
+                                <option>eliminada</option>
+                            </select>
+                        </div>
+                    </div>
+                {% endif %}
                 
                 <div class="col-md-4">
                     {% load static %}
@@ -81,21 +94,21 @@
                         {% endfor %}
                     </div>
                 </main>
+                {% endif %}
                 {% if request.session.rol == 'usuario' %}
-                    <main class="container mt-4">
-                        <div class="row">
-                            <div class="col-md-3 mb-4">
-                                <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-success">Crear nueva publicación</a>
-                            </div>
-                            <div class="col-md-3 mb-4">
-                                <a href="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" class="btn btn-primary">Ver mis publicaciones</a>
-                            </div>
+                <main class="container mt-4">
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <a href="{% url 'publicaciones:realizar_publicacion' %}" class="btn btn-success">Crear nueva publicación</a>
                         </div>
-                    </main>
+                        <div class="col-md-3 mb-4">
+                            <a href="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" class="btn btn-primary">Ver mis publicaciones</a>
+                        </div>
+                    </div>
+                </main>
                 {% endif %}
             </main>
-        {% endif %}
-    </ul>
+        </ul>
 </form>
 
 {% endblock %}
