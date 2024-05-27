@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
-        /* Estilos adicionales */
         .jumbotron {
             background-color: #f8f9fa;
             box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
@@ -75,11 +74,7 @@
                         {% if request.session.rol == 'ayudante' %}
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                                 <li class="nav-item">
-<<<<<<< HEAD
-                                    <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">Mi Perfil</a>
-=======
                                 <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
->>>>>>> 6883e8ace5882b671dc70c023886bccb23c15f6c
                                 </li>
                             </ul>
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
@@ -92,11 +87,7 @@
                         {% if request.session.rol == "administrador" %}
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                                 <li class="nav-item">
-<<<<<<< HEAD
-                                    <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">Mi Perfil</a>
-=======
                                 <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
->>>>>>> 6883e8ace5882b671dc70c023886bccb23c15f6c
                                 </li>
                             </ul>
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -123,11 +114,8 @@
                     {% else %}
                         <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                             <li class="nav-item">
-<<<<<<< HEAD
-                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">Mi Perfil</a>
-=======
+
                             <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
->>>>>>> 6883e8ace5882b671dc70c023886bccb23c15f6c
                             </li>
                         </ul>
                     {% endif %}
