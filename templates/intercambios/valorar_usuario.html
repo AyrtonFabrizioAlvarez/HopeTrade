@@ -2,9 +2,6 @@
 
 {% load static %}
 
-{% block title %}
-    Valoración de Intercambio
-{% endblock title %}
 
 {% block head %}
     {{ block.super }}
@@ -24,7 +21,7 @@
     </div>
     <form id="valoracion-form" method="POST" action="{% url 'intercambios:valorar_usuario' intercambio_id user1_id user2_id %}">
         {% csrf_token %}
-        <input type="hidden" name="rating" id="rating-input">
+        <input type="hidden" name="rating" id="rating-input" value="0"> 
         <button type="submit" id="confirmar-btn">Confirmar</button>
     </form>
 </div>
