@@ -14,13 +14,13 @@
                 <a href="{% url 'intercambios:inasistencia_parcial_enviarmails' intercambio.id intercambio.ofrecimientoId.publicacionId.usuarioId.id intercambio.ofrecimientoId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">
                     <div>{{ intercambio.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</div>
                     <div class="small">
-                      ID: {{ intercambio.ofrecimientoId.publicacionId.usuarioId.id }}
+                      DNI: {{ intercambio.ofrecimientoId.publicacionId.usuarioId.dni }}
                     </div>
                   </a>
                   <a href="{% url 'intercambios:inasistencia_parcial_enviarmails' intercambio.id  intercambio.ofrecimientoId.usuarioId.id intercambio.ofrecimientoId.publicacionId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">
                     <div>{{ intercambio.ofrecimientoId.usuarioId.personaId.nombre }}</div>
                     <div class="small">
-                      ID: {{ intercambio.ofrecimientoId.usuarioId.id }}
+                      DNI: {{ intercambio.ofrecimientoId.usuarioId.dni }}
                     </div>
                   </a>
             </div>

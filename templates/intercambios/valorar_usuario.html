@@ -2,13 +2,12 @@
 
 {% load static %}
 
-{% block title %}
-
-{% endblock title %}
 
 {% block head %}
+    {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 {% endblock head %}
+
 {% block content %}
 <div class="valoracion-container">
     <h2>Valoración</h2>
@@ -20,7 +19,11 @@
         <span class="estrella" data-value="4">&#9734;</span>
         <span class="estrella" data-value="5">&#9734;</span>
     </div>
-    <button id="confirmar-btn">Confirmar</button>
+    <form id="valoracion-form" method="POST" action="{% url 'intercambios:valorar_usuario' intercambio_id user1_id user2_id %}">
+        {% csrf_token %}
+        <input type="hidden" name="rating" id="rating-input" value="0"> 
+        <button type="submit" id="confirmar-btn">Confirmar</button>
+    </form>
 </div>
 
 <script>
@@ -32,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         estrella.addEventListener('click', function() {
             valorSeleccionado = this.getAttribute('data-value');
             actualizarEstrellas(valorSeleccionado);
+            document.getElementById('rating-input').value = valorSeleccionado;
         });
     });
 
@@ -46,4 +50,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-{% endblock %}
+{% endblock content %}
