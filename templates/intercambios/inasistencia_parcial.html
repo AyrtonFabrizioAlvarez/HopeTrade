@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Inasistencia Parcial</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1 class="mb-4">Inasistencia Parcial</h1>
+            <p class="mb-4">¿Cuál de los dos usuarios se presentó?</p>
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'intercambios:inasistencia_parcial_enviarmails' intercambio.id intercambio.ofrecimientoId.publicacionId.usuarioId.id intercambio.ofrecimientoId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">
+                    <div>{{ intercambio.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</div>
+                    <div class="small">
+                      DNI: {{ intercambio.ofrecimientoId.publicacionId.usuarioId.dni }}
+                    </div>
+                  </a>
+                  <a href="{% url 'intercambios:inasistencia_parcial_enviarmails' intercambio.id  intercambio.ofrecimientoId.usuarioId.id intercambio.ofrecimientoId.publicacionId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">
+                    <div>{{ intercambio.ofrecimientoId.usuarioId.personaId.nombre }}</div>
+                    <div class="small">
+                      DNI: {{ intercambio.ofrecimientoId.usuarioId.dni }}
+                    </div>
+                  </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

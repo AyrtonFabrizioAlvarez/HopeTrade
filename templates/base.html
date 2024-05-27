@@ -73,66 +73,74 @@
                         </li>
                     </ul>
                 {% else %}
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
-                        </li>
-                    </ul>
-
-                    {% if request.session.rol != "usuario" %}
+                    {% if request.session.rol == "administrador" %}
+                        <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">{{ request.session.nombre|title }}</a>
+                            </li>
+                        </ul>
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
                             </li>
                         </ul>
-                        {% if request.session.rol == 'ayudante' %}
-                            <ul class="navbar-nav me-auto mb-3 mb-lg-0">
-                                <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">Mi Perfil</a>
-                                </li>
-                            </ul>
-                        {% endif %}
-
-                        {% if request.session.rol == "administrador" %}
-
-                            <ul class="navbar-nav me-auto mb-3 mb-lg-0">
-                                <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">Mi Perfil</a>
-                                </li>
-                            </ul>
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
-                                </li>
-                            </ul>
-
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
-                                </li>
-                            </ul>
-
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
-                                </li>
-                            </ul>
-
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/listados/listar_categorias/">Categorias</a>
-                                </li>
-                            </ul>
-                        {% endif %}
-
-                    {% else %}
-                        <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">Mi Perfil</a>
+                                <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/listados/listar_categorias/">Categorias</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
                             </li>
                         </ul>
                     {% endif %}
 
+                    {% if request.session.rol == "ayudante" %}
+                        <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_helper/{{ request.session.rol_id }}">{{ request.session.nombre|title }}</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/listados/listar_intercambios_del_dia/">Ver intercambios</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+
+                    {% if request.session.rol == "usuario" %}
+                        <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                            <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">{{ request.session.nombre|title }}</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/publicaciones/listar_publicaciones_sistema/">Publicaciones</a>
+                            </li>
+                        </ul>
+                    {% endif %}
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/sesiones/signout/">Cerrar Sesion</a>
@@ -140,10 +148,7 @@
                     </ul>
 
                 {% endif %}
-
-
             </div>
-
         </div>
     </nav>
 

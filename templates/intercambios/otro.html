@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>¿Por qué razón se esta cancelando el intercambio?</h3>
+                <p class="mb-4">La razón se le enviara a ambos usuarios por mail</p>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.razon.label_tag }}
+                        {{ form.razon }}
+                        {% if form.razon.errors %}
+                            <div class="alert alert-danger mt-2">{{ form.razon.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-danger">Cancelar Intercambio</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

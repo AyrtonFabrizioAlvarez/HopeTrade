@@ -19,32 +19,31 @@
             </div>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    {% endfor %}
+{% endfor %}
 <form method="GET">
-
     {% csrf_token %}
-
     <ul>
         {% if usuarios %}
-        <div class="row">
-            {% for usuario in usuarios %}
-            <div class="col-md-3 mb-4 d-flex align-items-stretch">
-                <div class="card shadow-sm" style="width: 100%;">
-                    <div class="card-body">
-                        <a href="{% url 'sesiones:view_profile_user' usuario.id %}">
-                            {{ usuario.personaId.nombre }} {{usuario.personaId.apellido}}
-                        </a>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ usuario.dni }}</h6>
-                        {% if request.session.rol == 'administrador'%}
-                            <a href="{% url 'sesiones:delete_user' usuario.id %}" class="btn btn-danger">Eliminar Usuario</a>
-                        {% endif %}
-                    </div>
+            <main class="container mt-5">
+                <div class="row">
+                    {% for usuario in usuarios %}
+                        <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                            <div class="card shadow-sm" style="width: 100%;">
+                                <div class="card-body">
+                                    <a href="{% url 'sesiones:view_profile_user' usuario.id %}">
+                                        {{ usuario.personaId.nombre }} {{usuario.personaId.apellido}}
+                                    </a>
+                                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ usuario.dni }}</h6>
+                                    {% if request.session.rol == 'administrador'%}
+                                        <a href="{% url 'sesiones:delete_user' usuario.id %}" class="btn btn-danger">Eliminar Usuario</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            </div>
-            {% endfor %}
-        </div>
+            </main>
         {% endif %}
     </ul>
-
 </form>
 {% endblock content %}

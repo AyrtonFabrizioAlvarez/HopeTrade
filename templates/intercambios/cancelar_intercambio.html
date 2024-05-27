@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Cancelar intercambio</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1 class="mb-4">Cancelar intercambio</h1>
+            <p class="mb-4">¿Por que razón se esta cancelando el intercambio?</p>
+
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'intercambios:inasistencia_parcial' intercambio.id intercambio.ofrecimientoId.publicacionId.usuarioId.id intercambio.ofrecimientoId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">Inasistencia parcial</a>
+                <a href="{% url 'intercambios:inasistencia_total' intercambio.id intercambio.ofrecimientoId.publicacionId.usuarioId.id intercambio.ofrecimientoId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">Inasistencia total</a>
+                <a href="{% url 'intercambios:otro' intercambio.id intercambio.ofrecimientoId.publicacionId.usuarioId.id intercambio.ofrecimientoId.usuarioId.id %}" class="btn btn-lg btn-success mx-2">Otro</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
