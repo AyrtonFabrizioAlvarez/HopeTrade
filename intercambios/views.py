@@ -21,12 +21,11 @@ def confirm_exchange(request, intercambio_id):
     intercambio.estado = "terminado"
     intercambio.save()
     
-    # Obtén el id de la publicación en lugar del objeto completo
     publicacionid = intercambio.ofrecimientoId.publicacionId.id
     
     ofrecimientos = Ofrecimiento.objects.filter(publicacionId__id=publicacionid)
     for ofrecimiento in ofrecimientos:
-        if intercambio.ofrecimientoId != ofrecimiento:
+        if intercambio.ofrecimientoId.id != ofrecimiento.id:
             enviar_mail(
                 "Tu ofrecimiento ya no existe", 
                 f"El ofrecimiento que le hiciste a la publicación {ofrecimiento.publicacionId.titulo} ya no existe debido a que ya fue intercambiado", 
@@ -36,15 +35,17 @@ def confirm_exchange(request, intercambio_id):
     
     user1 = intercambio.ofrecimientoId.publicacionId.usuarioId
     user2 = intercambio.ofrecimientoId.usuarioId
+    link1 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user1.id}/{user2.id}"
+    link2 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user2.id}/{user1.id}"
     enviar_mail(
         "Valoración", 
-        f"Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre}", 
+        f"Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre} a traves del siguiente link: {link1}", 
         user1.email, 
         ""
     )
     enviar_mail(
         "Valoración", 
-        f"Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user1.personaId.nombre}", 
+        f"Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user1.personaId.nombre} a traves del siguiente link: {link2}", 
         user2.email, 
         ""
     )
@@ -73,9 +74,10 @@ def partial_absence(request, intercambio_id, user1_id, user2_id):
     cancelar_intercambio(intercambio_id)
     user1 = get_object_or_404(Usuario, id=user1_id)
     user2 = get_object_or_404(Usuario, id=user2_id)
+    link1 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user1.id}/{user2.id}"
     enviar_mail(
         "Valoración", 
-        f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a tu ausencia. Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre}", 
+        f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a su ausencia. Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre} en el siguiente link: {link1}", 
         user1.email, 
         ""
     )
@@ -123,3 +125,15 @@ def enviar_mails_cancelacion(user1_id, user2_id, razon):
         user2.email, 
         ""
     )
+
+def value_user (request, intercambio_id, user1_id, user2_id):
+    user2 = get_object_or_404(Usuario, id=user2_id)
+    if request.method == "GET":
+        return render(request, "intercambios/valorar_usuario.html", {"intercambio_id": intercambio_id, "user1_id": user1_id, "user2_id": user2_id})
+    elif request.method == 'POST':
+        rating = int(request.POST.get('rating', 0))
+        user2.reputacion = (user2.reputacion + rating) / (user2.cant_valoraciones + 1)
+        user2.cant_valoraciones = user2.cant_valoraciones + 1
+        user2.save()
+        messages.success(request, 'Tu valoración se envió exitosamente')
+        return redirect("/")  

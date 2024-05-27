@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+{% endblock head %}
+
+{% block content %}
+<div class="valoracion-container">
+    <h2>Valoración</h2>
+    <h3>¿Qué puntuación deseas darle al usuario?</h3>
+    <div class="estrellas">
+        <span class="estrella" data-value="1">&#9734;</span>
+        <span class="estrella" data-value="2">&#9734;</span>
+        <span class="estrella" data-value="3">&#9734;</span>
+        <span class="estrella" data-value="4">&#9734;</span>
+        <span class="estrella" data-value="5">&#9734;</span>
+    </div>
+    <form id="valoracion-form" method="POST" action="{% url 'intercambios:valorar_usuario' intercambio_id user1_id user2_id %}">
+        {% csrf_token %}
+        <input type="hidden" name="rating" id="rating-input" value="0"> 
+        <button type="submit" id="confirmar-btn">Confirmar</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const estrellas = document.querySelectorAll('.estrella');
+    let valorSeleccionado = 0;
+
+    estrellas.forEach(estrella => {
+        estrella.addEventListener('click', function() {
+            valorSeleccionado = this.getAttribute('data-value');
+            actualizarEstrellas(valorSeleccionado);
+            document.getElementById('rating-input').value = valorSeleccionado;
+        });
+    });
+
+    function actualizarEstrellas(valor) {
+        estrellas.forEach(estrella => {
+            if (estrella.getAttribute('data-value') <= valor) {
+                estrella.innerHTML = '&#9733;';  // Estrella llena
+            } else {
+                estrella.innerHTML = '&#9734;';  // Estrella vacía
+            }
+        });
+    }
+});
+</script>
+{% endblock content %}
