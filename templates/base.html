@@ -1,75 +1,61 @@
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <style>
-    /* Estilos adicionales */
-    .jumbotron {
-      background-color: #f8f9fa;
-      box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
-      padding: 40px;
-    }
-  </style>
-  <style>
-    html, body {
-        height: 100%;
-    }
-</style>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    /* Estilos adicionales */
-    .jumbotron {
-      background-color: #f8f9fa;
-      box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
-      padding: 40px;
-    }
-  </style>
+    <style>
+        .jumbotron {
+            background-color: #f8f9fa;
+            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+    </style>
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
+
     {% block title %}
     {% endblock title %}
+
+    {% block head %}
+    {% endblock head %}
 </head>
 <body class="d-flex flex-column h-100">
 
     <nav class="navbar sticky-top sticky-top navbar-expand-lg bg-body-tertiary shadow-sm">
         <div class="container-fluid">
-
             <div class="container">
                 {% load static %}
                 <a class="navbar-brand" href="/">
-                  <img src="{% static 'logo.png' %}" style="max-width: 200px; height: auto;">
+                    <img src="{% static 'logo.png' %}" style="max-width: 200px; height: auto;">
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                
                 <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                     <li class="nav-item">
-                    <a class="nav-link scrollto active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link scrollto active" aria-current="page" href="/">Home</a>
                     </li>
                 </ul>
 
-                <!--SI NO INICIO SESION-->
+                <!-- SI NO INICIO SESION -->
                 {% if request.session.usuario_id is none %}
                     <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/signup/">Registrarse</a>
+                            <a class="nav-link active" aria-current="page" href="/sesiones/signup/">Registrarse</a>
                         </li>
                     </ul>
 
                     <ul class="navbar-nav me-auto mb-3 mb-lg-0">
-                        
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/signin/">Iniciar Sesion</a>
+                            <a class="nav-link active" aria-current="page" href="/sesiones/signin/">Iniciar Sesion</a>
                         </li>
                     </ul>
                 {% else %}
@@ -82,7 +68,7 @@
                     {% if request.session.rol != "usuario" %}
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
+                                <a class="nav-link active" aria-current="page" href="/sesiones/users/">Usuarios</a>
                             </li>
                         </ul>
                         {% if request.session.rol == 'ayudante' %}
@@ -93,13 +79,12 @@
                             </ul>
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/listados/listar_intercambios_del_dia/">Ver intercambios</a>
+                                    <a class="nav-link active" aria-current="page" href="/listados/listar_intercambios_del_dia/">Ver intercambios</a>
                                 </li>
                             </ul>
                         {% endif %}
 
                         {% if request.session.rol == "administrador" %}
-
                             <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                                 <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_admin/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
@@ -110,29 +95,26 @@
                                     <a class="nav-link active" aria-current="page" href="/sesiones/helpers/">Ayudantes</a>
                                 </li>
                             </ul>
-
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
                                     <a class="nav-link active" aria-current="page" href="/sesiones/signup_helper/">Registrar Ayudante</a>
                                 </li>
                             </ul>
-
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
+                                    <a class="nav-link active" aria-current="page" href="/sesiones/delete/">Eliminar Usuarios</a>
                                 </li>
                             </ul>
-
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/listados/listar_categorias/">Categorias</a>
+                                    <a class="nav-link active" aria-current="page" href="/listados/listar_categorias/">Categorias</a>
                                 </li>
                             </ul>
                         {% endif %}
-
                     {% else %}
                         <ul class="navbar-nav me-auto mb-3 mb-lg-0">
                             <li class="nav-item">
+
                             <a class="nav-link active" aria-current="page" href="/sesiones/view_profile_user/{{ request.session.rol_id }}">{{ request.session.nombre }}</a>
                             </li>
                         </ul>
@@ -140,18 +122,13 @@
 
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/sesiones/signout/">Cerrar Sesion</a>
+                            <a class="nav-link active" aria-current="page" href="/sesiones/signout/">Cerrar Sesion</a>
                         </li>
                     </ul>
-
                 {% endif %}
-
-
             </div>
-
         </div>
     </nav>
-
 
     {% block content %}
     {% endblock content %}

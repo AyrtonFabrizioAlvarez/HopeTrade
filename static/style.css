@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.valoracion-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.valoracion-container h2, 
+.valoracion-container h3 {
+    text-align: center;
+}
+
+.valoracion-container .estrellas {
+    font-size: 10em; 
+    color: gold;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.valoracion-container .estrella {
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+#confirmar-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
