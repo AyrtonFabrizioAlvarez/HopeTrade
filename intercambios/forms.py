@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+from .models import Intercambio
 
 class escribir_texto_cancelacion(forms.Form):
     razon = forms.CharField(
@@ -9,3 +10,8 @@ class escribir_texto_cancelacion(forms.Form):
         }),
         label='Razón'
     )
+
+class realizarIntercambio(forms.ModelForm):
+    class Meta:
+        model = Intercambio
+        fields = ('estado','ofrecimientoId')

@@ -32,8 +32,11 @@
                             <h5 class="card-title"> {{ofrecimiento.articulo}}</h5>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{ ofrecimiento.descripcion }}</h6>
 
-                            <a href="{% url 'publicaciones:aceptar_ofrecimiento' ofrecimiento.id %}" class="btn btn-success">Aceptar</a>
-                            <a href="{% url 'publicaciones:rechazar_ofrecimiento' ofecimiento.id %}" class="btn btn-danger">Rechazar</a>
+                            <a href="{% url 'ofrecimientos:aceptar_ofrecimiento' ofrecimiento.id %}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-success">Aceptar</button>
+                            </form>                            
+
+                            <a href="{% url 'ofrecimientos:rechazar_ofrecimiento' ofrecimiento.id %}" class="btn btn-danger">Rechazar</a>
 
                         </div>
                     </div>

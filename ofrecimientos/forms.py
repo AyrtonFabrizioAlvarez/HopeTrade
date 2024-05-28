@@ -42,3 +42,12 @@ class RealizarOfrecimiento(forms.ModelForm):
         if fecha.hour < 8 or fecha.hour >= 20:
             raise forms.ValidationError("Ingresar un horario entre las 08:00 y las 20:00.")
         return fecha
+    
+class escribir_texto_cancelacion(forms.Form):
+    texto = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'ej: sucursal muy lejana'
+        }),
+        label='Razón'
+    )
