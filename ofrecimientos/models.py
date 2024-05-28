@@ -13,6 +13,7 @@ class Ofrecimiento(models.Model):
     articulo = models.CharField(max_length=100)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=250)
+    estado = models.TextField()
     imagen = models.BinaryField(null=True, blank=True, editable=True)
     usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     categoriaId = models.ForeignKey(Categoria, on_delete=models.CASCADE)
