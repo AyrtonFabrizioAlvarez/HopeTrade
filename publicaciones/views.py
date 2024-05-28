@@ -7,6 +7,7 @@ from sesiones.models import Usuario
 from .forms import RealizarPublicacion
 from .forms import RealizarComentario
 from datetime import datetime
+import base64
 
 # Create your views here.
 def realizar_publicacion(request):
@@ -24,6 +25,12 @@ def realizar_publicacion(request):
                 })  
                 publicacion.categoria_id = realizar_publicacion_form.cleaned_data['categoriaId'].id
                 publicacion.estado = "disponible"
+                imagen=(
+                    base64.b64encode(realizar_publicacion_form.cleaned_data["imagen"].read())
+                    if realizar_publicacion_form.cleaned_data["imagen"]
+                    else realizar_publicacion_form.cleaned_data["imagen"]
+                )
+                publicacion.imagen = imagen
                 publicacion.save()
                 ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
                 return redirect(ruta)
@@ -98,7 +105,11 @@ def listar_publicaciones_usuario(request, user_id):
 def seleccionar_publicacion(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
     comentarios = Comentario.objects.filter(publicacionId=publicacion_id)
-    return render(request, 'publicaciones/seleccionar_publicacion.html', {'publicacion': publicacion, 'comentarios': comentarios})
+    if bool(publicacion.imagen):
+        publicacion_imagen = publicacion.imagen.decode("utf-8")
+    else:
+        publicacion_imagen = None
+    return render(request, 'publicaciones/seleccionar_publicacion.html', {'publicacion': publicacion, 'comentarios': comentarios, 'publicacion_imagen': publicacion_imagen})
 
 def eliminar_publicacion(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)

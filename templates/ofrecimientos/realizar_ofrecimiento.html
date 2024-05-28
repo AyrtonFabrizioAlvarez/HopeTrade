@@ -4,6 +4,7 @@
         <title>Ofrecimiento</title>
 {% endblock title %}
 {% block content %}
+
     <form method="POST" enctype="multipart/form-data" class="custom-form">
     
         {% csrf_token %}
@@ -11,63 +12,63 @@
         <div class="col-md-5 mx-auto">
             <div class="card p-4">
                 <h1 style="font-size: 2em;">Nuevo Ofrecimiento<h1></h1>
-                <div class="mb-0">
+                <div class="mb-3">
                     <label class="form-label" style="font-size: 20px;">Fecha</label>
-                    <input type="datetime-local" id="id_fecha" name="fecha" class="form-control {% if realizar_ofrecimiento.fecha.errors %}is-invalid{% endif %}" placeholder="dd/mm/aaaa HH:MM" name="fecha" value="{{ request.POST.fecha }}"">
-                    {% for error in form_usuario.fecha.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="mb-0">
-                    <label class="form-label" style="font-size: 20px;">Articulo</label>
-                    <input type="text" class="form-control {% if realizar_ofrecimiento.titulo.errors %}is-invalid{% endif %}" placeholder="articulo" name="articulo" value="{{ request.POST.articulo }}">
-                    {% for error in realizar_ofrecimiento.articulo.errors %}
+                    <input type="datetime-local" id="id_fecha" name="fecha" class="form-control {% if realizar_ofrecimiento_form.fecha.errors %}is-invalid{% endif %}" placeholder="dd/mm/aaaa HH:MM" name="fecha" value="{{ request.POST.fecha }}"">
+                    {% for error in realizar_ofrecimiento_form.fecha.errors %}
                     <div class="invalid-feedback">
                         {{ error }}
                     </div>
                     {% endfor %}
                 </div>
-                <div class="mb-0">
+                <div class="mb-3">
+                    <label class="form-label" style="font-size: 20px;">Articulo</label>
+                    <input type="text" class="form-control {% if realizar_ofrecimiento_form.titulo.errors %}is-invalid{% endif %}" placeholder="articulo" name="articulo" value="{{ request.POST.articulo }}">
+                    {% for error in realizar_ofrecimiento_form.articulo.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
                     <label class="form-label" style="font-size: 20px;">Cantidad</label>
-                    <input type="text" class="form-control {% if realizar_ofrecimiento.cantidad.errors %}is-invalid{% endif %}" placeholder="cantidad" name="cantidad" value="{{ request.POST.cantidad }}">
-                    {% for error in realizar_ofrecimiento.cantidad.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
+                    <input type="text" class="form-control {% if realizar_ofrecimiento_form.cantidad.errors %}is-invalid{% endif %}" placeholder="cantidad" name="cantidad" value="{{ request.POST.cantidad }}">
+                    {% for error in realizar_ofrecimiento_form.cantidad.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
                     {% endfor %}
                 </div>
-                <div class="mb-0">
+                <div class="mb-3">
                     <label class="form-label" style="font-size: 20px;">Descripcion</label>
-                    <input type="text" class="form-control {% if realizar_ofrecimiento.descripcion.errors %}is-invalid{% endif %}" placeholder="descripcion" name="descripcion" value="{{ request.POST.descripcion }}">
-                    {% for error in realizar_ofrecimiento.descripcion.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
+                    <input type="text" class="form-control {% if realizar_ofrecimiento_form.descripcion.errors %}is-invalid{% endif %}" placeholder="descripcion" name="descripcion" value="{{ request.POST.descripcion }}">
+                    {% for error in realizar_ofrecimiento_form.descripcion.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
                     {% endfor %}
                 </div>
-                <div class="mb-0">
+                <div class="mb-3">
                     <label class="form-label" style="font-size: 20px;">Imagen</label>
-                    <input type="file" class="form-control {% if realizar_ofrecimiento.imagen.errors %}is-invalid{% endif %}" placeholder="imagen" name="imagen" accept="image/*" value="{{ request.POST.imagen }}">
-                    {% for error in realizar_ofrecimiento.imagen.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
+                    <input type="file" class="form-control {% if realizar_ofrecimiento_form.imagen.errors %}is-invalid{% endif %}" placeholder="imagen" name="imagen" accept="image/*" value="{{ request.POST.imagen }}">
+                    {% for error in realizar_ofrecimiento_form.imagen.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
                     {% endfor %}
                 </div>
-                <div class="mb-0">
+                <div class="mb-3">
                     <label class="form-label" style="font-size: 20px;">Categoría</label>
                     <select name="categoriaId" class="form-control">
-                        {% for categoria in form.fields.categoriaId.queryset %}
+                        {% for categoria in realizar_ofrecimiento_form.fields.categoriaId.queryset %}
                             <option value="{{ categoria.pk }}">{{ categoria.titulo }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="mb-0">
+                <div class="mb-3">
                     <label class="form-label" style="font-size: 20px;">Sucursal</label>
                     <select name="sucursalId" class="form-control">
-                        {% for sucursal in form.fields.sucursalId.queryset %}
+                        {% for sucursal in realizar_ofrecimiento_form.fields.sucursalId.queryset %}
                             <option value="{{ sucursal.pk }}">{{ sucursal.nombre }}</option>
                         {% endfor %}
                     </select>
@@ -77,17 +78,14 @@
         </div>
     </form>
 
-{% if form.errors %}
+{% if realizar_ofrecimiento_form.errors %}
     <div class="errors">
         <p>Hubo algunos errores en el formulario:</p>
         <ul>
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <li>{{ field.label }}: {{ error }}</li>
+            {% for field in realizar_ofrecimiento_form %}
+                {% for error in errors %}
+                    <li>{{ field }}: {{ error }}</li>
                 {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
             {% endfor %}
         </ul>
     </div>
