@@ -5,6 +5,7 @@ from .models import Ofrecimiento
 from .forms import RealizarOfrecimiento
 from django.contrib import messages
 from datetime import datetime
+import base64
 
 # Create your views here.
 def realizar_ofrecimiento(request, publicacion_id):
@@ -16,6 +17,12 @@ def realizar_ofrecimiento(request, publicacion_id):
                 usuarioId = request.session.get('rol_id')
                 ofrecimiento.usuarioId = Usuario.objects.get(id=usuarioId)
                 ofrecimiento.publicacionId = Publicacion.objects.get(id=publicacion_id)
+                imagen=(
+                    base64.b64encode(realizar_ofrecimiento_form.cleaned_data["imagen"].read())
+                    if realizar_ofrecimiento_form.cleaned_data["imagen"]
+                    else realizar_ofrecimiento_form.cleaned_data["imagen"]
+                )
+                ofrecimiento.imagen = imagen
                 ofrecimiento.save()
                 messages.success(request, "El ofrecimiento se creó exitosamente")
                 ruta = "/publicaciones/seleccionar_publicacion/" + str(publicacion_id)
@@ -28,7 +35,7 @@ def realizar_ofrecimiento(request, publicacion_id):
     else:
         realizar_ofrecimiento_form = RealizarOfrecimiento()
     return render(request, "ofrecimientos/realizar_ofrecimiento.html", {
-        'form': RealizarOfrecimiento()
+        'realizar_ofrecimiento_form': realizar_ofrecimiento_form
     })
 
 def ver_ofrecimientos(request, publicacion_id):

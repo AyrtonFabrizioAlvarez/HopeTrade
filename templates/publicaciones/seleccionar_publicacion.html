@@ -31,6 +31,12 @@
                         <h5 class="card-title"> {{publicacion.titulo}}</h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
                         <h7 class="card-subtitle mb-2 text-body-secondary">cantidad: {{ publicacion.cantidad }}</h7>
+                        <div class="col-md-8 text-center">
+                            <img src="data:image/png;base64,{{ publicacion_imagen }}"
+                                 class="img-fluid m-3 shadow-sm ratio-1x1 "
+                                 style="border: 1px solid #ddd"
+                                 alt="Imagen">
+                        </div>
                         {% if request.session.rol == 'administrador'%}
                             <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
                         {% endif %}

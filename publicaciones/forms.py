@@ -9,6 +9,7 @@ class RealizarPublicacion(forms.ModelForm):
     class Meta:
         model = Publicacion
         fields = ['titulo','descripcion','cantidad','imagen','categoriaId']
+    imagen = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
         super(RealizarPublicacion, self).__init__(*args, **kwargs)
