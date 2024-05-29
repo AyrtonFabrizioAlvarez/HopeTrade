@@ -10,11 +10,11 @@ imagenes/
 
 # Distribution / packaging
 .Python
-build/
+build/s
 develop-eggs/
 dist/
 downloads/
-eggs/
+eggs/s
 .eggs/
 lib/
 lib64/
