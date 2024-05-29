@@ -7,14 +7,20 @@ __pycache__/
 *.so
 
 imagenes/
+listados/migrations/
+sesiones/migrations/
+donaciones/migrations/
+publicaciones/migrations/
+ofrecimientos/migrations/
+intercambios/migrations/
 
 # Distribution / packaging
 .Python
-build/
+build/s
 develop-eggs/
 dist/
 downloads/
-eggs/
+eggs/s
 .eggs/
 lib/
 lib64/
