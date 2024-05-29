@@ -7,6 +7,12 @@ __pycache__/
 *.so
 
 imagenes/
+listados/migrations/
+sesiones/migrations/
+donaciones/migrations/
+publicaciones/migrations/
+ofrecimientos/migrations/
+intercambios/migrations/
 
 # Distribution / packaging
 .Python
