@@ -10,16 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='publicacion',
-            name='aceptada',
-        ),
-        migrations.AddField(
-            model_name='publicacion',
-            name='estado',
-            field=models.TextField(default='pendiente'),
-            preserve_default=False,
-        ),
         migrations.AlterField(
             model_name='comentario',
             name='texto',
