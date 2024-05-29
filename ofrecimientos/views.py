@@ -13,7 +13,7 @@ import base64
 # Create your views here.
 def realizar_ofrecimiento(request, publicacion_id):
     if request.method == "POST":
-        realizar_ofrecimiento_form = RealizarOfrecimiento(request.POST)
+        realizar_ofrecimiento_form = RealizarOfrecimiento(request.POST, request.FILES)
         if realizar_ofrecimiento_form.is_valid():
             try:
                 ofrecimiento = realizar_ofrecimiento_form.save(commit=False)
@@ -45,34 +45,48 @@ def ver_ofrecimientos(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
     ofrecimientosPublicacion = Ofrecimiento.objects.all().filter(publicacionId=publicacion).exclude(estado='rechazado')
     categorias = Categoria.objects.all()
+    ofrecimiento_info = []
+    for ofrecimiento in ofrecimientosPublicacion:
+        aux = {
+            "id": ofrecimiento.id,
+            "articulo": ofrecimiento.articulo,
+            "cantidad": ofrecimiento.cantidad,
+            "descripcion": ofrecimiento.descripcion,
+            "imagen": None,
+        }
+        if ofrecimiento.imagen:
+            imagen = ofrecimiento.imagen.decode("utf-8")
+            aux["imagen"] = imagen
+        ofrecimiento_info.append(aux)
     if len(ofrecimientosPublicacion) == 0:
         messages.warning(request, 'Esta publicación no tiene ofrecimientos')
     return render(request, "ofrecimientos/ver_ofrecimientos.html", {
-        'ofrecimientosPublicacion': ofrecimientosPublicacion,
+        'ofrecimientosPublicacion': ofrecimiento_info,
         'categorias': categorias,
     })
 
 def aceptar_ofrecimiento(request, ofrecimiento_id):
-    print('arranca')
     ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
     datos = {'estado': 'pendiente',
             'ofrecimientoId': ofrecimiento}
-    realizar_intercambio_form = realizarIntercambio(initial=datos)
-    if realizar_intercambio_form.is_valid():
-        print('entró')
-        intercambio = realizar_intercambio_form.save(commit=False)
-        intercambio.save()
-        ofrecimientos = Ofrecimiento.objects.filter(publicacionId=ofrecimiento.publicacionId).exclude(id=ofrecimiento_id)
-        for ofrecimiento in ofrecimientos:
-            rechazar_ofrecimiento_interno(ofrecimiento.id)
-        publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId)
-        publicacion.estado = 'aceptada'
-        subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue aceptado, te esperamos!"
-        enviar_mail("Tu ofrecimiento de Hope Trade", subject, ofrecimiento.usuarioId.email, ofrecimiento.usuarioId.personaId.nombre)
-        ofrecimiento.estado = 'aceptado' ##hay que tener en cuenta que este no hace falta exluirlo a la hora de listar ofrecimientos
-        messages.success(request, "El ofrecimiento se aceptó exitosamente")
-        ruta = "/publicaciones/seleccionar_publicacion/" + str(ofrecimiento.publicacion_id)
-        return redirect(ruta)
+    if request.method == 'POST':
+        realizar_intercambio_form = realizarIntercambio(request.POST,initial=datos)
+        if realizar_intercambio_form.is_valid():
+            intercambio = realizar_intercambio_form.save(commit=False)
+            intercambio.save()
+            ofrecimientos = Ofrecimiento.objects.filter(publicacionId=ofrecimiento.publicacionId).exclude(id=ofrecimiento_id)
+            for ofrecimiento in ofrecimientos:
+                rechazar_ofrecimiento_interno(ofrecimiento.id)
+            publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId)
+            publicacion.estado = 'aceptada'
+            subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue aceptado, te esperamos!"
+            enviar_mail("Tu ofrecimiento de Hope Trade", subject, ofrecimiento.usuarioId.email, ofrecimiento.usuarioId.personaId.nombre)
+            ofrecimiento.estado = 'aceptado'
+            messages.success(request, "El ofrecimiento se aceptó exitosamente")
+            return redirect( "/publicaciones/listar_publicaciones_sistema/")
+    else:
+        realizar_intercambio_form = realizarIntercambio(initial=datos)
+    return render(request, 'ver_ofrecimientos.html', {'form': realizar_intercambio_form, 'ofrecimiento': ofrecimiento})
 
 def rechazar_ofrecimiento_interno(ofrecimiento_id):
     ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
