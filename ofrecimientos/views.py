@@ -74,9 +74,6 @@ def aceptar_ofrecimiento(request, ofrecimiento_id):
         if realizar_intercambio_form.is_valid():
             intercambio = realizar_intercambio_form.save(commit=False)
             intercambio.save()
-            ofrecimientos = Ofrecimiento.objects.filter(publicacionId=ofrecimiento.publicacionId).exclude(id=ofrecimiento_id)
-            for ofrecimiento in ofrecimientos:
-                rechazar_ofrecimiento_interno(ofrecimiento.id)
             publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId)
             publicacion.estado = 'aceptada'
             subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue aceptado, te esperamos!"
@@ -87,14 +84,6 @@ def aceptar_ofrecimiento(request, ofrecimiento_id):
     else:
         realizar_intercambio_form = realizarIntercambio(initial=datos)
     return render(request, 'ver_ofrecimientos.html', {'form': realizar_intercambio_form, 'ofrecimiento': ofrecimiento})
-
-def rechazar_ofrecimiento_interno(ofrecimiento_id):
-    ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
-    publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId)
-    subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue cancelado, dado que la publicacion ya no se encuantra disponible."
-    enviar_mail("Tu ofrecimiento de Hope Trade", subject, ofrecimiento.usuarioId.email, ofrecimiento.usuarioId.personaId.nombre)
-    ofrecimiento.estado = 'rechazado'
-    return
 
 def rechazar_ofrecimiento(request, ofrecimiento_id):
     ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
@@ -120,4 +109,7 @@ def rechazar_ofrecimiento(request, ofrecimiento_id):
         'publicacionId': publicacion.id,
     })
 
+def cancelar_operacion(request, publicacion_id):
+    ruta = "/ofrecimientos/ver_ofrecimientos/" + str(publicacion_id)
+    return redirect(ruta)
 
