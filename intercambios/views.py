@@ -18,7 +18,7 @@ def listar_intercambios(request):
 
 def confirm_exchange(request, intercambio_id):
     intercambio = get_object_or_404(Intercambio, id=intercambio_id)
-    intercambio.estado = "terminado"
+    intercambio.estado = "confirmado"
     intercambio.save()
     
     publicacionid = intercambio.ofrecimientoId.publicacionId.id
