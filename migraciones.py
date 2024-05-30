@@ -15,3 +15,6 @@ subprocess.run(["python", "manage.py", "migrate", "publicaciones"])
 subprocess.run(["python", "manage.py", "migrate", "ofrecimientos"])
 subprocess.run(["python", "manage.py", "migrate", "intercambios"])
 
+subprocess.run(["python", "manage.py", "makemigrations"])
+subprocess.run(["python", "manage.py", "migrate"])
+
