@@ -70,6 +70,7 @@ def edit_user(request, user_id):
         if formulario_usuario_nuevo.is_valid() and formulario_persona_nueva.is_valid():
             formulario_persona_nueva.save()
             formulario_usuario_nuevo.save()
+            request.session['nombre'] = request.POST['nombre']
             return redirect('/')
         else:
             formulario_persona = formulario_persona_nueva
@@ -115,6 +116,7 @@ def edit_admin(request, admin_id):
             persona.nombre = request.POST['nombre']
             persona.apellido = request.POST['apellido']
             persona.contraseña = request.POST['contraseña']
+            request.session['nombre'] = persona.nombre
             persona.save()
             return redirect('/')
         else:
@@ -188,6 +190,7 @@ def edit_intern(request, helper_id):
             persona.nombre = request.POST['nombre']
             persona.apellido = request.POST['apellido']
             persona.contraseña = request.POST['contraseña']
+            request.session['nombre'] = persona.nombre
             persona.save()
             return redirect('/')
         else:
