@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Aceptar Ofrecimiento</title>
+{% endblock title %}
+
+{% block content %}
+        
+<form method="POST">
+<div class="container mt-5">
+        <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                        {% csrf_token %}
+                        <div class="card">
+                                <div class="card-body">
+                                        <h1 class="mb-4"> ¿Estás seguro que deseas aceptar el ofrecimiento?</h1>
+
+                                        <button type="submit" class="btn btn-success">
+                                                Aceptar
+                                        </button>
+                                        
+                                        <a href="{% url 'ofrecimientos:cancelar_operacion' ofrecimiento.publicacionId.id %}" class="btn btn-primary">Cancelar</a>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</div>
+</form>
+
+{% endblock content %}

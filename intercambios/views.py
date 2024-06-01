@@ -18,7 +18,7 @@ def listar_intercambios(request):
 
 def confirm_exchange(request, intercambio_id):
     intercambio = get_object_or_404(Intercambio, id=intercambio_id)
-    intercambio.estado = "terminado"
+    intercambio.estado = "confirmado"
     intercambio.save()
     
     publicacionid = intercambio.ofrecimientoId.publicacionId.id
@@ -32,11 +32,12 @@ def confirm_exchange(request, intercambio_id):
                 ofrecimiento.usuarioId.email, 
                 ""
             )
-    
+            ofrecimiento.estado = "rechazado"
+            ofrecimiento.save()
     user1 = intercambio.ofrecimientoId.publicacionId.usuarioId
     user2 = intercambio.ofrecimientoId.usuarioId
-    link1 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user1.id}/{user2.id}"
-    link2 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user2.id}/{user1.id}"
+    link1 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user1.id}/{user2.id}/{1}"
+    link2 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user2.id}/{user1.id}/{2}"
     enviar_mail(
         "Valoración", 
         f"Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre} a traves del siguiente link: {link1}", 
@@ -69,12 +70,15 @@ def cancelar_intercambio(intercambio_id):
     publicacion = intercambio.ofrecimientoId.publicacionId
     publicacion.estado = "disponible"
     publicacion.save()
+    ofrecimiento = intercambio.ofrecimientoId
+    ofrecimiento.estado = "rechazado"
+    ofrecimiento.save()
 
 def partial_absence(request, intercambio_id, user1_id, user2_id):
     cancelar_intercambio(intercambio_id)
     user1 = get_object_or_404(Usuario, id=user1_id)
     user2 = get_object_or_404(Usuario, id=user2_id)
-    link1 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user1.id}/{user2.id}"
+    link1 = f"http://127.0.0.1:8000/intercambios/value_user/{intercambio_id}/{user1.id}/{user2.id}/{1}"
     enviar_mail(
         "Valoración", 
         f"Tu intercambio con {user2.personaId.nombre} ha sido cancelado debido a su ausencia. Para una mejor seguridad y confiabilidad de los usuarios en nuestra aplicación, nos gustaría que le des una valoración a {user2.personaId.nombre} en el siguiente link: {link1}", 
@@ -126,14 +130,27 @@ def enviar_mails_cancelacion(user1_id, user2_id, razon):
         ""
     )
 
-def value_user (request, intercambio_id, user1_id, user2_id):
+def guardar_valoracion(request, user2):
+    rating = int(request.POST.get('rating', 0))
+    user2.reputacion = (user2.reputacion + rating) / (user2.cant_valoraciones + 1)
+    user2.cant_valoraciones = user2.cant_valoraciones + 1
+    user2.save()
+    messages.success(request, 'Tu valoración se envió exitosamente')
+
+def value_user (request, intercambio_id, user1_id, user2_id, num):
     user2 = get_object_or_404(Usuario, id=user2_id)
     if request.method == "GET":
-        return render(request, "intercambios/valorar_usuario.html", {"intercambio_id": intercambio_id, "user1_id": user1_id, "user2_id": user2_id})
+        return render(request, "intercambios/valorar_usuario.html", {"intercambio_id": intercambio_id, "user1_id": user1_id, "user2_id": user2_id, "num": num})
     elif request.method == 'POST':
-        rating = int(request.POST.get('rating', 0))
-        user2.reputacion = (user2.reputacion + rating) / (user2.cant_valoraciones + 1)
-        user2.cant_valoraciones = user2.cant_valoraciones + 1
-        user2.save()
-        messages.success(request, 'Tu valoración se envió exitosamente')
+        intercambio = get_object_or_404(Intercambio, id=intercambio_id)
+        if num == 1 and intercambio.valoracion1== False:
+            guardar_valoracion(request, user2)
+            intercambio.valoracion1 = True
+            intercambio.save()
+        elif num == 2 and intercambio.valoracion2 == False:
+            guardar_valoracion(request, user2)
+            intercambio.valoracion2 = True
+            intercambio.save()
+        else:
+            messages.error(request, "Ya has realizado esta valoracion")
         return redirect("/")  
