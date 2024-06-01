@@ -7,6 +7,7 @@ from .forms import RealizarOfrecimiento, escribir_texto_cancelacion
 from intercambios.forms import realizarIntercambio
 from sesiones.views import enviar_mail
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 import base64
 
@@ -127,4 +128,52 @@ def cancelar_operacion(request, publicacion_id):
     ruta = "/ofrecimientos/ver_ofrecimientos/" + str(publicacion_id)
     return redirect(ruta)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################################################
+def ver_mis_ofrecimientos(request, user_id):
+    try:
+        usuario = Usuario.objects.get(id=user_id)
+        ofrecimientos = Ofrecimiento.objects.filter(usuarioId=usuario).exclude(estado='eliminado')
+    except ObjectDoesNotExist:
+        messages.warning(request, 'No tienes ningún ofrecimiento activo')
+    if len(ofrecimientos) == 0:
+        messages.warning(request, "No tienes ningún ofrecimiento activo")
+    return render(request, 'ofrecimientos/ver_mis_ofrecimientos.html', {
+        'ofrecimientos': ofrecimientos,
+    })
+    
+def eliminar_ofrecimiento(request, ofrecimiento_id):
+    ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
+    if request.method == "POST":
+        ofrecimiento.estado = 'eliminado'
+        ofrecimiento.save()
+        messages.success(request, "El ofrecimiento se eliminó exitosamente")
+        return redirect('ofrecimientos:ver_mis_ofrecimientos', user_id=request.session['rol_id'])
+    return render(request, 'ofrecimientos/eliminar_ofrecimiento.html', { 'ofrecimiento': ofrecimiento })
+############################################################################################################
+    
 

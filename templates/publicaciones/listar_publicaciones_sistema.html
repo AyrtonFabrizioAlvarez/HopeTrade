@@ -21,25 +21,38 @@
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
+
     <form method="POST" action="{% url 'publicaciones:filtrar_publicaciones_sistema' %}">
         {% csrf_token %}
         <main class="container mt-5">
-            <div class="col g-3 d-flex">
-                <div class="col-md-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-2">
                     <div class="input-group">
                         <select class="form-select shadow-sm" name="categoria">
-                            <option selected>Categoria</option>
+                            <option selected>
+                                {% if categoria_seleccionada.titulo %}
+                                    {{ categoria_seleccionada.titulo }}
+                                {% else %}
+                                    Categoria
+                                {% endif %}
+                            </option>
                             {% for categoria in categorias %}
                             <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div> 
-    
-                <div class="col-md-4">
+
+                <div class="col-md-2">
                     <div class="input-group">
                         <select class="form-select shadow-sm" name="reputacion">
-                            <option selected>Reputacion</option>
+                            <option selected>
+                                {% if reputacion_seleccionada %}
+                                    {{ reputacion_seleccionada }}
+                                {% else %}
+                                    Reputacion
+                                {% endif %}
+                            </option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -50,10 +63,16 @@
                 </div>
 
                 {% if request.session.rol == 'administrador' %}
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="input-group">
                             <select class="form-select shadow-sm" name="estado">
-                                <option selected>Estado</option>
+                                <option selected>
+                                {% if estado_seleccionado %}
+                                    {{ estado_seleccionado }}
+                                {% else %}
+                                    Estado
+                                {% endif %}
+                                </option>
                                 <option>aceptada</option>
                                 <option>disponible</option>
                                 <option>eliminada</option>
@@ -62,13 +81,18 @@
                     </div>
                 {% endif %}
                 
-                <div class="col-md-4">
+                <div class="col-md-1 d-flex align-items-center justify-content-center">
                     {% load static %}
-                    <button class="btn h-100 w-100" type="submit" style="display: flex; align-items: center; justify-content: left;">
+                    <button class="btn p-0 border-0 bg-transparent" type="submit">
                         <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-height: 24px;">
                     </button>
                 </div>
-            </div>
+
+                <div class="col-md-2 d-flex align-items-center justify-content-center">
+                    <a href="{% url 'publicaciones:listar_publicaciones_sistema' %}" class="btn btn-secondary w-100">
+                        Borrar filtros
+                    </a>
+                </div>
         </main>
     </form>
 <form method="GET">
