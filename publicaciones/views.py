@@ -132,17 +132,30 @@ def filtrar_publicaciones_sistema(request):
     categoria = request.POST.get('categoria')
     reputacion = request.POST.get('reputacion')
     estado = request.POST.get('estado')
+    categoria_seleccionada = None
+    estado_seleccionado = None
+    reputacion_seleccionada=None
     if categoria != 'Categoria':
-        publicaciones = publicaciones.filter(categoriaId__id=categoria)
+        if categoria.isdigit():
+            publicaciones = publicaciones.filter(categoriaId__id=categoria)
+            categoria_seleccionada = Categoria.objects.get(id=categoria)
+        else:
+            categoria_seleccionada = Categoria.objects.get(titulo=categoria)
+            publicaciones = publicaciones.filter(categoriaId__id=categoria_seleccionada.id)
     if reputacion != 'Reputacion':
         publicaciones = publicaciones.filter(usuarioId__reputacion=reputacion)
-    if estado != 'Estado':
+        reputacion_seleccionada = reputacion
+    if estado != 'Estado' and estado != None:
         publicaciones = publicaciones.filter(estado=estado)
+        estado_seleccionado = estado
     if len(publicaciones) == 0:
         messages.warning(request, f'No existen publicaciones para el filtro seleccionado')
     return render(request, "publicaciones/listar_publicaciones_sistema.html", {
         'publicacionesSistema': publicaciones,
-        'categorias': categorias
+        'categorias': categorias,
+        'categoria_seleccionada':categoria_seleccionada,
+        'reputacion_seleccionada':reputacion_seleccionada,
+        'estado_seleccionado':estado_seleccionado
     })
     
 def filtrar_publicaciones_usuario(request):
@@ -150,15 +163,22 @@ def filtrar_publicaciones_usuario(request):
     publicaciones = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada')
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
+    categoria_seleccionada = None
     for cat in categorias_eliminadas:
         if not publicaciones.filter(categoriaId=cat).exists():
             categorias.exclude(id=cat.id)
     categoria = request.POST.get('categoria')
     if categoria != 'Categoria':
-        publicaciones = publicaciones.filter(categoriaId__id=categoria)
+        if categoria.isdigit():
+            publicaciones = publicaciones.filter(categoriaId__id=categoria)
+            categoria_seleccionada = Categoria.objects.get(id=categoria)
+        else:
+            categoria_seleccionada = Categoria.objects.get(titulo=categoria)
+            publicaciones = publicaciones.filter(categoriaId__id=categoria_seleccionada.id)
     if len(publicaciones) == 0:
         messages.warning(request, f'No existen publicaciones para el filtro seleccionado')
     return render(request, "publicaciones/listar_publicaciones_usuario.html", {
         'publicacionesUsuario': publicaciones,
-        'categorias': categorias
+        'categorias': categorias,
+        'categoria_seleccionada': categoria_seleccionada
     })

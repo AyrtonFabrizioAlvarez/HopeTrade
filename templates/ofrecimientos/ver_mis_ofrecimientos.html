@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Publicaciones del Usuario</title>
+{% endblock title %}
+
+{% block content %}
+<br>
+{% for msg in messages %}
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="check-circle-fill" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+  </symbol>
+</svg>
+
+<div class="alert alert-success d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"></use></svg>
+  <div>
+    {{ msg }}
+  </div>
+  <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+    
+<form method="GET">
+    {% csrf_token %}     
+    <ul>
+        {% if ofrecimientos %}
+        <main class="container mt-5">
+            {% for ofrecimiento in ofrecimientos %}
+                {% if forloop.counter0|divisibleby:2 %}
+                    <div class="row align-items-center">
+                {% endif %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="col">
+                                <h5 class="card-title">{{ ofrecimiento.articulo }}</h5>
+                                <br>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ ofrecimiento.descripcion }}</h6>
+                                <br>
+                                <h6 class="card-subtitle mb-2 text-muted">Cantidad: {{ ofrecimiento.cantidad }}</h6>
+                                <br>
+                                <h6 class="card-subtitle mb-2 text-muted">Publicacion realizada por:</h6>
+                                <h6 class="">
+                                    <a class="text-center" href="{% url 'sesiones:view_profile_user' ofrecimiento.publicacionId.usuarioId.id %}">
+                                        {{ ofrecimiento.publicacionId.usuarioId.personaId.nombre }} {{ofrecimiento.publicacionId.usuarioId.personaId.apellido}}
+                                    </a>
+                                </h6>
+                                <br>
+                                <a href="{% url 'ofrecimientos:eliminar_ofrecimiento' ofrecimiento.id %}" class="btn btn-danger mt-3">Eliminar</a>
+                            </div>
+                            <div class="col d-flex justify-content-end">
+                                <img src="data:image/png;base64,{{ ofrecimiento.imagen }}" class="img-fluid m-3 shadow-sm" style="border: 1px solid #ddd; max-width: 100px;" alt="Imagen">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:2 or forloop.last %}
+            </div>
+            {% endif %}
+            <br>
+            {% endfor %}
+        </main>
+        {% endif %}
+    </ul>
+</form>
+{% endblock %}

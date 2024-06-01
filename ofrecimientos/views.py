@@ -7,6 +7,7 @@ from .forms import RealizarOfrecimiento, escribir_texto_cancelacion
 from intercambios.forms import realizarIntercambio
 from sesiones.views import enviar_mail
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 import base64
 
@@ -26,6 +27,7 @@ def realizar_ofrecimiento(request, publicacion_id):
                     else realizar_ofrecimiento_form.cleaned_data["imagen"]
                 )
                 ofrecimiento.imagen = imagen
+                ofrecimiento.estado = 'pendiente'
                 ofrecimiento.save()
                 messages.success(request, "El ofrecimiento se creó exitosamente")
                 ruta = "/publicaciones/seleccionar_publicacion/" + str(publicacion_id)
@@ -67,23 +69,36 @@ def ver_ofrecimientos(request, publicacion_id):
 
 def aceptar_ofrecimiento(request, ofrecimiento_id):
     ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
-    datos = {'estado': 'pendiente',
-            'ofrecimientoId': ofrecimiento}
-    if request.method == 'POST':
-        realizar_intercambio_form = realizarIntercambio(request.POST,initial=datos)
+
+    if request.method == 'POST':    
+        datos = {
+            'estado': 'pendiente',
+            'valoracion1': False,
+            'valoracion2': False,
+            'ofrecimientoId': ofrecimiento.id
+        }
+        realizar_intercambio_form = realizarIntercambio(data=datos)
+    
         if realizar_intercambio_form.is_valid():
             intercambio = realizar_intercambio_form.save(commit=False)
             intercambio.save()
-            publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId)
+            publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId.id)
             publicacion.estado = 'aceptada'
+            publicacion.save()
             subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue aceptado, te esperamos!"
             enviar_mail("Tu ofrecimiento de Hope Trade", subject, ofrecimiento.usuarioId.email, ofrecimiento.usuarioId.personaId.nombre)
             ofrecimiento.estado = 'aceptado'
+            ofrecimiento.save()
             messages.success(request, "El ofrecimiento se aceptó exitosamente")
             return redirect( "/publicaciones/listar_publicaciones_sistema/")
-    else:
-        realizar_intercambio_form = realizarIntercambio(initial=datos)
-    return render(request, 'ver_ofrecimientos.html', {'form': realizar_intercambio_form, 'ofrecimiento': ofrecimiento})
+        else:
+            print('Formulario no válido. Errores:')
+            for field, errors in realizar_intercambio_form.errors.items():
+                for error in errors:
+                    print(f"Error en {field}: {error}")
+    return render(request, 'ofrecimientos/aceptar_ofrecimiento.html',{
+        'ofrecimiento': ofrecimiento
+    })
 
 def rechazar_ofrecimiento(request, ofrecimiento_id):
     ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
@@ -112,4 +127,53 @@ def rechazar_ofrecimiento(request, ofrecimiento_id):
 def cancelar_operacion(request, publicacion_id):
     ruta = "/ofrecimientos/ver_ofrecimientos/" + str(publicacion_id)
     return redirect(ruta)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################################################
+def ver_mis_ofrecimientos(request, user_id):
+    try:
+        usuario = Usuario.objects.get(id=user_id)
+        ofrecimientos = Ofrecimiento.objects.filter(usuarioId=usuario).exclude(estado='eliminado')
+    except ObjectDoesNotExist:
+        messages.warning(request, 'No tienes ningún ofrecimiento activo')
+    if len(ofrecimientos) == 0:
+        messages.warning(request, "No tienes ningún ofrecimiento activo")
+    return render(request, 'ofrecimientos/ver_mis_ofrecimientos.html', {
+        'ofrecimientos': ofrecimientos,
+    })
+    
+def eliminar_ofrecimiento(request, ofrecimiento_id):
+    ofrecimiento = Ofrecimiento.objects.get(id=ofrecimiento_id)
+    if request.method == "POST":
+        ofrecimiento.estado = 'eliminado'
+        ofrecimiento.save()
+        messages.success(request, "El ofrecimiento se eliminó exitosamente")
+        return redirect('ofrecimientos:ver_mis_ofrecimientos', user_id=request.session['rol_id'])
+    return render(request, 'ofrecimientos/eliminar_ofrecimiento.html', { 'ofrecimiento': ofrecimiento })
+############################################################################################################
+    
 

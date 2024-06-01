@@ -9,5 +9,8 @@ urlpatterns = [
     path('ver_ofrecimientos/<int:publicacion_id>', views.ver_ofrecimientos, name='ver_ofrecimientos'),
     path('aceptar_ofrecimiento/<int:ofrecimiento_id>', views.aceptar_ofrecimiento, name='aceptar_ofrecimiento'),
     path('rechazar_ofrecimiento/<int:ofrecimiento_id>', views.rechazar_ofrecimiento, name='rechazar_ofrecimiento'),
+    path('ver_mis_ofrecimientos/<int:user_id>', views.ver_mis_ofrecimientos, name='ver_mis_ofrecimientos'),
+    path('eliminar_ofrecimientos/<int:ofrecimiento_id>', views.eliminar_ofrecimiento, name='eliminar_ofrecimiento'),
     path('cancelar_operacion/<int:publicacion_id>', views.cancelar_operacion, name='cancelar_operacion'),
+
 ]

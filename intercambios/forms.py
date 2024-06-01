@@ -14,4 +14,4 @@ class escribir_texto_cancelacion(forms.Form):
 class realizarIntercambio(forms.ModelForm):
     class Meta:
         model = Intercambio
-        fields = ('estado','ofrecimientoId')
+        fields = ('estado','valoracion1','valoracion2','ofrecimientoId')
