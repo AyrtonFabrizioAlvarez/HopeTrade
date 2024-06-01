@@ -19,7 +19,7 @@
         <span class="estrella" data-value="4">&#9734;</span>
         <span class="estrella" data-value="5">&#9734;</span>
     </div>
-    <form id="valoracion-form" method="POST" action="{% url 'intercambios:valorar_usuario' intercambio_id user1_id user2_id %}">
+    <form id="valoracion-form" method="POST" action="{% url 'intercambios:valorar_usuario' intercambio_id user1_id user2_id num %}">
         {% csrf_token %}
         <input type="hidden" name="rating" id="rating-input" value="0"> 
         <button type="submit" id="confirmar-btn">Confirmar</button>
