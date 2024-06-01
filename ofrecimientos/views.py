@@ -112,7 +112,7 @@ def rechazar_ofrecimiento(request, ofrecimiento_id):
             else:
                 subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue rechazado. La razón: {texto}"
             enviar_mail("Tu ofrecimiento de Hope Trade", subject, ofrecimiento.usuarioId.email, ofrecimiento.usuarioId.personaId.nombre)
-            ofrecimiento.estado = 'rechazado'
+            ofrecimiento.estado = 'eliminado'
             ofrecimiento.save()
             messages.success(request, "El ofrecimiento se rechazó exitosamente")
             url = reverse('ofrecimientos:ver_ofrecimientos', kwargs={'publicacion_id': publicacion.id})
@@ -157,7 +157,7 @@ def cancelar_operacion(request, publicacion_id):
 def ver_mis_ofrecimientos(request, user_id):
     try:
         usuario = Usuario.objects.get(id=user_id)
-        ofrecimientos = Ofrecimiento.objects.filter(usuarioId=usuario).exclude(estado='eliminado')
+        ofrecimientos = Ofrecimiento.objects.filter(usuarioId=usuario).exclude(estado='eliminado').exclude(estado='aceptado')
     except ObjectDoesNotExist:
         messages.warning(request, 'No tienes ningún ofrecimiento activo')
     if len(ofrecimientos) == 0:

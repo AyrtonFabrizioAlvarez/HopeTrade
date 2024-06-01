@@ -16,11 +16,11 @@
                                                 <h2>Escribe la razón por la que deseas rechazar el ofrecimiento:</h2>
                                                 {{ form.as_p }}
 
-                                                <button type="submit" class="btn btn-danger">
-                                                        Aceptar
+                                                <button type="submit" class="btn btn-success">
+                                                        Enviar
                                                 </button>
                                                 
-                                                <a href="{% url 'ofrecimientos:cancelar_operacion' publicacionId %}" class="btn btn-primary">Cancelar</a>
+                                                <a href="{% url 'ofrecimientos:cancelar_operacion' publicacionId %}" class="btn btn-danger">Cancelar</a>
                                         </div>
                                 </div>
                         </div>
