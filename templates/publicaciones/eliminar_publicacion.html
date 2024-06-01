@@ -17,7 +17,7 @@
             </button>
         </form>
     
-        <form action="{% url 'publicaciones:listar_publicaciones_sistema' %}" method="GET">
+        <form action="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" method="GET">
             <button type="submit" class="btn btn-secondary">
                     Cancelar
             </button>

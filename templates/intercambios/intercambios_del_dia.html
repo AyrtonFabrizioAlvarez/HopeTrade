@@ -31,7 +31,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ intercambio.ofrecimientoId.publicacionId.titulo }}</h5>
-                                    <p class="card-text">Intercambio ID: {{ intercambio.id }}</p>
                                     <p><strong>Usuario que publica:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.publicacionId.usuarioId.id %}">{{ intercambio.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</a></p>
                                     <p><strong>Usuario que ofrece:</strong> <a href="{% url 'sesiones:view_profile_user' intercambio.ofrecimientoId.usuarioId.id %}">{{ intercambio.ofrecimientoId.usuarioId.personaId.nombre }}</a></p>
                                     <a href="{% url 'listados:listar_intercambios_del_dia_confirmar' intercambio.id %}" class="btn btn-lg btn-success mx-2">Intercambio exitoso</a>

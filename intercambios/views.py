@@ -33,7 +33,7 @@ def confirm_exchange(request, intercambio_id):
                 ofrecimiento.usuarioId.email, 
                 ""
             )
-            ofrecimiento.estado = "rechazado"
+            ofrecimiento.estado = "eliminado"
             ofrecimiento.save()
     user1 = intercambio.ofrecimientoId.publicacionId.usuarioId
     user2 = intercambio.ofrecimientoId.usuarioId
