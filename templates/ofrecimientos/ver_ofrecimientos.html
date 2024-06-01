@@ -31,17 +31,14 @@
                             <h5 class="card-title">{{ ofrecimiento.articulo }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{ ofrecimiento.descripcion }}</h6>
                             <h7 class="card-subtitle mb-2 text-muted">cantidad: {{ ofrecimiento.cantidad }}</h7>
-                                <img src="data:image/png;base64,{{ ofrecimiento.imagen }}"
-                                     class="img-fluid m-3 shadow-sm ratio-1x1 "
-                                     style="border: 1px solid #ddd"
-                                     alt="Imagen">
-                                <div class="d-flex justify-content-center">
-                                    <form action="{{ aceptar_ofrecimiento }}" method="POST">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-success m-1">Aceptar</button>
-                                    </form>
-                                    <a href="{% url 'ofrecimientos:rechazar_ofrecimiento' ofrecimiento.id %}" class="btn btn-danger m-1">Rechazar</a>
-                                </div>
+                            <img src="data:image/png;base64,{{ ofrecimiento.imagen }}"
+                                class="img-fluid m-3 shadow-sm ratio-1x1 "
+                                style="border: 1px solid #ddd"
+                                alt="Imagen">
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'ofrecimientos:aceptar_ofrecimiento' ofrecimiento.id %}" class="btn btn-success m-1">Aceptar</a>
+                                <a href="{% url 'ofrecimientos:rechazar_ofrecimiento' ofrecimiento.id %}" class="btn btn-danger m-1">Rechazar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
