@@ -7,16 +7,25 @@
 {% block content %}
         
 <form method="POST">
-        {% csrf_token %}
-        
-        <h2>Escribe la razón por la que deseas rechazar el ofrecimiento:</h2>
-        {{ form.as_p }}
+        <div class="container mt-5">
+                <div class="row justify-content-center">
+                        <div class="col-md-6 text-center">
+                                {% csrf_token %}
+                                <div class="card">
+                                        <div class="card-body">
+                                                <h2>Escribe la razón por la que deseas rechazar el ofrecimiento:</h2>
+                                                {{ form.as_p }}
 
-        <button type="submit" class="btn btn-danger">
-                Aceptar
-        </button>
-        
-        <a href="{% url 'ofrecimientos:cancelar_operacion' publicacionId %}" class="btn btn-primary">Cancelar</a>
+                                                <button type="submit" class="btn btn-danger">
+                                                        Aceptar
+                                                </button>
+                                                
+                                                <a href="{% url 'ofrecimientos:cancelar_operacion' publicacionId %}" class="btn btn-primary">Cancelar</a>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
 </form>
 
 {% endblock content %}
