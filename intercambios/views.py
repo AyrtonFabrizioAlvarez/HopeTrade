@@ -9,6 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from listados.views import list_exchanges_today
 from .forms import escribir_texto_cancelacion
 from django.contrib import messages
+from django.db.models import Q
 # Create your views here.
 def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
@@ -137,3 +138,33 @@ def value_user (request, intercambio_id, user1_id, user2_id):
         user2.save()
         messages.success(request, 'Tu valoración se envió exitosamente')
         return redirect("/")  
+
+def listar_intercambios(request, user_id):
+    if(request.session['rol'] == 'administrador'):
+        intercambios = Intercambio.objects.all()
+    else:
+        usuario = Usuario.objects.get(id=user_id)
+        publicaciones_usuario = Publicacion.objects.filter(usuarioId=usuario)
+        ofrecimientos_recibidos = Ofrecimiento.objects.filter(publicacionId__in = publicaciones_usuario)
+        ofrecimientos_usuario = Ofrecimiento.objects.filter(usuarioId=user_id)
+        intercambios = Intercambio.objects.filter(Q(ofrecimientoId__in = ofrecimientos_usuario) | Q(ofrecimientoId__in=ofrecimientos_recibidos))
+    
+    if len(intercambios) == 0:
+        messages.warning(request, 'No existen intercambios')
+    return render(request, "intercambios/listar_intercambios.html",{'intercambios': intercambios})
+
+
+
+def filtrar_intercambios(request):
+    intercambios = Intercambio.objects.all()
+    estado = request.POST.get('estado')
+    estado_seleccionado = None
+    if estado != 'Estado' and estado != None:
+        intercambios = intercambios.filter(estado=estado)
+        estado_seleccionado = estado
+    if len(intercambios) == 0:
+        messages.warning(request, f'No existen intercambios para el filtro seleccionado')
+    return render(request, "intercambios/listar_intercambios.html", {
+        'intercambios': intercambios,
+        'estado_seleccionado':estado_seleccionado
+    })
