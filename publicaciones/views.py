@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from publicaciones.models import Publicacion
 from publicaciones.models import Comentario
+from ofrecimientos.models import Ofrecimiento
 from listados.models import Categoria
 from sesiones.models import Usuario
 from .forms import RealizarPublicacion
@@ -115,10 +116,14 @@ def seleccionar_publicacion(request, publicacion_id):
 def eliminar_publicacion(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
     if request.method == "POST":
-        publicacion.estado = 'eliminada'
-        publicacion.save()
+        ofrecimientos = Ofrecimiento.objects.filter(publicacionId=publicacion_id).exclude(estado='eliminado')
+        if not ofrecimientos:
+            publicacion.estado = 'eliminada'
+            publicacion.save()
+            messages.success(request, "La publicación se eliminó exitosamente")
+        else:
+            messages.warning(request, "No se puede eliminar una publicación con ofrecimientos pendientes")
         ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
-        messages.success(request, "La publicación se eliminó exitosamente")
         return redirect(ruta)
     return render(request, 'publicaciones/eliminar_publicacion.html', { 'publicacion': publicacion })
 
