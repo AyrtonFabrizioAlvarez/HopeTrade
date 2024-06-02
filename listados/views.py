@@ -53,7 +53,7 @@ def editar_categoria(request, categoria_id):
 def eliminar_categoria(request, categoria_id):
     categoria = Categoria.objects.get(id=categoria_id)
     if request.method == 'GET':
-        if Categoria.objects.count() > 1:
+        if Categoria.objects.all().exclude(estado='eliminada').count() > 1:
             return render(request, 'listados/eliminar_categoria.html', {'categoria':categoria})
         else:
             messages.warning(request, "No se puede eliminar la categoría, tiene que existir al menos una en el sistema")
