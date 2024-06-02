@@ -10,6 +10,7 @@ from listados.views import list_exchanges_today
 from .forms import escribir_texto_cancelacion
 from django.contrib import messages
 from django.db.models import Q
+from django.utils import timezone
 # Create your views here.
 def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
@@ -185,3 +186,20 @@ def filtrar_intercambios(request):
         'intercambios': intercambios,
         'estado_seleccionado':estado_seleccionado
     })
+
+
+
+def actualizar_sistema(request):
+    hoy = timezone.now().date()
+    ofrecimientos = Ofrecimiento.objects.filter(fecha__date=hoy).filter(estado = "pendiente")
+    for ofrecimiento in ofrecimientos:
+        ofrecimiento.estado = "eliminado"
+        ofrecimiento.save()
+        enviar_mail(
+        "Valoración", 
+        f"Tu ofrecimiento {ofrecimiento.articulo} ha sido eliminado debido a la expiración de la fecha", 
+        ofrecimiento.usuarioId.email, 
+        ""    
+        )
+    messages.success(request, 'Se ha actualizado el sistema correctamente')
+    return list_exchanges_today(request)

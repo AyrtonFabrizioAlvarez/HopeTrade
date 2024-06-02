@@ -44,6 +44,6 @@
             {% else %}
                 <h1>No existen intercambios para el día de hoy</h1>
             {% endif %}
-        
+            <a href="{% url 'intercambios:actualizar_sistema' %}" class="btn btn-lg btn-success mx-2">actualizar sistema</a>
     </form>
 {% endblock %}

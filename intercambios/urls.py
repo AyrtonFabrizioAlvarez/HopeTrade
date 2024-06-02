@@ -10,4 +10,5 @@ urlpatterns = [
     path('listar_intercambios/<int:user_id>/', views.listar_intercambios, name='listar_intercambios'),
     path('filtrar_intercambios/', views.filtrar_intercambios, name='filtrar_intercambios'),
     path('value_user/<int:intercambio_id>/<int:user1_id>/<int:user2_id>/<int:num>', views.value_user, name='valorar_usuario'),
+    path('actualizacion_del_sistema/', views.actualizar_sistema, name="actualizar_sistema")
 ]
