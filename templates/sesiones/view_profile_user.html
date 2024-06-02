@@ -35,6 +35,11 @@
             <input type="text" class="form-control" name="fecha_nac" value="{{ fecha_nac }}" readonly>
         </div>
 
+        <div class="mb-3">
+            <label class="form-label">Reputación</label>
+            <input type="text" class="form-control" name="reputacion" value="{{ reputacion }}" readonly>
+        </div>
+
 
         {% if request.session.usuario_id == persona_id  %}
             <button type="submit" class="btn btn-lg btn-primary">Editar perfil</button>
