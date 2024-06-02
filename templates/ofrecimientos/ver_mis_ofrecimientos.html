@@ -60,7 +60,8 @@
                                     <a class="text-center" href="{% url 'publicaciones:seleccionar_publicacion' ofrecimiento.publicacionId.id %}">
                                         Publicacion    
                                     </a>
-                                    realizada por:</h6>
+                                    realizada por:
+                                </h6>
                                 <h6 class="">
                                     <a class="text-center" href="{% url 'sesiones:view_profile_user' ofrecimiento.publicacionId.usuarioId.id %}">
                                         {{ ofrecimiento.publicacionId.usuarioId.personaId.nombre }} {{ofrecimiento.publicacionId.usuarioId.personaId.apellido}}
@@ -69,9 +70,9 @@
                                 <br>
                                 <a href="{% url 'ofrecimientos:eliminar_ofrecimiento' ofrecimiento.id %}" class="btn btn-danger mt-3">Eliminar</a>
                             </div>
-                            <div class="col d-flex justify-content-end">
-                                <img src="data:image/png;base64,{{ ofrecimiento.imagen }}" class="img-fluid m-3 shadow-sm" style="border: 1px solid #ddd; max-width: 100px;" alt="Imagen">
-                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                              <img src="data:image/png;base64,{{ ofrecimiento.imagen }}" class="img-fluid m-3 shadow-sm" style="border: 1px solid #ddd; max-width: 100%; height: auto; max-height: 200px; object-fit: contain;" alt="Imagen">
+                          </div>
                         </div>
                     </div>
                 </div>

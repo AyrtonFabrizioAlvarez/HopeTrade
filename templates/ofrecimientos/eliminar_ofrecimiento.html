@@ -23,8 +23,12 @@
                             <br>
                             <h6 class="card-subtitle mb-2 text-muted">Cantidad: {{ ofrecimiento.cantidad }}</h6>
                             <br>
-                            <h6 class="card-subtitle mb-2 text-muted">Publicación realizada por:</h6>
-                            <br>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <a class="text-center" href="{% url 'publicaciones:seleccionar_publicacion' ofrecimiento.publicacionId.id %}">
+                                    Publicacion    
+                                </a>
+                                realizada por:
+                            </h6>                            <br>
                             <h6 class="text-center mb-4">
                                 <a href="{% url 'sesiones:view_profile_user' ofrecimiento.publicacionId.usuarioId.id %}">
                                     {{ ofrecimiento.publicacionId.usuarioId.personaId.nombre }} {{ofrecimiento.publicacionId.usuarioId.personaId.apellido}}
@@ -32,7 +36,7 @@
                             </h6>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end">
-                            <img src="data:image/png;base64,{{ ofrecimiento.imagen }}" class="img-fluid m-3 shadow-sm" style="border: 1px solid #ddd; max-width: 100px;" alt="Imagen">
+                            <img src="data:image/png;base64,{{ ofrecimiento.imagen }}" class="img-fluid m-3 shadow-sm" style="border: 1px solid #ddd; max-width: 100%; height: auto; max-height: 200px; object-fit: contain;" alt="Imagen">
                         </div>
                     </div>
                 </div>

@@ -162,8 +162,22 @@ def ver_mis_ofrecimientos(request, user_id):
         messages.warning(request, 'No tienes ningún ofrecimiento activo')
     if len(ofrecimientos) == 0:
         messages.warning(request, "No tienes ningún ofrecimiento activo")
+    ofrecimientos_final = []
+    for ofrecimiento in ofrecimientos:
+        ofrecimiento_con_imagen = {
+            "id": ofrecimiento.id,
+            "articulo": ofrecimiento.articulo,
+            "cantidad": ofrecimiento.cantidad,
+            "descripcion": ofrecimiento.descripcion,
+            'publicacionId': ofrecimiento.publicacionId,
+            "imagen": None,
+        }
+        if ofrecimiento.imagen:
+            imagen = ofrecimiento.imagen.decode("utf-8")
+            ofrecimiento_con_imagen["imagen"] = imagen
+        ofrecimientos_final.append(ofrecimiento_con_imagen)
     return render(request, 'ofrecimientos/ver_mis_ofrecimientos.html', {
-        'ofrecimientos': ofrecimientos,
+        'ofrecimientos': ofrecimientos_final,
     })
     
 def eliminar_ofrecimiento(request, ofrecimiento_id):
@@ -173,6 +187,7 @@ def eliminar_ofrecimiento(request, ofrecimiento_id):
         ofrecimiento.save()
         messages.success(request, "El ofrecimiento se eliminó exitosamente")
         return redirect('ofrecimientos:ver_mis_ofrecimientos', user_id=request.session['rol_id'])
+    ofrecimiento.imagen = ofrecimiento.imagen.decode("utf-8")
     return render(request, 'ofrecimientos/eliminar_ofrecimiento.html', { 'ofrecimiento': ofrecimiento })
 ############################################################################################################
     
