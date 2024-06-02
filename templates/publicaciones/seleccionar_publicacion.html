@@ -48,9 +48,11 @@
                             <a href="{% url 'ofrecimientos:ver_ofrecimientos' publicacion.id %}" class="btn mb-2" style="background-color: #8f33ff; color: white; border-color: #500ce1;">Ver ofrecimientos</a>
                         </div>
                     {% else %}
-                        <div class="d-flex flex-column align-items-start">
-                            <a href="{% url 'ofrecimientos:realizar_ofrecimiento' publicacion.id %}" class="btn mb-2" style="background-color: #8f33ff; color: white; border-color: #500ce1;">Realizar ofrecimiento</a>
-                        </div>
+                        {% if publicacion.estado == 'disponible' %}
+                            <div class="d-flex flex-column align-items-start">
+                                <a href="{% url 'ofrecimientos:realizar_ofrecimiento' publicacion.id %}" class="btn mb-2" style="background-color: #8f33ff; color: white; border-color: #500ce1;">Realizar ofrecimiento</a>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
                 <h3>Comentarios:</h3>

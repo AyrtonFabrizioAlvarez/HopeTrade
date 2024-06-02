@@ -45,6 +45,8 @@ class RealizarOfrecimiento(forms.ModelForm):
     
 class escribir_texto_cancelacion(forms.Form):
     texto = forms.CharField(
+        required=False,
+        empty_value='',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'ej: sucursal muy lejana'

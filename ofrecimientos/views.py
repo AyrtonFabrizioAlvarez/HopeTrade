@@ -45,7 +45,7 @@ def realizar_ofrecimiento(request, publicacion_id):
 
 def ver_ofrecimientos(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
-    ofrecimientosPublicacion = Ofrecimiento.objects.all().filter(publicacionId=publicacion).exclude(estado='rechazado')
+    ofrecimientosPublicacion = Ofrecimiento.objects.all().filter(publicacionId=publicacion).exclude(estado='eliminado')
     categorias = Categoria.objects.all()
     ofrecimiento_info = []
     for ofrecimiento in ofrecimientosPublicacion:
@@ -53,6 +53,7 @@ def ver_ofrecimientos(request, publicacion_id):
             "id": ofrecimiento.id,
             "articulo": ofrecimiento.articulo,
             "cantidad": ofrecimiento.cantidad,
+            "fecha": ofrecimiento.fecha,
             "descripcion": ofrecimiento.descripcion,
             "imagen": None,
         }
