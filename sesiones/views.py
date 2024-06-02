@@ -88,7 +88,7 @@ def view_profile_user(request, user_id):
     formulario_usuario = UsuarioForm(instance=usuario)
     formulario_persona = PersonaForm(instance=persona)
     return render(request, "sesiones/view_profile_user.html", {'form_persona': formulario_persona,'form_usuario': formulario_usuario,
-    'fecha_nac': fecha_nac_formateada, 'id':user_id, 'persona_id':persona.id})
+    'fecha_nac': fecha_nac_formateada, 'id':user_id, 'persona_id':persona.id, 'reputacion':usuario.reputacion})
     
 def view_profile_helper(request, helper_id):
     intern = get_object_or_404(Ayudante, pk=helper_id)

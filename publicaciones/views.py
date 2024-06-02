@@ -32,6 +32,7 @@ def realizar_publicacion(request):
                 )
                 publicacion.imagen = imagen
                 publicacion.save()
+                messages.success(request, "Su publicacion se creó exitosamente")
                 ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
                 return redirect(ruta)
             except:
@@ -143,8 +144,10 @@ def filtrar_publicaciones_sistema(request):
         else:
             categoria_seleccionada = Categoria.objects.get(titulo=categoria)
             publicaciones = publicaciones.filter(categoriaId__id=categoria_seleccionada.id)
-    if reputacion != 'Reputacion':
-        publicaciones = publicaciones.filter(usuarioId__reputacion=reputacion)
+    if reputacion is not None and reputacion != 'Reputacion':
+        reputacion_int = int(reputacion)
+        #traigo las publicaciones con reputacion >= a lo que pide el filtro y < lo que pide el filtro +1
+        publicaciones = publicaciones.filter(usuarioId__reputacion__gte=reputacion_int, usuarioId__reputacion__lt=reputacion_int + 1)
         reputacion_seleccionada = reputacion
     if estado != 'Estado' and estado != None:
         publicaciones = publicaciones.filter(estado=estado)
