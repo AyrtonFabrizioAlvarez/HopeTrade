@@ -20,15 +20,11 @@ class EditarCategoriaForm(forms.ModelForm):
         model = Categoria
         fields = ['titulo']
     
-    titulo = forms.CharField(label="titulo", max_length=25, required=True)
+    titulo = forms.CharField(label="titulo", max_length=25)
 
     def clean_titulo(self):
         titulo = self.cleaned_data.get('titulo')
-        try:
-            id = Categoria.objects.get(titulo=titulo).id
-            if Categoria.objects.filter(titulo=titulo).exclude(id=id).exists():
-                raise forms.ValidationError("El nombre de la categoría ya existe.")
-        except ObjectDoesNotExist:
-            if Categoria.objects.filter(titulo=titulo).exists():
+        if titulo:
+            if Categoria.objects.filter(titulo=titulo).exclude(estado='eliminada').exists():
                 raise forms.ValidationError("El nombre de la categoría ya existe.")
         return titulo
