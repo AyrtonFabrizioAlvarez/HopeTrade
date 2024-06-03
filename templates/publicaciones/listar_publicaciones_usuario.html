@@ -85,8 +85,10 @@
                             <div class="card shadow-sm" style="width: 100%;">
                                 <div class="card-body">
                                     
-                                    <h5 class="card-title"> {{publicacion.titulo}}</h5>
-                                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+                                    <h5 class="card-title mb-3"> {{publicacion.titulo}}</h5>
+                                    <h6 class="card-subtitle mb-3 text-body-secondary">Categoria: {{ publicacion.categoriaId.titulo }}</h6>
+                                    <h6 class="card-subtitle mb-3 text-body-secondary">Descripcion: 
+                                        {{ publicacion.descripcion }}</h6>
                                     
                                     <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
                                     <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
