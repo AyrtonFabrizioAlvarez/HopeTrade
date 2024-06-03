@@ -124,8 +124,9 @@
                                         <a href="{% url 'sesiones:view_profile_user' publicacion.usuarioId.id %}">
                                             {{ publicacion.usuarioId.personaId.nombre }}
                                         </a>
-                                        <h5 class="card-title"> {{publicacion.titulo}}</h5>
-                                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ publicacion.descripcion }}</h6>
+                                        <h5 class="card-title mb-3"> {{publicacion.titulo}}</h5>
+                                        <h6 class="card-subtitle mb-3 text-body-secondary">Categoria: {{ publicacion.categoriaId.titulo }}</h6>
+                                        <h6 class="card-subtitle mb-3 text-body-secondary">{{ publicacion.descripcion }}</h6>
                                         <a href="{% url 'publicaciones:seleccionar_publicacion' publicacion.id %}" class="btn btn-primary">Ver</a>
                                     </div>
                                 </div>

@@ -6,31 +6,34 @@
 
 {% block content %}
 
-<div class="container mt-3">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
             <form method="POST">
                 {% csrf_token %}
-                <br><br>
+                <br>
                 <h2>¿Seguro que desea eliminar el ofrecimiento?</h2>
-                <br><br>
+                <br>
                 <div class="card shadow-sm m-6">
                     <div class="card-body d-flex align-items-center">
                         <div class="col-md-6">
-                            <h5 class="card-title">{{ ofrecimiento.articulo }}</h5>
+                            <h5 class="card-title mb-3">{{ ofrecimiento.articulo }}</h5>
                             <br>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ ofrecimiento.descripcion }}</h6>
+                            <h6 class="card-subtitle mb-3 text-muted">{{ ofrecimiento.descripcion }}</h6>
                             <br>
-                            <h6 class="card-subtitle mb-2 text-muted">Cantidad: {{ ofrecimiento.cantidad }}</h6>
+                            <h6 class="card-subtitle mb-3 text-muted">Cantidad: {{ ofrecimiento.cantidad }}</h6>
                             <br>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                <a class="text-center" href="{% url 'publicaciones:seleccionar_publicacion' ofrecimiento.publicacionId.id %}">
-                                    Publicacion    
-                                </a>
-                                realizada por:
-                            </h6>                            <br>
-                            <h6 class="text-center mb-4">
-                                <a href="{% url 'sesiones:view_profile_user' ofrecimiento.publicacionId.usuarioId.id %}">
+                            <h6 class="card-subtitle mb-3 text-muted">Fecha: {{ ofrecimiento.fecha }}</h6>
+                            <br>
+                            <h6 class="card-subtitle mb-3 text-muted">Sucursal: {{ ofrecimiento.sucursalId.nombre }}</h6>
+                            <br>
+                            <h6 class="card-subtitle mb-3 text-muted">Ubicacion: {{ ofrecimiento.sucursalId.ubicacion }}</h6>
+                            <br>
+                            <h6 class="card-subtitle mb-3 text-muted">Ofrecido en 
+                                <a class="text-center" href="{% url 'publicaciones:seleccionar_publicacion' ofrecimiento.publicacionId.id %}">Publicacion</a> realizada por:
+                              </h6>
+                            <h6 class="card-subtitle mb-3 text-muted">
+                                <a class="text-center" href="{% url 'sesiones:view_profile_user' ofrecimiento.publicacionId.usuarioId.id %}">
                                     {{ ofrecimiento.publicacionId.usuarioId.personaId.nombre }} {{ofrecimiento.publicacionId.usuarioId.personaId.apellido}}
                                 </a>
                             </h6>
@@ -40,7 +43,6 @@
                         </div>
                     </div>
                 </div>
-                <br><br>
                 <div class="m-4">
                     <button type="submit" class="btn btn-danger mr-2">Aceptar</button>
                     <a href="{% url 'ofrecimientos:ver_mis_ofrecimientos' request.session.rol_id %}" class="btn btn-secondary">Cancelar</a>

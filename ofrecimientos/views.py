@@ -56,6 +56,8 @@ def ver_ofrecimientos(request, publicacion_id):
             "fecha": ofrecimiento.fecha,
             "descripcion": ofrecimiento.descripcion,
             "imagen": None,
+            "sucursalId":ofrecimiento.sucursalId,
+            "usuarioId":ofrecimiento.usuarioId,
         }
         if ofrecimiento.imagen:
             imagen = ofrecimiento.imagen.decode("utf-8")
@@ -169,9 +171,11 @@ def ver_mis_ofrecimientos(request, user_id):
             "id": ofrecimiento.id,
             "articulo": ofrecimiento.articulo,
             "cantidad": ofrecimiento.cantidad,
+            'fecha': ofrecimiento.fecha,
             "descripcion": ofrecimiento.descripcion,
             'publicacionId': ofrecimiento.publicacionId,
             "imagen": None,
+            "sucursalId":ofrecimiento.sucursalId,
         }
         if ofrecimiento.imagen:
             imagen = ofrecimiento.imagen.decode("utf-8")
