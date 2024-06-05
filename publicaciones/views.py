@@ -19,7 +19,7 @@ def realizar_publicacion(request):
                 publicacion = realizar_publicacion_form.save(commit=False)
                 usuarioId = request.session.get('rol_id')
                 publicacion.usuarioId = Usuario.objects.get(id=usuarioId) #hay que modificar el user
-                if Publicacion.objects.filter(titulo=publicacion.titulo, usuarioId=publicacion.usuarioId).exclude(estado="eliminada").exists():
+                if Publicacion.objects.filter(titulo=publicacion.titulo, usuarioId=publicacion.usuarioId).exclude(estado="eliminada").exclude(estado="aceptada").exists():
                     return render(request, "publicaciones/realizar_publicacion.html", {
                     'form': RealizarPublicacion(),
                     "error": 'No se pudo realizar la publicación, actualmente ya posee una publicación con el mismo título'
@@ -123,7 +123,10 @@ def eliminar_publicacion(request, publicacion_id):
             messages.success(request, "La publicación se eliminó exitosamente")
         else:
             messages.warning(request, "No se puede eliminar una publicación con ofrecimientos pendientes")
-        ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
+        if request.session['rol'] == 'usuario':
+            ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
+        else:
+            ruta = "/publicaciones/listar_publicaciones_sistema"
         return redirect(ruta)
     return render(request, 'publicaciones/eliminar_publicacion.html', { 'publicacion': publicacion })
 
