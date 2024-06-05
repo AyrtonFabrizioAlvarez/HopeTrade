@@ -69,5 +69,7 @@ def eliminar_categoria(request, categoria_id):
 def list_exchanges_today(request):
     hoy = timezone.now().date()
     intercambios_hoy = Intercambio.objects.filter(ofrecimientoId__fecha__date=hoy).filter(estado = "pendiente")
+    if len(intercambios_hoy) == 0:
+        messages.warning(request, "No existen intercambios para el día de hoy")
     return render(request, "intercambios/intercambios_del_dia.html", {"intercambios_hoy": intercambios_hoy})
 

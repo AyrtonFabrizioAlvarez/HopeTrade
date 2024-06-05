@@ -19,7 +19,7 @@ def realizar_publicacion(request):
                 publicacion = realizar_publicacion_form.save(commit=False)
                 usuarioId = request.session.get('rol_id')
                 publicacion.usuarioId = Usuario.objects.get(id=usuarioId) #hay que modificar el user
-                if Publicacion.objects.filter(titulo=publicacion.titulo, usuarioId=publicacion.usuarioId).exclude(estado="eliminada").exclude(estado="aceptada").exists():
+                if Publicacion.objects.filter(titulo=publicacion.titulo, usuarioId=publicacion.usuarioId).exclude(estado="eliminada").exclude(estado="finalizada").exists():
                     return render(request, "publicaciones/realizar_publicacion.html", {
                     'form': RealizarPublicacion(),
                     "error": 'No se pudo realizar la publicación, actualmente ya posee una publicación con el mismo título'
@@ -75,7 +75,7 @@ def realizar_comentario(request, publicacion_id):
 def listar_publicaciones_sistema(request):
     publicacionesSistema = Publicacion.objects.all()
     if request.session['rol'] != 'administrador':
-        publicacionesSistema = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
+        publicacionesSistema = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada').exclude(estado="finalizada")
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
     for cat in categorias_eliminadas:
@@ -91,7 +91,7 @@ def listar_publicaciones_sistema(request):
 
 def listar_publicaciones_usuario(request, user_id):
     usuario = Usuario.objects.get(id=user_id)
-    publicacionesUsuario = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada').exclude(estado='aceptada')
+    publicacionesUsuario = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada').exclude(estado='aceptada').exclude(estado="finalizada")
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
     for cat in categorias_eliminadas:
@@ -133,7 +133,7 @@ def eliminar_publicacion(request, publicacion_id):
 def filtrar_publicaciones_sistema(request):
     publicaciones = Publicacion.objects.all()
     if request.session['rol'] != 'administrador':
-        publicaciones = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada')
+        publicaciones = Publicacion.objects.all().exclude(estado='eliminada').exclude(estado='aceptada').exclude(estado="finalizada")
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
     for cat in categorias_eliminadas:
@@ -172,7 +172,7 @@ def filtrar_publicaciones_sistema(request):
     
 def filtrar_publicaciones_usuario(request):
     usuario = Usuario.objects.get(id=request.session['rol_id'])
-    publicaciones = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada')
+    publicaciones = Publicacion.objects.filter(usuarioId=usuario).exclude(estado='eliminada').exclude(estado="finalizada")
     categorias = Categoria.objects.all()
     categorias_eliminadas = Categoria.objects.filter(estado='eliminada')
     categoria_seleccionada = None
