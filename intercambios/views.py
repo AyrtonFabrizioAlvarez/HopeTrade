@@ -24,6 +24,9 @@ def confirm_exchange(request, intercambio_id):
     intercambio.save()
     
     publicacionid = intercambio.ofrecimientoId.publicacionId.id
+    publicacion = intercambio.ofrecimientoId.publicacionId
+    publicacion.estado = "finalizada"
+    publicacion.save()
     
     ofrecimientos = Ofrecimiento.objects.filter(publicacionId__id=publicacionid)
     for ofrecimiento in ofrecimientos:

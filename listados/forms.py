@@ -30,7 +30,7 @@ class EditarCategoriaForm(forms.ModelForm):
         else:
             try:
                 categoria = Categoria.objects.get(titulo=titulo)
-                if Publicacion.objects.filter(categoriaId=categoria).exclude(estado="eliminada").exists():
+                if Publicacion.objects.filter(categoriaId=categoria).exclude(estado="eliminada").exclude(estado="finalizada").exists():
                     raise forms.ValidationError("El nombre al que usted quiere cambiar pertenece a una categoría eliminada que aún posee publicaciones")
                 else:
                     categoria.delete()

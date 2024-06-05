@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404
 from .forms import IniciarSesionUsuario, RecuperarClave
 from .forms import PersonaForm, UsuarioForm, AyudanteForm, EditarUsuarioForm, EditarPersonaForm, EditarAyudanteForm
 from .models import Persona, Usuario, Ayudante, Administrador
+from publicaciones.models import Publicacion
+from ofrecimientos.models import Ofrecimiento
+from intercambios.models import Intercambio
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -157,7 +160,9 @@ def signup_helper(request):
     
 def delete(request):
     if request.method == "GET":
-        Usuario.objects.all().delete()
+        Publicacion.objects.all().delete()
+        Ofrecimiento.objects.all().delete()
+        Intercambio.objects.all().delete()
     return redirect("/")
 
 def delete_user(request, user_id):
