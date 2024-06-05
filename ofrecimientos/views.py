@@ -29,6 +29,8 @@ def realizar_ofrecimiento(request, publicacion_id):
                 ofrecimiento.imagen = imagen
                 ofrecimiento.estado = 'pendiente'
                 ofrecimiento.save()
+                subject = f"¡Hola!, te han realizado un ofrecimiento para la publicacion del producto {ofrecimiento.publicacionId.titulo}, saludos!"
+                enviar_mail("Tu publicacion de Hope Trade", subject, ofrecimiento.publicacionId.usuarioId.email, ofrecimiento.publicacionId.usuarioId.personaId.nombre)
                 messages.success(request, "El ofrecimiento se creó exitosamente")
                 ruta = "/publicaciones/seleccionar_publicacion/" + str(publicacion_id)
                 return redirect(ruta)
