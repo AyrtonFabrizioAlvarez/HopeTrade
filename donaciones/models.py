@@ -3,10 +3,11 @@ from sesiones.models import Usuario
 
 # Create your models here.
 class Donacion(models.Model):
-    nombre = models.TextField()
-    apellido = models.TextField()
-    email = models.EmailField()
-    dni = models.BigIntegerField()
+    nombre = models.TextField(blank=True, null=True)
+    apellido = models.TextField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    dni = models.BigIntegerField(blank=True, null=True)
+    fecha = models.DateField()
     usuarioId = models.ForeignKey(Usuario, blank=True, null=True, on_delete=models.CASCADE)
 
 class Donacion_prod(models.Model):

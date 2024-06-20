@@ -17,3 +17,8 @@ class Comentario(models.Model):
     fecha = models.DateTimeField()
     usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     publicacionId = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
+    comentarioId = models.ForeignKey("self", blank=True, null=True, on_delete=models.CASCADE)
+
+class PublicacionFavorita(models.Model):
+    usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    publicacionId = models.ForeignKey(Publicacion, on_delete=models.CASCADE)

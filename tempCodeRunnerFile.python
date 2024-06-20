@@ -1,0 +1,7 @@
+def imprimir(b):
+    print(b)
+
+a = 4198
+imprimir(a) #imprime 4198
+a = "Hola"
+imprimir(a) #imprime "Hola"
