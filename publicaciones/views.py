@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from publicaciones.models import Publicacion
 from publicaciones.models import Comentario
+from publicaciones.models import PublicacionFavorita
 from ofrecimientos.models import Ofrecimiento
 from listados.models import Categoria
 from sesiones.models import Usuario
@@ -107,11 +108,20 @@ def listar_publicaciones_usuario(request, user_id):
 def seleccionar_publicacion(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
     comentarios = Comentario.objects.filter(publicacionId=publicacion_id)
+    usuario_id = request.session['rol_id']
+    is_favorita = False
+    publicacion_favorita_id = None
+    if usuario_id:
+        favorita = PublicacionFavorita.objects.filter(usuarioId_id=usuario_id, publicacionId_id=publicacion_id).first()
+        if favorita:
+            is_favorita = True
+            publicacion_favorita_id = favorita.id
     if bool(publicacion.imagen):
         publicacion_imagen = publicacion.imagen.decode("utf-8")
     else:
         publicacion_imagen = None
-    return render(request, 'publicaciones/seleccionar_publicacion.html', {'publicacion': publicacion, 'comentarios': comentarios, 'publicacion_imagen': publicacion_imagen})
+    return render(request, 'publicaciones/seleccionar_publicacion.html', {'publicacion': publicacion, 'comentarios': comentarios, 'publicacion_imagen': publicacion_imagen, 'is_favorita': is_favorita,
+        'publicacion_favorita_id': publicacion_favorita_id,})
 
 def eliminar_publicacion(request, publicacion_id):
     publicacion = Publicacion.objects.get(id=publicacion_id)
@@ -194,3 +204,27 @@ def filtrar_publicaciones_usuario(request):
         'categorias': categorias,
         'categoria_seleccionada': categoria_seleccionada
     })
+
+
+
+def agregar_publicacion_favorita(request, publicacion_id):
+    usuario = Usuario.objects.get(id=request.session['rol_id'])
+    publicacion = Publicacion.objects.get(id=publicacion_id)
+    PublicacionFavorita.objects.create(usuarioId=usuario, publicacionId=publicacion)
+    return redirect('publicaciones:seleccionar_publicacion', publicacion_id=publicacion_id)
+
+def eliminar_publicacion_favorita(request, publicacionfav_id, publicacion_id):
+    publicacion_fav = PublicacionFavorita.objects.get(id=publicacionfav_id)
+    publicacion_fav.delete()
+    return redirect('publicaciones:seleccionar_publicacion', publicacion_id=publicacion_id)
+
+def listar_publicaciones_favoritas(request):
+    usuario = Usuario.objects.get(id=request.session['rol_id'])
+    listado_publicaciones = Publicacion.objects.exclude(estado='eliminada').exclude(estado='aceptada').exclude(estado="finalizada")
+    listado_publicacion_id = list(listado_publicaciones.values_list('id', flat=True))
+    listado_favoritas = PublicacionFavorita.objects.filter(usuarioId=usuario, publicacionId__in=listado_publicacion_id)
+    for elem in listado_favoritas:
+        print(elem.usuarioId.id)
+    if len(listado_favoritas) == 0:
+        messages.warning(request, 'No posees publicaciones favoritas')
+    return render(request, 'publicaciones/listar_publicaciones_favoritas.html', { 'listado_favoritas': listado_favoritas })

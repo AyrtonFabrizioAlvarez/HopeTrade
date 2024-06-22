@@ -12,6 +12,9 @@ urlpatterns = [
     path('seleccionar_publicacion/<int:publicacion_id>/realizar_comentario/', publicaciones.realizar_comentario, name='realizar_comentario'),
     path('filtrar_publicaciones_sistema/', publicaciones.filtrar_publicaciones_sistema, name='filtrar_publicaciones_sistema'),
     path('filtrar_publicaciones_usuario/', publicaciones.filtrar_publicaciones_usuario, name='filtrar_publicaciones_usuario'),
+    path('listar_publicaciones_favoritas/', publicaciones.listar_publicaciones_favoritas, name='listar_publicaciones_favoritas'),
+    path('agregar_publicacion_favorita/<int:publicacion_id>/', publicaciones.agregar_publicacion_favorita, name='agregar_publicacion_favorita'),
+    path('eliminar_publicacion_favorita/<int:publicacionfav_id>/<int:publicacion_id>/', publicaciones.eliminar_publicacion_favorita, name='eliminar_publicacion_favorita'),
 ]
 
 

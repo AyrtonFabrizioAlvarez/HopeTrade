@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-        <title>Seleccionar Publicacion</title>
+    <title>Seleccionar Publicacion</title>
 {% endblock title %}
 {% block content %}
 {% for msg in messages %}
@@ -22,8 +22,19 @@
     <main class="container">
         <div class="row">
             <div class="col-md-3 mb-4">
-                <div class="card" style="width: 20rem;">
+                <div class="card" style="width: 20rem; position: relative;">
                     <div class="card-body">
+                        {% if request.session.rol == 'usuario' %}
+                            {% if is_favorita %}
+                                <a href="{% url 'publicaciones:eliminar_publicacion_favorita' publicacion_favorita_id publicacion.id %}" class="favorite-icon" style="position: absolute; top: 10px; right: 10px;">
+                                    <i class="fas fa-star" style="color: gold;"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'publicaciones:agregar_publicacion_favorita' publicacion.id %}" class="favorite-icon" style="position: absolute; top: 10px; right: 10px;">
+                                    <i class="far fa-star"></i>
+                                </a>
+                            {% endif %}
+                        {% endif %}
                         <a href="{% url 'sesiones:view_profile_user' publicacion.usuarioId.id %}">
                             {{ publicacion.usuarioId.personaId.nombre }}
                         </a>
@@ -67,11 +78,11 @@
                     {% endfor %}
                     {% if request.session.rol == 'usuario' %}
                         <div class="d-flex flex-column align-items-start">
-                            <a href="{% url 'publicaciones:realizar_comentario' publicacion.id %}" class="btn btn-primary mb-2">Realizar comentario</a>                        </div>
+                            <a href="{% url 'publicaciones:realizar_comentario' publicacion.id %}" class="btn btn-primary mb-2">Realizar comentario</a>
+                        </div>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </main>
-
 {% endblock %}
