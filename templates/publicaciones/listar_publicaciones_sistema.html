@@ -145,6 +145,9 @@
                         <div class="col-md-3 mb-4">
                             <a href="{% url 'publicaciones:listar_publicaciones_usuario' request.session.rol_id %}" class="btn btn-primary">Ver mis publicaciones</a>
                         </div>
+                        <div class="col-md-3 mb-4">
+                            <a href="{% url 'publicaciones:listar_publicaciones_favoritas' %}" class="btn btn-primary">Ver mis publicaciones favoritas</a>
+                        </div>
                     </div>
                 </main>
                 {% endif %}
