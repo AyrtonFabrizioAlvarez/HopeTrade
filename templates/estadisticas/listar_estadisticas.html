@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Estadisticas</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5">Estadísticas Principales</h1>
+    <div class="list-group mt-4">
+        <a href="{% url 'estadisticas:estadisticas_publicaciones' %}"
+           class="list-group-item list-group-item-action">Estadisticas de Publicaciones</a>
+    </div>
+</div>
+{% endblock content %}
