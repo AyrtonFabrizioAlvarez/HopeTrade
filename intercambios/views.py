@@ -11,6 +11,9 @@ from .forms import escribir_texto_cancelacion
 from django.contrib import messages
 from django.db.models import Q
 from django.utils import timezone
+from historiales.models import Historial, IntercambioHistorial, PublicacionHistorial
+import datetime
+
 # Create your views here.
 def prueba(request, prueba):
     return HttpResponse("<h2>pagina generalh2</h2>")
@@ -22,11 +25,17 @@ def confirm_exchange(request, intercambio_id):
     intercambio = get_object_or_404(Intercambio, id=intercambio_id)
     intercambio.estado = "confirmado"
     intercambio.save()
+    #SE CREA UN LOG EN EL HISTORIAL DE INTERCAMBIOS
+    historial = Historial.objects.create(estado="confirmado", fecha=datetime.datetime.now())
+    historial_intercambio = IntercambioHistorial.objects.create(intercambioId=intercambio, historialId=historial)
     
     publicacionid = intercambio.ofrecimientoId.publicacionId.id
     publicacion = intercambio.ofrecimientoId.publicacionId
     publicacion.estado = "finalizada"
     publicacion.save()
+    #SE CREA UN LOG EN EL HISTORIAL DE PUBLICACIONES
+    historial = Historial.objects.create(estado="finalizada", fecha=datetime.datetime.now())
+    historial_publicacion = PublicacionHistorial.objects.create(publicacionId=publicacion, historialId=historial)
     
     ofrecimientos = Ofrecimiento.objects.filter(publicacionId__id=publicacionid)
     for ofrecimiento in ofrecimientos:
@@ -72,9 +81,17 @@ def cancelar_intercambio(intercambio_id):
     intercambio = get_object_or_404(Intercambio, id=intercambio_id)
     intercambio.estado = "cancelado"
     intercambio.save()
+    #SE CREA UN LOG EN EL HISTORIAL DE INTERCAMBIOS
+    historial = Historial.objects.create(estado="cancelado", fecha=datetime.datetime.now())
+    IntercambioHistorial.objects.create(intercambioId=intercambio, historialId=historial)
+    
     publicacion = intercambio.ofrecimientoId.publicacionId
     publicacion.estado = "disponible"
     publicacion.save()
+    #SE CREA UN LOG EN EL HISTORIAL DE PUBLICACIONES
+    historial = Historial.objects.create(estado="disponible", fecha=datetime.datetime.now())
+    PublicacionHistorial.objects.create(publicacionId=publicacion, historialId=historial)
+    
     ofrecimiento = intercambio.ofrecimientoId
     ofrecimiento.estado = "rechazado"
     ofrecimiento.save()

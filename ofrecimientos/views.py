@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 import base64
+from historiales.models import Historial, PublicacionHistorial, IntercambioHistorial
 
 # Create your views here.
 def realizar_ofrecimiento(request, publicacion_id):
@@ -87,9 +88,17 @@ def aceptar_ofrecimiento(request, ofrecimiento_id):
         if realizar_intercambio_form.is_valid():
             intercambio = realizar_intercambio_form.save(commit=False)
             intercambio.save()
+            #SE CREA UN LOG EN EL HISTORIAL DE INTERCAMBIOS
+            historial = Historial.objects.create(estado="pendiente", fecha=datetime.now())
+            IntercambioHistorial.objects.create(intercambioId=intercambio, historialId=historial)
+            
             publicacion = Publicacion.objects.get(id=ofrecimiento.publicacionId.id)
             publicacion.estado = 'aceptada'
             publicacion.save()
+            #SE CREA UN LOG EN EL HISTORIAL
+            historial = Historial.objects.create(estado="aceptada", fecha=datetime.now())
+            PublicacionHistorial.objects.create(publicacionId=publicacion, historialId=historial)
+    
             subject = f"¡Hola!, tu ofrecimiento para la publicacion del producto {publicacion.titulo}, a nombre de {publicacion.usuarioId.personaId.nombre} fue aceptado, te esperamos!"
             enviar_mail("Tu ofrecimiento de Hope Trade", subject, ofrecimiento.usuarioId.email, ofrecimiento.usuarioId.personaId.nombre)
             ofrecimiento.estado = 'aceptado'
