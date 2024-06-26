@@ -73,10 +73,33 @@ def listar_estadisticas(request):
 
 def estadisticas_publicaciones(request):
     return render(request, "estadisticas/estadisticas_publicaciones.html", {
+        "todas": publicaciones_estado(),
         "activas": publicaciones_activas(),
         "eliminadas": publicaciones_eliminadas(),
         "finalizadas": publicaciones_finalizadas()
     })
+
+def publicaciones_estado():
+    try:
+        publicaciones = Publicacion.objects.all().exclude(estado="aceptada")
+        data = [
+            {
+            "estado":(
+                pub.estado
+            )
+            }
+            for pub in publicaciones
+        ]
+        df = pd.DataFrame(data)
+        values = df['estado'].value_counts(dropna=False).keys().tolist()
+        counts = df['estado'].value_counts(dropna=False).tolist()
+        value_dict = dict(zip(values, counts))
+        img = grafico_torta(value_dict)
+
+    except Exception:
+        img = no_data()
+
+    return create_base64_image(img)
 
 def publicaciones_activas():
     try:
@@ -144,13 +167,21 @@ def estadisticas_intercambios(request):
 
 def intercambios_confirmados_rechazados():
     try:
-        intercambios = Intercambio.objects.all()
-        estados_intercambios = {
-            "Confirmados": intercambios.filter(estado="confirmado").count(),
-            "Rechazados": intercambios.filter(estado="rechazado").count()
-        }
+        intercambios = Intercambio.objects.all().exclude(estado="pendiente")
+        data = [
+            {
+            "estado":(
+                inter.estado
+            )
+            }
+            for inter in intercambios
+        ]
+        df = pd.DataFrame(data)
+        values = df['estado'].value_counts(dropna=False).keys().tolist()
+        counts = df['estado'].value_counts(dropna=False).tolist()
+        value_dict = dict(zip(values, counts))
 
-        img = grafico_torta(estados_intercambios)
+        img = grafico_torta(value_dict)
 
     except Exception:
         img = no_data()
@@ -198,7 +229,7 @@ def intercambios_pendientes_sucursal():
 def intercambios_finalizados_sucursal():
     try:
         intercambios = Intercambio.objects.all().exclude(estado="pendiente")
-        sucursales_intercambios = [
+        data = [
             {
             "sucursal":(
                 inter.ofrecimientoId.sucursalId.nombre
@@ -206,7 +237,7 @@ def intercambios_finalizados_sucursal():
             }
             for inter in intercambios
         ]
-        df = pd.DataFrame(sucursales_intercambios)
+        df = pd.DataFrame(data)
         values = df['sucursal'].value_counts(dropna=False).keys().tolist()
         counts = df['sucursal'].value_counts(dropna=False).tolist()
         value_dict = dict(zip(values, counts))
