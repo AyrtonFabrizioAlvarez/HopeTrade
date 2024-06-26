@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Estadisticas de Publicaciones</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Publicaciones Activas por Categoría</h1>
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ activas }}"
+             class="img-fluid">
+    </div>
+    
+    <h1 class="text-center">Publicaciones Eliminadas por Categoría</h1>
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ eliminadas }}"
+             class="img-fluid">
+    </div>
+
+    <h1 class="text-center">Publicaciones Finalizadas por Categoría</h1>
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ finalizadas }}"
+             class="img-fluid">
+    </div>
+</div>
+{% endblock content %}
