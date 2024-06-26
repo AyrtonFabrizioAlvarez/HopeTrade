@@ -56,6 +56,19 @@
                         Borrar filtros
                     </a>
                 </div>
+                {% if request.session.rol == "administrador" %}
+                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                        <a href="{% url 'historiales:historial_intercambios_sistema' %}" class="btn btn-secondary w-100">
+                            Historial Intercambios
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                        <a href="{% url 'historiales:historial_intercambios_usuario' request.session.rol_id %}" class="btn btn-secondary w-100">
+                            Historial Intercambios
+                        </a>
+                    </div>
+                {% endif %}
         </main>
     </form>
     <form method="GET">

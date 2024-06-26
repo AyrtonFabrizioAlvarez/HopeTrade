@@ -9,6 +9,7 @@ from sesiones.models import Usuario
 from .forms import RealizarPublicacion
 from .forms import RealizarComentario
 from datetime import datetime
+from historiales.models import Historial, PublicacionHistorial
 import base64
 
 # Create your views here.
@@ -36,6 +37,9 @@ def realizar_publicacion(request):
                 publicacion.save()
                 messages.success(request, "Su publicacion se creó exitosamente")
                 ruta = "/publicaciones/listar_publicaciones_usuario/" + str(request.session['rol_id'])
+                #SE CREA UN LOG EN EL HISTORIAL
+                historial = Historial.objects.create(estado="disponible", fecha=datetime.now())
+                PublicacionHistorial.objects.create(publicacionId=publicacion, historialId=historial)
                 return redirect(ruta)
             except:
                 return render(request, "publicaciones/realizar_publicacion.html", {
@@ -130,6 +134,9 @@ def eliminar_publicacion(request, publicacion_id):
         if not ofrecimientos:
             publicacion.estado = 'eliminada'
             publicacion.save()
+            #SE CREA UN LOG EN EL HISTORIAL DE PUBLICACIONES
+            historial = Historial.objects.create(estado="eliminada", fecha=datetime.now())
+            PublicacionHistorial.objects.create(publicacionId=publicacion, historialId=historial)
             messages.success(request, "La publicación se eliminó exitosamente")
         else:
             messages.warning(request, "No se puede eliminar una publicación con ofrecimientos pendientes")
