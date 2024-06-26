@@ -27,4 +27,5 @@ urlpatterns = [
     path('', sesiones.ver_landing_page),
     path('ofrecimientos/', include('ofrecimientos.urls')),
     path('historiales/', include(('historiales.urls', 'historiales'))),
+    path('estadisticas/', include(('estadisticas.urls', 'estadisticas')))
 ]
