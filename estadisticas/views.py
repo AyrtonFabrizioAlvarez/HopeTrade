@@ -49,10 +49,24 @@ def grafico_barras(data):
             color=colors[: len(category_counts)],
         )
 
-        plt.ylabel("Número de publicaciones")
+        plt.ylabel("Cantidad")
         plt.xticks(rotation=45)
         plt.tight_layout()
         return plt
+
+def grafico_torta(intercambios_estado):
+    data = list(intercambios_estado.values())
+    labels = list(intercambios_estado.keys())
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    wedges, texts, autotexts = ax.pie(
+        data, labels=labels, autopct="%1.1f%%", startangle=140
+    )
+    #adjust_text(texts + autotexts, arrowprops=dict(arrowstyle="->", color="r", lw=1))
+    ax.axis("equal")
+    plt.tight_layout()
+
+    return plt
 
 def listar_estadisticas(request):
     return render(request, "estadisticas/listar_estadisticas.html")
@@ -93,7 +107,7 @@ def publicaciones_eliminadas():
             }
             for pub in publicaciones
         ]
-
+        
         img = grafico_barras(data)
 
     except Exception:
@@ -120,19 +134,85 @@ def publicaciones_finalizadas():
 
     return create_base64_image(img)
 
-#def intercambios_estado(request):
-#    try:
-#        intercambios = Intercambio.objects.all()
-#        data = [
-#            {
-#                "state": (
-#                    inter.estado
-#                )
-#            }
-#            for inter in intercambios
-#        ]
-#
-#        return render_chart(request, "estadisticas/publicaciones_activas.html", grafico_barras(request, data))
-#
-#    except Exception:
-#        return render_chart(request, "estadisticas/publicaciones_activas.html", no_data())
+def estadisticas_intercambios(request):
+    return render(request, "estadisticas/estadisticas_intercambios.html", {
+        "confirmadas_canceladas": intercambios_confirmados_rechazados(),
+        "pendientes_finalizados": intercambios_pendientes_finalizados(),
+        "pendientes_sucursal": intercambios_pendientes_sucursal(),
+        "terminados_sucursal": intercambios_finalizados_sucursal(),
+    })
+
+def intercambios_confirmados_rechazados():
+    try:
+        intercambios = Intercambio.objects.all()
+        estados_intercambios = {
+            "Confirmados": intercambios.filter(estado="confirmado").count(),
+            "Rechazados": intercambios.filter(estado="rechazado").count()
+        }
+
+        img = grafico_torta(estados_intercambios)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
+def intercambios_pendientes_finalizados():
+    try:
+        intercambios = Intercambio.objects.all()
+        data = [ 
+            {
+            "category": (
+                inter.estado if inter.estado=="pendiente" else "finalizado"
+            )
+            }
+            for inter in intercambios
+        ]
+
+        img = grafico_barras(data)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
+def intercambios_pendientes_sucursal():
+    try:
+        intercambios = Intercambio.objects.filter(estado="pendiente")
+        data = [ 
+            {
+            "category": (
+                inter.ofrecimientoId.sucursalId.nombre
+            )
+            }
+            for inter in intercambios
+        ]
+
+        img = grafico_barras(data)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
+def intercambios_finalizados_sucursal():
+    try:
+        intercambios = Intercambio.objects.all().exclude(estado="pendiente")
+        sucursales_intercambios = [
+            {
+            "sucursal":(
+                inter.ofrecimientoId.sucursalId.nombre
+            )
+            }
+            for inter in intercambios
+        ]
+        df = pd.DataFrame(sucursales_intercambios)
+        values = df['sucursal'].value_counts(dropna=False).keys().tolist()
+        counts = df['sucursal'].value_counts(dropna=False).tolist()
+        value_dict = dict(zip(values, counts))
+        img = grafico_torta(value_dict)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
