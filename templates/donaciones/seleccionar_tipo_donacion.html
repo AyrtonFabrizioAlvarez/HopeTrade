@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<html>
+<head>
+    <title>Seleccionar Tipo de Donación</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+{% endblock title %}
+{% block content %}
+<body>
+    <div class="container">
+        <h2 class="mt-5">Seleccionar Tipo de Donación</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="tipo_donacion">Selecciona el tipo de donación:</label>
+                <select class="form-control" id="tipo_donacion" name="tipo_donacion">
+                    <option value="dinero">Donación de Dinero</option>
+                    <option value="producto">Donación de Producto</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Seleccionar</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

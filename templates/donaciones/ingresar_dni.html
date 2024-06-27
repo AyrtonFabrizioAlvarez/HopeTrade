@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<html>
+<head>
+    <title>Ingresar DNI</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+{% endblock title %}
+{% block content %}
+<body>
+    <div class="container">
+        <h2 class="mt-5">Ingresar DNI</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.dni.label_tag }}
+                {{ form.dni }}
+            </div>
+            <button type="submit" class="btn btn-primary">Verificar DNI</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}
