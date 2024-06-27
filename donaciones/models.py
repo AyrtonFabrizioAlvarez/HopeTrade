@@ -7,7 +7,7 @@ class Donacion(models.Model):
     apellido = models.TextField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     dni = models.BigIntegerField(blank=True, null=True)
-    fecha = models.DateField()
+    fecha = models.DateField(auto_now_add=True)
     usuarioId = models.ForeignKey(Usuario, blank=True, null=True, on_delete=models.CASCADE)
 
 class Donacion_prod(models.Model):

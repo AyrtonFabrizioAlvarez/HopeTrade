@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<html>
+<head>
+    <title>Donación de Dinero</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+{% endblock title %}
+{% block content %}
+<body>
+    <div class="container">
+        <h2 class="mt-5">Donación de Dinero</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Registrar Donación de Dinero</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}
