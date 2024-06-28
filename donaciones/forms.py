@@ -33,3 +33,19 @@ class DonacionProductoForm(forms.ModelForm):
             'producto': forms.TextInput(attrs={'class': 'form-control'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+    
+class MercadoPagoForm(forms.ModelForm):
+    class Meta:
+        model = Donacion_din
+        fields = ["monto"]
+        labels = {"monto": "Monto a donar"}
+        widgets = {
+            "monto": forms.NumberInput(
+                attrs={
+                    "min": "1",
+                    "max": "1000000",
+                    "step": "1",
+                    "class": "form-control",
+                }
+            ),
+        }

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Estadísticas de Donaciones</title>
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Donaciones de Usuarios Registrados y No Registrados</h1>
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ registrado_noRegistrado }}"
+             class="img-fluid">
+    </div>
+    
+    <h1 class="text-center">Donaciones de Dinero y Productos</h1>
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ dinero_producto }}"
+             class="img-fluid">
+    </div>
+</div>
+{% endblock content %}

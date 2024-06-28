@@ -146,3 +146,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'hopetradeunlp@gmail.com'  # Correo desde el que se envian los correos
 EMAIL_HOST_PASSWORD = 'cshc lqwr bbaw ypjb'  # Contraseña de correo
+
+MERCADOPAGO_ACCESS_TOKEN = "APP_USR-4206847862328031-062812-0cfe3c3dcd12c5b062bb384eb336ca47-1875901227"
