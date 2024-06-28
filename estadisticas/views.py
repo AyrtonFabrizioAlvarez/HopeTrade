@@ -6,6 +6,7 @@ import base64
 import pandas as pd
 from publicaciones.models import Publicacion
 from intercambios.models import Intercambio
+from donaciones.models import Donacion, Donacion_din, Donacion_prod
 
 def create_base64_image(fig):
     buf = io.BytesIO()
@@ -242,6 +243,43 @@ def intercambios_finalizados_sucursal():
         counts = df['sucursal'].value_counts(dropna=False).tolist()
         value_dict = dict(zip(values, counts))
         img = grafico_torta(value_dict)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
+def estadisticas_donaciones(request):
+    return render(request, "estadisticas/estadisticas_donaciones.html", {
+        "registrado_noRegistrado": donaciones_registrado_noRegistrado(),
+        "dinero_producto": donaciones_dinero_producto(),
+    })
+
+def donaciones_registrado_noRegistrado():
+    try:
+        donaciones = Donacion.objects.all()
+        data = {
+            "registrado": donaciones.filter(usuarioId__isnull=False).count(),
+            "no registrado": donaciones.filter(usuarioId__isnull=True).count(),
+        }
+
+        img = grafico_torta(data)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
+def donaciones_dinero_producto():
+    try:
+        dinero = Donacion_din.objects.all()
+        producto = Donacion_prod.objects.all()
+        data = {
+            "donación de dinero": dinero.count(),
+            "donación de productos": producto.count(),
+        }
+
+        img = grafico_torta(data)
 
     except Exception:
         img = no_data()

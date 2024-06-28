@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Donar dinero</title>
+{% endblock title %}
+
+{% block content %}
+<form method="POST">
+    <div class="container mt-5">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Error de Conexión</h4>
+            <p>{{ error }}</p>
+            {% comment %} <hr>
+            <p class="mb-0">Por favor, inténtelo de nuevo más tarde.</p> {% endcomment %}
+        </div>
+        <a href="/" class="btn btn-primary">Volver</a>
+    </div>
+</form>
+
+{% endblock content %}

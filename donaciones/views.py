@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from donaciones.models import Donacion
+from donaciones.models import Donacion, Donacion_din
 from sesiones.models import Usuario
-from .forms import DniForm, DonacionDineroForm, DonacionForm, DonacionProductoForm
+from .forms import DniForm, DonacionDineroForm, DonacionForm, DonacionProductoForm, MercadoPagoForm
+from .mercadopago import mp, create_preference
 
 # Create your views here.
 def ingresar_dni(request):
@@ -75,3 +76,44 @@ def donacion_producto(request, donacion_id):
     else:
         form = DonacionProductoForm()
     return render(request, 'donaciones/donacion_producto.html', {'form': form, 'donacion': donacion})
+
+def mercadopago(request, user_id):
+    if request.method == "POST":
+        form = MercadoPagoForm(request.POST)
+        if form.is_valid():
+            donation_amount = form.cleaned_data["monto"]
+
+            preference = create_preference(donation_amount, user_id)
+
+            if preference:
+                return redirect(preference["response"]["init_point"])
+            else:
+                return render(
+                    request,
+                    "donaciones/mercadopago_error.html",
+                    {
+                        "error": "No se pudo conectar con MercadoPago. Inténtelo de nuevo más tarde."
+                    },
+                )
+    else:
+        form = MercadoPagoForm()
+    return render(request, "donaciones/mercadopago.html", {"form": form})
+
+def mercadopago_exito(request, user_id):
+    payment_id = request.GET.get("payment_id")
+    if payment_id:
+        payment = mp.payment().get(payment_id)
+        if payment["response"]["status"] == "approved":
+            usuario = Usuario.objects.get(id=user_id)
+            donacion = Donacion.objects.create(usuarioId=usuario)
+            donation_amount = payment["response"]["transaction_amount"]
+            Donacion_din.objects.create(forma_pago="mercadopago",monto=donation_amount, donacionId=donacion)
+            return render(request, "donaciones/mercadopago_exito.html")
+    return redirect("donaciones:mercadopago_rechazo")
+
+def mercadopago_rechazo(request):
+    return render(request, "donaciones/mercadopago_rechazo.html")
+
+
+def mercadopago_pendiente(request):
+    return render(request, "donaciones/mercadopago_pendiente.html")
