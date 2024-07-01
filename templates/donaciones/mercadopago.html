@@ -10,6 +10,8 @@
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Confirmar</button>
     <a href="/" class="btn btn-secondary">Cancelar</a>
+    
 </form>
+<a href="{% url 'historiales:historial_donaciones_sistema' %}" class="btn btn-success col-md-4">Historial Donaciones</a>
 
 {% endblock content %}

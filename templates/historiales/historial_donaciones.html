@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %}
+        <title>Historial Donaciones</title>
+{% endblock title %}
+
+{% block content %}
+{% for msg in messages %}
+{% if msg.level == 25 %}
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="check-circle-fill" viewBox="0 0 16 16">
+      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+    </symbol>
+  </svg>
+  <div class="alert alert-success d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"></use></svg>
+      <div>
+        {{ msg }}
+      </div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% elif msg.level == 30 %}
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+  </svg>
+    
+  <div class="alert alert-warning d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+      <div>
+        {{ msg }}
+      </div>
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+{% endfor %}
+
+
+
+{% if request.path != "/historiales/donaciones_sistema/" %}
+  {% if request.path == "/historiales/donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/" %}
+    <form method="POST" action="{% url 'historiales:filtrar_historial_donaciones_dinero' %}">
+  {% else %}
+    <form method="POST" action="{% url 'historiales:filtrar_historial_donaciones_producto' %}">
+  {%endif%}
+  {% csrf_token %}
+  <main class="container mt-5">
+    <div class="row align-items-center">
+      <div class="col-md-2 align-items-center justify-content-center">
+        <div class="input-group">
+          {% if request.path == "/historiales/donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/"  %}
+            <select class="form-select shadow-sm" name="forma de pago">
+              <option selected>
+                {% if forma_pago_seleccionada %}
+                  {{ forma_pago_seleccionada }}
+                {% else %}
+                  Forma de Pago
+                {% endif %}
+              </option>
+              <option>efectivo</option>
+              <option>mercadopago</option>
+              <option>tarjeta</option>
+            </select>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-2 align-items-center justify-content-center">
+        <label class="form-label" style="font-size:20px;">Desde</label>
+        <input type="date" id="id_fecha_desde" name="fecha_desde" class="form-control" placeholder="desde" value="{{ fecha_desde_seleccionada|default_if_none:'' }}">
+      </div>
+      <div class="col-md-2 align-items-center justify-content-center">
+        <label class="form-label" style="font-size:20px;">Hasta</label>
+        <input type="date" id="id_fecha_hasta" name="fecha_hasta" class="form-control" placeholder="hasta" value="{{ fecha_hasta_seleccionada|default_if_none:'' }}">
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center">
+        {% load static %}
+        <button class="btn p-0 border-0 bg-transparent" type="submit">
+          <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-height: 24px;">
+        </button>
+      </div>
+      {% if request.path == "/historiales/historial_donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/" %}
+        <div class="col-md-2 d-flex align-items-center justify-content-center">
+          <a href="{% url 'historiales:historial_donaciones_dinero_sistema' %}" class="btn btn-secondary w-100">
+            Borrar filtros
+          </a>
+        </div>
+      {% elif request.path == "/historiales/historial_donaciones_producto_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_producto/" %}
+          <div class="col-md-2 d-flex align-items-center justify-content-center">
+            <a href="{% url 'historiales:historial_donaciones_productos_sistema' %}" class="btn btn-secondary w-100">
+              Borrar filtros
+            </a>
+          </div>
+      {% else %}
+      <div class="col-md-2 d-flex align-items-center justify-content-center">
+        <a href="" class="btn btn-secondary w-100">
+          Borrar filtros
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</form>
+{% endif %}
+{% if request.path == "/historiales/donaciones_sistema/" %}
+  <main class="d-flex flex-column align-items-center justify-content-center vh-100">
+    <h2 class="mb-4 text-center">¿Qué tipo de donaciones desea visualizar?</h2>
+    <div class="row w-100 d-flex justify-content-center">
+      <div class="col-md-3 mb-2 d-flex justify-content-center">
+        <a href="{% url 'historiales:historial_donaciones_dinero_sistema' %}" class="btn btn-success text-center w-100">
+          Donaciones Dinero
+        </a>
+      </div>
+      <div class="col-md-3 mb-2 d-flex justify-content-center">
+        <a href="{% url 'historiales:historial_donaciones_productos_sistema' %}" class="btn btn-success text-center w-100">
+          Donaciones Productos
+        </a>
+      </div>
+    </div>
+  </main>
+{% else %}
+  <main class="container mt-5">
+      <div class="row align-items-center">
+        <div class="col-md-2">
+          <a href="{% url 'historiales:historial_donaciones_dinero_sistema' %}" class="btn btn-success w-100">
+            Donaciones Dinero
+          </a>
+        </div>
+        
+        <div class="col-md-2">
+          <a href="{% url 'historiales:historial_donaciones_productos_sistema' %}" class="btn btn-success w-100">
+            Donaciones Productos
+          </a>
+        </div>
+      </div>
+    </main>
+  {% endif %}
+{% if request.path != "/historiales/donaciones_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/"  %}
+    <table class="table container mt-5 table-striped">
+        <thead>
+        <tr class="table-success">
+            <th scope="col">#</th>
+            <th scope="col">
+              {% if request.path == "/historiales/donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/" %}
+                Forma de Pago
+              {% else %}
+                Titulo
+              {% endif %}
+            </th>
+            <th scope="col">
+              {% if request.path == "/historiales/donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/" %}
+                Monto
+              {% else %}
+                Cantidad
+              {% endif %}
+            </th>
+            <th scope="col">Fecha</th>
+            {% if request.session.rol == "administrador" %}
+                <th scope="col">Usuario</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+            {% for donacion in donaciones %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>
+                      {% if request.path == "/historiales/donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/"  %}
+                        {{ donacion.forma_pago }}
+                      {% else %}
+                        {{ donacion.producto }}
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if request.path == "/historiales/donaciones_dinero_sistema/" or request.path == "/historiales/filtrar_historial_donaciones_dinero/"  %}
+                        {{ donacion.monto }}
+                      {% else %}
+                        {{ donacion.cantidad }}
+                      {% endif %}
+                    </td>
+                    <td>{{ donacion.donacionId.fecha }}</td>
+                    {% if request.session.rol == "administrador"%}
+                      {% if donacion.donacionId.usuarioId %}
+                        <td><a href="{% url 'sesiones:view_profile_user' donacion.donacionId.usuarioId.id %}">{{ donacion.donacionId.usuarioId.personaId.nombre }}</a></td>
+                      {% else %}
+                        <td>{{ donacion.donacionId.nombre }}</td>
+
+                      {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  {% endif %}
+
+
+{% endblock %}

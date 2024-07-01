@@ -35,10 +35,65 @@
   </div>
 {% endif %}
 {% endfor %}
-{% if historial %}
-    <table class="table container mt-5">
+
+
+<form method="POST" action="{% url 'historiales:filtrar_historial_publicaciones' %}">
+  {% csrf_token %}
+  <main class="container mt-5">
+      <div class="row g-3 align-items-center">
+          <div class="col-md-2">
+              <div class="input-group">
+                  <select class="form-select shadow-sm" name="categoria">
+                      <option selected>
+                          {% if categoria_seleccionada.titulo %}
+                              {{ categoria_seleccionada.titulo }}
+                          {% else %}
+                              Categoria
+                          {% endif %}
+                      </option>
+                      {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.titulo }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          </div> 
+              <div class="col-md-2">
+                  <div class="input-group">
+                      <select class="form-select shadow-sm" name="estado">
+                          <option selected>
+                          {% if estado_seleccionado %}
+                              {{ estado_seleccionado }}
+                          {% else %}
+                              Estado
+                          {% endif %}
+                          </option>
+                          <option>finalizada</option>
+                          <option>aceptada</option>
+                          <option>disponible</option>
+                          <option>eliminada</option>
+                      </select>
+                  </div>
+              </div>
+
+          
+              <div class="col-md-1 d-flex align-items-center justify-content-center">
+                  {% load static %}
+                  <button class="btn p-0 border-0 bg-transparent" type="submit">
+                      <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-height: 24px;">
+                  </button>
+              </div>
+
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+              <a href="{% url 'historiales:historial_publicaciones_sistema' %}" class="btn btn-secondary w-100">
+                Borrar filtros
+              </a>
+            </div>
+  </main>
+</form>
+
+    <table class="table container mt-5 table-striped">
         <thead>
-        <tr>
+        <tr class="table-success">
             <th scope="col">#</th>
             <th scope="col">Titulo</th>
             <th scope="col">Estado</th>
@@ -62,6 +117,6 @@
             {% endfor %}
         </tbody>
     </table>
-{% endif %}
+
 
 {% endblock %}
