@@ -253,6 +253,7 @@ def estadisticas_donaciones(request):
     return render(request, "estadisticas/estadisticas_donaciones.html", {
         "registrado_noRegistrado": donaciones_registrado_noRegistrado(),
         "dinero_producto": donaciones_dinero_producto(),
+        "forma_pago": donaciones_forma_pago()
     })
 
 def donaciones_registrado_noRegistrado():
@@ -280,6 +281,29 @@ def donaciones_dinero_producto():
         }
 
         img = grafico_torta(data)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
+def donaciones_forma_pago():
+    try:
+        dinero = Donacion_din.objects.all()
+        data = [
+            {
+            "forma de pago":(
+                din.forma_pago
+            )
+            }
+            for din in dinero
+        ]
+        df = pd.DataFrame(data)
+        values = df['forma de pago'].value_counts(dropna=False).keys().tolist()
+        counts = df['forma de pago'].value_counts(dropna=False).tolist()
+        value_dict = dict(zip(values, counts))
+
+        img = grafico_torta(value_dict)
 
     except Exception:
         img = no_data()
