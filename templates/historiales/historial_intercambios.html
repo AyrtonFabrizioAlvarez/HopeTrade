@@ -35,28 +35,80 @@
           </div>
         {% endif %}
       {% endfor%}
-{% if historial %}
-    <table class="table container mt-5">
+
+<form method="POST" action="{% url 'historiales:filtrar_historial_intercambios' %}">
+  {% csrf_token %}
+  <main class="container mt-5">
+      <div class="row align-items-center">
+        <div class="col-md-2 align-items-center justify-content-center">
+            <div class="input-group">
+                <select class="form-select shadow-sm" name="estado">
+                    <option selected>
+                    {% if estado_seleccionado %}
+                        {{ estado_seleccionado }}
+                    {% else %}
+                        Estado
+                    {% endif %}
+                    </option>
+                    <option>pendiente</option>
+                    <option>confirmado</option>
+                    <option>cancelado</option>
+                </select>
+            </div>
+        </div>
+
+
+          <div class="col-md-2 align-items-center justify-content-center">
+            <label class="form-label" style="font-size:20px;">Desde</label>
+            <input type="datetime-local" id="id_fecha_desde" name="fecha_desde" class="form-control" placeholder="desde" name="fecha_desde" value="{{ fecha_desde_seleccionada }}">
+          </div>
+          <div class="col-md-2 align-items-center justify-content-center">
+            <label class="form-label" style="font-size:20px;">Hasta</label>
+            <input type="datetime-local" id="id_fecha_hasta" name="fecha_hasta" class="form-control" placeholder="hasta" name="fecha_hasta" value="{{ fecha_hasta_seleccionada }}">
+          </div>
+
+
+          
+        <div class="col-md-1 d-flex align-items-center justify-content-center">
+            {% load static %}
+            <button class="btn p-0 border-0 bg-transparent" type="submit">
+                <img src="{% static 'logoLupaBuscador.png' %}" alt="Buscar" style="max-height: 24px;">
+            </button>
+        </div>
+
+          <div class="col-md-2 d-flex align-items-center justify-content-center">
+            <a href="{% url 'historiales:historial_intercambios_sistema' %}" class="btn btn-secondary w-100">
+              Borrar filtros
+            </a>
+          </div>
+
+  </main>
+</form>
+
+    <table class="table container mt-5 table-striped">
         <thead>
-        <tr>
+        <tr class="table-success">
             <th scope="col">#</th>
+            <th scope="col">IntercambioId</th>
             <th scope="col">Estado</th>
             <th scope="col">Fecha</th>
             <th scope="col">Publicó</th>
             <th scope="col">Ofreció</th>
+            <th scope="col">FechaPactada</th>
         </tr>
         </thead>
         <tbody>
             {% for hist in historial %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ hist.intercambioId.id }}</td>
                     <td>{{ hist.historialId.estado }}</td>
                     <td>{{ hist.historialId.fecha }}</td>
                     <td><a href="{% url 'sesiones:view_profile_user' hist.intercambioId.ofrecimientoId.publicacionId.usuarioId.id %}">{{ hist.intercambioId.ofrecimientoId.publicacionId.usuarioId.personaId.nombre }}</a></th>
                     <td><a href="{% url 'sesiones:view_profile_user' hist.intercambioId.ofrecimientoId.usuarioId.id %}">{{ hist.intercambioId.ofrecimientoId.usuarioId.personaId.nombre }}</a></th>
-                </tr>
+                    <td>{{ hist.intercambioId.ofrecimientoId.fecha }}</td>
+                  </tr>
             {% endfor %}
         </tbody>
     </table>
-{% endif %}
 {% endblock %}
