@@ -77,12 +77,13 @@ def estadisticas_publicaciones(request):
         "todas": publicaciones_estado(),
         "activas": publicaciones_activas(),
         "eliminadas": publicaciones_eliminadas(),
+        "aceptadas": publicaciones_aceptadas(),
         "finalizadas": publicaciones_finalizadas()
     })
 
 def publicaciones_estado():
     try:
-        publicaciones = Publicacion.objects.all().exclude(estado="aceptada")
+        publicaciones = Publicacion.objects.all()
         data = [
             {
             "estado":(
@@ -139,6 +140,25 @@ def publicaciones_eliminadas():
     
     return create_base64_image(img)
 
+def publicaciones_aceptadas():
+    try:
+        publicaciones = Publicacion.objects.filter(estado="aceptada")
+        data = [
+            {
+                "category": (
+                    pub.categoriaId.titulo
+                )
+            }
+            for pub in publicaciones
+        ]
+        
+        img = grafico_barras(data)
+
+    except Exception:
+        img = no_data()
+    
+    return create_base64_image(img)
+
 def publicaciones_finalizadas():
     try:
         publicaciones = Publicacion.objects.filter(estado="finalizada")
@@ -160,13 +180,13 @@ def publicaciones_finalizadas():
 
 def estadisticas_intercambios(request):
     return render(request, "estadisticas/estadisticas_intercambios.html", {
-        "confirmadas_canceladas": intercambios_confirmados_rechazados(),
+        "confirmadas_canceladas": intercambios_confirmados_cancelados(),
         "pendientes_finalizados": intercambios_pendientes_finalizados(),
         "pendientes_sucursal": intercambios_pendientes_sucursal(),
         "terminados_sucursal": intercambios_finalizados_sucursal(),
     })
 
-def intercambios_confirmados_rechazados():
+def intercambios_confirmados_cancelados():
     try:
         intercambios = Intercambio.objects.all().exclude(estado="pendiente")
         data = [
