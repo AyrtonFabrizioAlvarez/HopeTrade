@@ -19,4 +19,8 @@ class RealizarPublicacion(forms.ModelForm):
 class RealizarComentario(forms.ModelForm):
     class Meta:
         model = Comentario
-        fields = ['texto',]
+        fields = ['texto', 'respuesta_a']
+        widgets = {
+            'texto': forms.Textarea(attrs={'class': 'form-control'}),
+            'respuesta_a': forms.HiddenInput(),
+        }
