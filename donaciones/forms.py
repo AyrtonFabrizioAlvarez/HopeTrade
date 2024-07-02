@@ -17,11 +17,21 @@ class DonacionForm(forms.ModelForm):
         }
 
 class DonacionDineroForm(forms.ModelForm):
+    FORMA_PAGO_CHOICES = [
+        ('efectivo', 'Efectivo'),
+        ('tarjeta', 'Tarjeta'),
+        ('mercado_pago', 'Mercado Pago'),
+    ]
+
+    forma_pago = forms.ChoiceField(
+        choices=FORMA_PAGO_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Donacion_din
         fields = ['forma_pago', 'monto']
         widgets = {
-            'forma_pago': forms.TextInput(attrs={'class': 'form-control'}),
             'monto': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 

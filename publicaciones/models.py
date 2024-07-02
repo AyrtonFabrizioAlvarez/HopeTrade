@@ -18,6 +18,10 @@ class Comentario(models.Model):
     usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     publicacionId = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
     comentarioId = models.ForeignKey("self", blank=True, null=True, on_delete=models.CASCADE)
+    respuesta_a = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='respuestas')
+
+    def __str__(self):
+        return self.texto
 
 class PublicacionFavorita(models.Model):
     usuarioId = models.ForeignKey(Usuario, on_delete=models.CASCADE)

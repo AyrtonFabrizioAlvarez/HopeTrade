@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from publicaciones.models import Publicacion
 from publicaciones.models import Comentario
@@ -55,7 +55,8 @@ def realizar_publicacion(request):
 def cancelar_operacion(request):
     return redirect('publicaciones:listar_publicaciones_sistema')
 
-def realizar_comentario(request, publicacion_id):
+def realizar_comentario(request, publicacion_id, comentario_id=None):
+    publicacion = get_object_or_404(Publicacion, id=publicacion_id)
     if request.method == "POST":
         realizar_comentario_form = RealizarComentario(request.POST)
         if realizar_comentario_form.is_valid():
@@ -64,17 +65,22 @@ def realizar_comentario(request, publicacion_id):
                 comentario.fecha = datetime.now()
                 usuarioId = request.session.get('rol_id')
                 comentario.usuarioId = Usuario.objects.get(id=usuarioId)
-                comentario.publicacionId = Publicacion.objects.get(id=publicacion_id) 
+                comentario.publicacionId = publicacion
+                if comentario_id:
+                    comentario.respuesta_a = Comentario.objects.get(id=comentario_id)
                 comentario.save()
-                ruta = "/publicaciones/seleccionar_publicacion/" + str(publicacion_id)
-                return redirect(ruta)
-            except:
+                return redirect(f"/publicaciones/seleccionar_publicacion/{publicacion_id}")
+            except Exception as e:
                 return render(request, "publicaciones/realizar_comentario.html", {
-                    'form': RealizarComentario(),
-                    "error": 'algo salió mal'
+                    'form': realizar_comentario_form,
+                    "error": 'algo salió mal: ' + str(e)
                 })
+    else:
+        inicial_data = {'respuesta_a': comentario_id} if comentario_id else {}
+        realizar_comentario_form = RealizarComentario(initial=inicial_data)
+    
     return render(request, "publicaciones/realizar_comentario.html", {
-        'form': RealizarComentario()
+        'form': realizar_comentario_form
     })
 
 def listar_publicaciones_sistema(request):

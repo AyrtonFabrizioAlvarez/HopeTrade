@@ -59,7 +59,7 @@ def donacion_dinero(request, donacion_id):
             donacion_dinero = form.save(commit=False)
             donacion_dinero.donacionId = donacion
             donacion_dinero.save()
-            return redirect('donaciones:ingresar_dni')
+            return redirect('/')
     else:
         form = DonacionDineroForm()
     return render(request, 'donaciones/donacion_dinero.html', {'form': form, 'donacion': donacion})
@@ -72,7 +72,7 @@ def donacion_producto(request, donacion_id):
             donacion_producto = form.save(commit=False)
             donacion_producto.donacionId = donacion
             donacion_producto.save()
-            return redirect('donaciones:ingresar_dni')
+            return redirect('/')
     else:
         form = DonacionProductoForm()
     return render(request, 'donaciones/donacion_producto.html', {'form': form, 'donacion': donacion})
