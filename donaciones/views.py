@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from donaciones.models import Donacion, Donacion_din
+from django.contrib import messages
 from sesiones.models import Usuario
 from .forms import DniForm, DonacionDineroForm, DonacionForm, DonacionProductoForm, MercadoPagoForm
 from .mercadopago import mp, create_preference
@@ -59,6 +60,7 @@ def donacion_dinero(request, donacion_id):
             donacion_dinero = form.save(commit=False)
             donacion_dinero.donacionId = donacion
             donacion_dinero.save()
+            messages.success(request, "La donación se registró exitosamente.")
             return redirect('/')
     else:
         form = DonacionDineroForm()
@@ -72,6 +74,7 @@ def donacion_producto(request, donacion_id):
             donacion_producto = form.save(commit=False)
             donacion_producto.donacionId = donacion
             donacion_producto.save()
+            messages.success(request, "La donación se registró exitosamente.")
             return redirect('/')
     else:
         form = DonacionProductoForm()
