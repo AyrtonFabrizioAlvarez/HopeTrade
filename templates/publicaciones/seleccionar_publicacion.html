@@ -3,6 +3,7 @@
 {% block title %}
     <title>Seleccionar Publicacion</title>
 {% endblock title %}
+
 {% block content %}
 {% for msg in messages %}
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -13,14 +14,17 @@
 
     <div class="alert alert-success d-flex align-items-center" role="alert">
         <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"></use></svg>
-        <div>{{ msg }}</div>
+        <div>
+            {{ msg }}
+        </div>
         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 {% endfor %}
 <main class="container">
     <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card" style="width: 20rem; position: relative;">
+        <!-- Ajusta el tamaño de las columnas aquí -->
+        <div class="col-md-6 mb-4">
+            <div class="card" style="width: 100%; position: relative;">
                 <div class="card-body">
                     {% if request.session.rol == 'usuario' %}
                         {% if is_favorita %}
@@ -39,9 +43,12 @@
                     <h5 class="card-title mb-3">{{ publicacion.titulo }}</h5>
                     <h6 class="card-subtitle mb-3 text-body-secondary">Categoria: {{ publicacion.categoriaId.titulo }}</h6>
                     <h6 class="card-subtitle mb-3 text-body-secondary">{{ publicacion.descripcion }}</h6>
-                    <h7 class="card-subtitle mb-3 text-body-secondary">Cantidad: {{ publicacion.cantidad }}</h7>
-                    <div class="col-md-8 text-center">
-                        <img src="data:image/png;base64,{{ publicacion_imagen }}" class="img-fluid m-3 shadow-sm ratio-1x1" style="border: 1px solid #ddd" alt="Imagen">
+                    <h7 class="card-subtitle mb-3 text-body-secondary">cantidad: {{ publicacion.cantidad }}</h7>
+                    <div class="col-md-6 text-center">
+                        <img src="data:image/png;base64,{{ publicacion_imagen }}"
+                             class="img-fluid m-3 shadow-sm ratio-1x1"
+                             style="border: 1px solid #ddd"
+                             alt="Imagen">
                     </div>
                     {% if request.session.rol == 'administrador' %}
                         <a href="{% url 'publicaciones:eliminar_publicacion' publicacion.id %}" class="btn btn-danger">Eliminar</a>
@@ -61,45 +68,16 @@
                     {% endif %}
                 {% endif %}
             {% endif %}
-            <h3>Comentarios:</h3>
-            <ul>
-                {% for comentario in comentarios %}
-                    {% if not comentario.respuesta_a_id %}
-                        <li>
-                            <a href="{% url 'sesiones:view_profile_user' comentario.usuarioId.id %}">
-                                {{ comentario.usuarioId.personaId.nombre }}:
-                            </a>
-                            {{ comentario.texto }}, {{ comentario.fecha }}
-                            <!-- Formulario para responder al comentario -->
-                            {% if request.session.rol == 'usuario' %}
-                                <button class="btn btn-link p-0" onclick="toggleForm('respuesta-{{ comentario.id }}')">Responder</button>
-                                <form id="respuesta-{{ comentario.id }}" class="d-none" method="POST" action="{% url 'publicaciones:responder_comentario' publicacion.id comentario.id %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="respuesta_a" value="{{ comentario.id }}">
-                                    <div class="form-group">
-                                        <textarea name="texto" class="form-control" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mt-2">Responder</button>
-                                </form>
-                            {% endif %}
-                            <!-- Mostrar las respuestas al comentario -->
-                            {% if comentario.respuestas.all %}
-                                <ul style="margin-left: 20px;">
-                                    {% for respuesta in comentario.respuestas.all %}
-                                        {% if respuesta.respuesta_a_id == comentario.id %}
-                                            <li>
-                                                <a href="{% url 'sesiones:view_profile_user' respuesta.usuarioId.id %}">
-                                                    {{ respuesta.usuarioId.personaId.nombre }}:
-                                                </a>
-                                                {{ respuesta.texto }}, {{ respuesta.fecha }}
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </li>
-                    {% endif %}
-                {% endfor %}
+            <!-- Contenedor de comentarios ampliado -->
+            <div class="col-md-12 mt-4">
+                <h3>Comentarios:</h3>
+                <ul class="list-unstyled">
+                    {% for comentario in comentarios %}
+                        {% if not comentario.respuesta_a %}
+                            {% include 'publicaciones/comentario_item.html' with comentario=comentario nivel=0 %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
                 <!-- Formulario para realizar un nuevo comentario -->
                 {% if request.session.rol == 'usuario' %}
                     <div class="d-flex flex-column align-items-start">
@@ -114,10 +92,11 @@
                         </form>
                     </div>
                 {% endif %}
-            </ul>
+            </div>
         </div>
-    </div>  
+    </div>
 </main>
+
 <script>
     function toggleForm(id) {
         const form = document.getElementById(id);

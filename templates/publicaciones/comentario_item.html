@@ -1,0 +1,41 @@
+{% block content %}
+<li>
+    <a href="{% url 'sesiones:view_profile_user' comentario.usuarioId.id %}">
+        {{ comentario.usuarioId.personaId.nombre }}:
+    </a>
+    {{ comentario.texto }}, {{ comentario.fecha }}
+        <!-- Formulario para responder al comentario -->
+        {% if request.session.rol == 'usuario' and nivel < 3 %}
+        <button class="btn btn-secondary btn-sm mt-2" onclick="toggleForm('respuesta-{{ comentario.id }}')">Responder</button>
+        <form id="respuesta-{{ comentario.id }}" class="d-none" method="POST" action="{% url 'publicaciones:responder_comentario' publicacion.id comentario.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="respuesta_a" value="{{ comentario.id }}">
+            <div class="form-group">
+                <textarea name="texto" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Enviar</button>
+        </form>
+    {% endif %}
+    <!-- Mostrar las respuestas al comentario -->
+    {% if comentario.respuestas.exists %}
+        <ul style="margin-left: 20px;">
+            {% for respuesta in comentario.respuestas.all %}
+                {% if nivel < 3 %}
+                    {% include 'publicaciones/comentario_item.html' with comentario=respuesta nivel=nivel|add:1 %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>
+
+<script>
+function toggleForm(formId) {
+    var form = document.getElementById(formId);
+    if (form.classList.contains('d-none')) {
+        form.classList.remove('d-none');
+    } else {
+        form.classList.add('d-none');
+    }
+}
+</script>
+{% endblock %}
