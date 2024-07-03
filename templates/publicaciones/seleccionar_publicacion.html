@@ -70,6 +70,18 @@
                                 {{ comentario.usuarioId.personaId.nombre }}:
                             </a>
                             {{ comentario.texto }}, {{ comentario.fecha }}
+                            <!-- Formulario para responder al comentario -->
+                            {% if request.session.rol == 'usuario' %}
+                                <button class="btn btn-link p-0" onclick="toggleForm('respuesta-{{ comentario.id }}')">Responder</button>
+                                <form id="respuesta-{{ comentario.id }}" class="d-none" method="POST" action="{% url 'publicaciones:responder_comentario' publicacion.id comentario.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="respuesta_a" value="{{ comentario.id }}">
+                                    <div class="form-group">
+                                        <textarea name="texto" class="form-control" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-2">Responder</button>
+                                </form>
+                            {% endif %}
                             <!-- Mostrar las respuestas al comentario -->
                             {% if comentario.respuestas.all %}
                                 <ul style="margin-left: 20px;">
@@ -84,18 +96,6 @@
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
-                            {% endif %}
-                            <!-- Formulario para responder al comentario -->
-                            {% if request.session.rol == 'usuario' %}
-                                <button class="btn btn-link p-0" onclick="toggleForm('respuesta-{{ comentario.id }}')">Responder</button>
-                                <form id="respuesta-{{ comentario.id }}" class="d-none" method="POST" action="{% url 'publicaciones:responder_comentario' publicacion.id comentario.id %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="respuesta_a" value="{{ comentario.id }}">
-                                    <div class="form-group">
-                                        <textarea name="texto" class="form-control" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mt-2">Responder</button>
-                                </form>
                             {% endif %}
                         </li>
                     {% endif %}
