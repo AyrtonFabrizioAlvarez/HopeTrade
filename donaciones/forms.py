@@ -20,7 +20,7 @@ class DonacionDineroForm(forms.ModelForm):
     FORMA_PAGO_CHOICES = [
         ('efectivo', 'Efectivo'),
         ('tarjeta', 'Tarjeta'),
-        ('mercado_pago', 'Mercado Pago'),
+        ('mercadopago', 'Mercado Pago'),
     ]
 
     forma_pago = forms.ChoiceField(
