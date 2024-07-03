@@ -8,6 +8,7 @@ from .models import Persona, Usuario, Ayudante, Administrador
 from publicaciones.models import Publicacion
 from ofrecimientos.models import Ofrecimiento
 from intercambios.models import Intercambio
+from donaciones.models import Donacion
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -163,6 +164,8 @@ def delete(request):
         Publicacion.objects.all().delete()
         Ofrecimiento.objects.all().delete()
         Intercambio.objects.all().delete()
+        Donacion.objects.all().delete()
+        
     return redirect("/")
 
 def delete_user(request, user_id):
